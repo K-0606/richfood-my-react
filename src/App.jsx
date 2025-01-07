@@ -12,6 +12,7 @@ function App() {
     <>
       <h1>Hello RichFood</h1>
       <LoginPage/>
+      
     </>
   )
 }
