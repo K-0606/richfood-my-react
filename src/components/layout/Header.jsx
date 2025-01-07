@@ -1,44 +1,26 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Button, Drawer, List, ListItem, ListItemText } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import * as React from 'react';
+import { Component } from 'react';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import "./Header.css";
 
-const MyAppBar = () => {
-  const [openDrawer, setOpenDrawer] = useState(false);
+export default class Header extends Component {
+  render() {
 
-  const toggleDrawer = () => setOpenDrawer(!openDrawer);
+    const variant = "btnPrimary";
 
-  return (
-    <div className='myHeader'>
-      <AppBar position="sticky">
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer} sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            RichFood
-          </Typography>
-          <Button color="inherit">登入</Button>
-        </Toolbar>
-      </AppBar>
+    return (
+      <div className="header">
+        <h1 className="logo">腹二帶</h1>
+        <div>
+        <Stack spacing={2} direction="row">
+          <Button className={`btn ${variant}`} variant="allrestaurant">所有餐廳</Button>
+          <Button className={`btn ${variant}`} variant="Hotrestaurant">熱門餐廳</Button>
+          <Button className="member"variant="member">會員/店家登入</Button>
+        </Stack>
+        </div>
+      </div>
+    );
+  }
+}
 
-      <Drawer anchor="left" open={openDrawer} onClose={toggleDrawer}>
-        <List>
-          <ListItem button onClick={toggleDrawer}>
-            <ListItemText primary="首頁" />
-          </ListItem>
-          <ListItem button onClick={toggleDrawer}>
-            <ListItemText primary="關於我們" />
-          </ListItem>
-          <ListItem button onClick={toggleDrawer}>
-            <ListItemText primary="服務" />
-          </ListItem>
-          <ListItem button onClick={toggleDrawer}>
-            <ListItemText primary="聯絡我們" />
-          </ListItem>
-        </List>
-      </Drawer>
-    </div>
-  );
-};
-
-export default MyAppBar;
