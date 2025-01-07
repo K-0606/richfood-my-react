@@ -4,16 +4,18 @@ import viteLogo from '/vite.svg'
 import LoginPage from './pages/LoginPage'
 import './App.css';
 import Header from "./components/layout/Header"
+import MemberRegister from './pages/MemberRegister';
+import SystemManage from './pages/SystemManage';
 
 
 
 function App() {
   return (
     <>
-      <h1>Hello RichFood</h1>
       <LoginPage/>
+      <MemberRegister/>
       
-      <Header/>
+     <SystemManage/>
     </>
   )
 }
