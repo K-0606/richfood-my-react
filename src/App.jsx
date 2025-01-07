@@ -10,11 +10,11 @@ import Header from "./components/layout/Header"
 function App() {
   return (
     <>
-      <h1>Hello RichFood</h1>
+      {/* <h1>Hello RichFood</h1> */}
       <LoginPage/>
-      <Header/>
+      {/* <Header/> */}
     </>
   )
 }
 
-
+export default App;
