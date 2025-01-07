@@ -12,5 +12,12 @@ const App = () => {
     </div>
   );
 };
+    <>
+      <h1>Hello RichFood</h1>
+      <LoginPage/>
+      
+    </>
+  )
+}
 
 export default App;
