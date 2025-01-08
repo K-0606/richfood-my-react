@@ -1,10 +1,11 @@
 import React from 'react';
-import Header from './Header';  // 導入 Header 組件
+import Header from '../components/layout/Header';
+
 
 const Home = () => {
   return (
     <div>
-      <Header />
+      <Header/>
       <p>This is the main content of the app.</p>
     </div>
   );
