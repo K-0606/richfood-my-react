@@ -11,7 +11,7 @@ export default class Header extends Component {
 
     return (
       <div className="header">
-        <h1 className="logo">腹二帶</h1>
+        <h1 className="logo">腹餓帶</h1>
         <div>
         <Stack spacing={2} direction="row">
           <Button className={`btn ${variant}`} variant="allrestaurant">所有餐廳</Button>

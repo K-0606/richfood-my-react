@@ -1,20 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import LoginPage from './pages/LoginPage'
-import './App.css';
-import Header from "./components/layout/Header"
+// src/App.jsx
+import React from 'react';
+import Home from './pages/Home';
+// import Header from './layout/Header';
 
 
-
-function App() {
+const App = () => {
   return (
-    <>
-      <h1>Hello RichFood</h1>
-      <LoginPage/>
-      <Header/>
-    </>
-  )
-}
+    <div>
+      {/* <Header/> */}
+      <Home/>
+    </div>
+  );
+};
 
 export default App;
