@@ -7,11 +7,7 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 export default function Home() {
   return (
     <>
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '100vh', paddingTop: '20px' }}>
-      <h1 style={{ fontSize: '36px', fontFamily: 'Arial, sans-serif',whiteSpace: 'nowrap'  }}>依地區搜尋餐廳</h1>
-    </div>
-
-    <ImageList style={{ maxWidth: '100%', height: '500px' }}
+    <ImageList style={{ maxWidth: '70%', height: '80%' }}
       sx={{
         // width: 200px, height: 100px,
         overflow: 'hidden', // 隱藏滾動條
@@ -47,11 +43,22 @@ export default function Home() {
               width: '200px', // 設置統一寬度
               height: '100px', // 設置統一高度
               objectFit: 'cover', // 保持比例，裁剪多餘的部分
+              borderRadius: '5%',
             }} />
           <ImageListItemBar
-            title={item.title}
-            subtitle={<span>by: {item.author}</span>}
-            position="below" />
+              title={item.title}
+              position="below"
+              sx={{
+                display: 'flex',
+                justifyContent: 'center', // 水平居中
+                alignItems: 'center', // 垂直居中
+                fontSize: '24px', // 設置字體大小
+                fontWeight: 'bold', // 可選，設置字體加粗
+                width: '100%', // 使區塊佔滿整個寬度
+                textAlign: 'center', // 確保文字居中對齊
+                padding: '10px 0', // 可以調整內邊距來達到更好的視覺效果
+              }}
+            />
         </ImageListItem>
       ))}
     </ImageList>
@@ -62,62 +69,50 @@ export default function Home() {
 const itemData = [
   {
     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    author: '@bkristastucchio',
+    title: '台北',
   },
   {
     img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-    author: '@rollelflex_graphy726',
+    title: '桃園',
   },
   {
     img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-    author: '@helloimnik',
+    title: '苗栗',
   },
   {
     img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    author: '@nolanissac',
+    title: '台中',
   },
   {
     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    author: '@hjrc33',
+    title: '南投',
   },
   {
     img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
+    title: '高雄',
   },
   {
     img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-    author: '@tjdragotta',
+    title: '台南'
   },
   {
     img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-    author: '@katie_wasserman',
+    title: '屏東'
   },
   {
     img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: 'Mushrooms',
-    author: '@silverdalex',
+    title: '嘉義'
   },
   {
     img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: 'Tomato basil',
-    author: '@shelleypauls',
+    title: '雲林'
   },
   {
     img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: 'Sea star',
-    author: '@peterlaster',
+    title: '宜蘭',
   },
   {
     img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: 'Bike',
-    author: '@southside_customs',
+    title: '新竹',
   },
 ];
