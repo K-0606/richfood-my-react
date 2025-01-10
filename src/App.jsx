@@ -1,19 +1,34 @@
+// src/App.jsx
+import React from 'react';
+import Home from './pages/Home';
+// import Header from './layout/Header';
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import LoginPage from './pages/LoginPage'
 import './App.css';
 
+
 import MemberRegister from './pages/MemberRegister';
 import MemberLoginPage from './pages/MemberLoginPage'
 import { createBrowserRouter, RouterProvider} from "react-router-dom"
-import Home from './pages/Home';
+import Home from './pages/HomeAll/HomePicture1';
 import SystemManage from './pages/SystemManage';
 import BookPage from './pages/BookPage';
 import ContactUsPage from './pages/ContactUsPage';
 import PaymentPage from './pages/PaymentPage';
 import ErrorPage from './pages/ErrorPage';
-
+import Header from './components/layout/Header';
+import HomeName1 from './pages/HomeAll/HomeName1';
+import HomeName2 from './pages/HomeAll/HomeName2';
+import HomeName3 from './pages/HomeAll/HomeName3';
+import HomePicture1 from './pages/HomeAll/HomePicture1';
+import HomePicture2 from './pages/HomeAll/HomePicture2';
+import HomePicture3 from './pages/HomeAll/HomePicture3';
+import HomeTop from './pages/HomeTop';
+import Footer from './components/layout/Footer';
+import HomeHeroImage from './pages/HomeAll/HomeHeroImage';
+import SearchStore from'./pages/SearchStore';
 
 
 const router = createBrowserRouter([
@@ -49,7 +64,52 @@ const router = createBrowserRouter([
   {
     path: "/systemManage",
     element: <SystemManage/>
-  }
+  },
+  // 珈珈---------------------------------------
+  {
+    path: "/Header",
+    element: <Header/>
+  },
+  {
+    path: "/Footer",
+    element: <Footer/>
+  },
+  {
+    path: "/HomeTop",
+    element: <HomeTop/>
+  },
+  {
+    path: "/HomeName1",
+    element: <HomeName1/>
+  },
+  {
+    path: "/HomeName2",
+    element: <HomeName2/>
+  },
+  {
+    path: "/HomeName3",
+    element: <HomeName3/>
+  },
+  {
+    path: "/HomePicture1",
+    element: <HomePicture1/>
+  },
+  {
+    path: "/HomePicture2",
+    element: <HomePicture2/>
+  },
+  {
+    path: "/HomePicture3",
+    element: <HomePicture3/>
+  },
+  {
+    path: "/HomeHeroImage",
+    element: <HomeHeroImage/>
+  },
+  {
+    path: "/SearchStore",
+    element: <SearchStore/>
+  },
 ])
 
 function App() {
@@ -59,5 +119,4 @@ function App() {
     </>
   )
 }
-
 export default App;

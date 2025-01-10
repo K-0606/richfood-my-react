@@ -1,0 +1,17 @@
+/* src/components/layout/Footer.css */
+.footer {
+    background-color: white; /* 背景色設為白色 */
+    color: black;             /* 字體顏色設為黑色 */
+    padding: 20px 0;          /* 頂部和底部內邊距 */
+    text-align: center;       /* 內容居中對齊 */
+    /* position: fixed;          固定在頁面底部 */
+    bottom: 0;
+    width: 100%;              /* 撑满屏幕宽度 */
+    font-size: 16px;          /* 字體大小 */
+    border-top: 1px solid #ddd; /* 底部加一條灰色邊框 */
+  }
+  
+  .footer-content p {
+    margin: 0;
+  }
+  
