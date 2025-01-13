@@ -1,34 +1,22 @@
-// src/components/MemberProfile.jsx
-import React, { useState } from "react";
-import { TextField, Button, Grid, Typography, Box, MenuItem, Select, InputLabel, FormControl, Avatar } from "@mui/material";
-import { PhotoCamera } from "@mui/icons-material";
+// src/pages/Home.jsx
+import React, { useState } from 'react';
+import { Button, Box, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { useAvatar } from './MemberComponents/AvatarContext'; // 引入 AvatarContext
 
-const MemberLoginPage = () => {
-  //資料
-  const initialData = {
-    id: "12345",
-    name: "Rich Food",
-    gender: "Male",
-    email: "richfood@example.com",
-    avatarUrl: "https://megapx-assets.dcard.tw/images/7d91a6c1-e79c-4f43-a57e-66670e71fca2/1280.webp" // 假圖像URL
-  };
+// 導入需要的子組件
+import Comments from './MemberComponents/Comments';
+import Collections from './MemberComponents/Collections';
+import Coupons from './MemberComponents/Coupons';
+import Reservations from './MemberComponents/Reservations';
+import MemberProfile from './MemberComponents/MemberProfile';
 
-  const [memberData, setMemberData] = useState(initialData);
-  const [isEditing, setIsEditing] = useState(false);
-  const [imageFile, setImageFile] = useState(null); // 用來儲存選擇的圖像檔案
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setMemberData((prevState) => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleSave = () => {
-    // 在這裡可以進行保存資料的邏輯，這裡只是模擬為簡化
-    console.log("Saved Member Data: ", memberData);
-    setIsEditing(false);
+const Home = () => {
+  const { avatarUrl, setAvatarUrl } = useAvatar();  // 從 context 獲取頭像與更新函數
+  const [activeContent, setActiveContent] = useState(''); // 用來控制顯示內容
+  const [isEditing, setIsEditing] = useState(false); // 控制是否顯示更換頭像按鈕
+  const handleButtonClick = (content) => {
+    setActiveContent(content);
   };
 
   const handleImageChange = (e) => {
@@ -36,37 +24,30 @@ const MemberLoginPage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setMemberData((prevState) => ({
-          ...prevState,
-          avatarUrl: reader.result // 更新為新圖像
-        }));
+        setAvatarUrl(reader.result);  // 更新頭像
       };
-      reader.readAsDataURL(file); // 將圖像檔案轉為Base64格式
+      reader.readAsDataURL(file);  // 將圖片轉換為 Base64 格式
     }
   };
 
   return (
     <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>會員資料</Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={4}>
-          {/* 會員圖像顯示區域 */}
-          <Box display="flex" justifyContent="center" alignItems="center">
-            <Avatar
-              src={memberData.avatarUrl}
-              alt="會員圖像"
-              sx={{ width: 150, height: 150 }}
-            />
-          </Box>
-          {/* 無論是否處於編輯模式，都可以更換圖像 */}
-          <Button
-            variant="outlined"
-            component="label"
-            fullWidth
-            sx={{ marginTop: 2 }}
-          >
-            <PhotoCamera sx={{ marginRight: 1 }} />
-            更換圖像
+      <Typography variant="h4" gutterBottom>會員首頁</Typography>
+
+      {/* 顯示頭像區域 */}
+      <Box display="flex" justifyContent="center" alignItems="center" sx={{ marginBottom: 4 }}>
+        <img 
+          src={avatarUrl} 
+          alt="會員頭像" 
+          style={{ width: 150, height: 150, borderRadius: '50%' }} 
+        />
+      </Box>
+
+      {/* 顯示「更換頭像」按鈕 */}
+      {activeContent === 'profile' && (
+        <Box display="flex" justifyContent="center" sx={{ marginTop: 2 }}>
+          <Button variant="outlined" component="label">
+            更換頭像
             <input
               type="file"
               accept="image/*"
@@ -74,62 +55,28 @@ const MemberLoginPage = () => {
               onChange={handleImageChange}
             />
           </Button>
-        </Grid>
+        </Box>
+      )}
 
-        <Grid item xs={12} sm={8}>
-          <TextField
-            label="會員 ID"
-            value={memberData.id}
-            fullWidth
-            disabled
-            variant="outlined"
-            sx={{ marginBottom: 2 }}
-          />
-          <TextField
-            label="會員姓名"
-            value={memberData.name}
-            onChange={handleInputChange}
-            name="name"
-            fullWidth
-            variant="outlined"
-            disabled={!isEditing}
-            sx={{ marginBottom: 2 }}
-          />
-          <FormControl fullWidth disabled={!isEditing} sx={{ marginBottom: 2 }}>
-            <InputLabel>性別</InputLabel>
-            <Select
-              name="gender"
-              value={memberData.gender}
-              onChange={handleInputChange}
-              label="性別"
-            >
-              <MenuItem value="Male">男</MenuItem>
-              <MenuItem value="Female">女</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            label="電子郵件"
-            value={memberData.email}
-            fullWidth
-            disabled
-            variant="outlined"
-            sx={{ marginBottom: 2 }}
-          />
-          <Grid item xs={12}>
-            {isEditing ? (
-              <Button variant="contained" onClick={handleSave}>
-                保存變更
-              </Button>
-            ) : (
-              <Button variant="outlined" onClick={() => setIsEditing(true)}>
-                編輯資料
-              </Button>
-            )}
-          </Grid>
-        </Grid>
-      </Grid>
+      {/* 顯示五個按鈕 */}
+      <Box display="flex" justifyContent="center" spacing={2}>
+        <Button variant="outlined" onClick={() => handleButtonClick('comments')}>我的評論</Button>
+        <Button variant="outlined" onClick={() => handleButtonClick('collections')}>我的珍藏</Button>
+        <Button variant="outlined" onClick={() => handleButtonClick('coupons')}>我的餐券</Button>
+        <Button variant="outlined" onClick={() => handleButtonClick('reservations')}>我的訂位</Button>
+        <Button variant="outlined" onClick={() => handleButtonClick('profile')}>會員資料</Button>
+      </Box>
+
+      {/* 進入會員資料頁面顯示相應內容 */}
+      <Box sx={{ marginTop: 4 }}>
+        {activeContent === 'comments' && <Comments />}
+        {activeContent === 'collections' && <Collections />}
+        {activeContent === 'coupons' && <Coupons />}
+        {activeContent === 'reservations' && <Reservations />}
+        {activeContent === 'profile' && <MemberProfile />}
+      </Box>
     </Box>
   );
 };
 
-export default MemberLoginPage;
+export default Home;

@@ -4,7 +4,7 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 
 
-export default function Home() {
+export default function HomePicture1() {
   return (
     <>
     <ImageList style={{ maxWidth: '70%', height: '80%' }}

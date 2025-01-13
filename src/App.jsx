@@ -8,11 +8,10 @@ import viteLogo from '/vite.svg'
 import LoginPage from './pages/LoginPage'
 import './App.css';
 
-
 import MemberRegister from './pages/MemberRegister';
 import MemberLoginPage from './pages/MemberLoginPage'
-import { createBrowserRouter, RouterProvider} from "react-router-dom"
-import Home from './pages/HomeAll/HomePicture1';
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
+
 import SystemManage from './pages/SystemManage';
 import BookPage from './pages/BookPage';
 import ContactUsPage from './pages/ContactUsPage';
@@ -28,95 +27,130 @@ import HomePicture3 from './pages/HomeAll/HomePicture3';
 import HomeTop from './pages/HomeTop';
 import Footer from './components/layout/Footer';
 import HomeHeroImage from './pages/HomeAll/HomeHeroImage';
-import SearchStore from'./pages/SearchStore';
+import SearchStore from './pages/SearchStore';
+import MemberProfile from './pages/MemberComponents/MemberProfile';
+import Comments from './pages/MemberComponents/Comments';
+import Collections from './pages/MemberComponents/Collections';
+import Coupons from './pages/MemberComponents/Coupons';
+import Reservations from './pages/MemberComponents/Reservations';
+import { AvatarProvider } from "./pages/MemberComponents/AvatarContext";  // 引入 AvatarContext
 
 
+// 定義路由
 const router = createBrowserRouter([
   {
     path: "/book",
-    element: <BookPage/>
+    element: <BookPage />
   },
   {
     path: "/contactUs",
-    element: <ContactUsPage/>
+    element: <ContactUsPage />
   },
   {
     path: "/",
-    element: <Home/>,
-    errorElement: <ErrorPage/>
+    element: <Home />,
+    errorElement: <ErrorPage />
   },
   {
     path: "/login",
-    element: <LoginPage/>
+    element: <LoginPage />
   },
   {
-    path: "/memberLoginPage",
-    element: <MemberLoginPage/>
+    path: "/memberLogin",
+    element: <MemberLoginPage />
   },
   {
     path: "/memberRegister",
-    element: <MemberRegister/>
+    element: <MemberRegister />
   },
   {
     path: "/paymentPage",
-    element: <PaymentPage/>
+    element: <PaymentPage />
   },
   {
     path: "/systemManage",
-    element: <SystemManage/>
+    element: <SystemManage />
   },
   // 珈珈---------------------------------------
   {
     path: "/Header",
-    element: <Header/>
+    element: <Header />
   },
   {
     path: "/Footer",
-    element: <Footer/>
+    element: <Footer />
   },
   {
     path: "/HomeTop",
-    element: <HomeTop/>
+    element: <HomeTop />
   },
   {
     path: "/HomeName1",
-    element: <HomeName1/>
+    element: <HomeName1 />
   },
   {
     path: "/HomeName2",
-    element: <HomeName2/>
+    element: <HomeName2 />
   },
   {
     path: "/HomeName3",
-    element: <HomeName3/>
+    element: <HomeName3 />
   },
   {
     path: "/HomePicture1",
-    element: <HomePicture1/>
+    element: <HomePicture1 />
   },
   {
     path: "/HomePicture2",
-    element: <HomePicture2/>
+    element: <HomePicture2 />
   },
   {
     path: "/HomePicture3",
-    element: <HomePicture3/>
+    element: <HomePicture3 />
   },
   {
     path: "/HomeHeroImage",
-    element: <HomeHeroImage/>
+    element: <HomeHeroImage />
   },
   {
     path: "/SearchStore",
-    element: <SearchStore/>
+    element: <SearchStore />
   },
+  //memberLogin
+  {
+    path: "/profile",
+    element: <MemberProfile />
+  },
+  {
+    path: "/comments",
+    element: <Comments />
+  },
+  {
+    path: "/collections",
+    element: <Collections />
+  },
+  {
+    path: "/coupons",
+    element: <Coupons />
+  },
+  {
+    path: "/reservations",
+    element: <Reservations />
+  },
+  {
+    path: "/member-profile",
+    element: <MemberProfile />
+  },
+
 ])
 
+// 最後包裹 AvatarProvider
 function App() {
   return (
-    <>
-      <RouterProvider router={router}/>
-    </>
-  )
+    <AvatarProvider>
+      <RouterProvider router={router} />
+    </AvatarProvider>
+  );
 }
+
 export default App;
