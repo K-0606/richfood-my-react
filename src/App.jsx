@@ -16,6 +16,7 @@ import Header from './components/layout/Header.jsx';
 import HomePicture1 from './pages/HomeAll/HomePicture1.jsx';
 import HomePicture2 from './pages/HomeAll/HomePicture2.jsx';
 import HomePicture3 from './pages/HomeAll/HomePicture3.jsx';
+import HomeComment from './pages/HomeAll/HomeComment.jsx';
 import Footer from './components/layout/Footer.jsx';
 import HomeHeroImage from './pages/HomeAll/HomeHeroImage.jsx';
 import SearchStore from './pages/SearchStore.jsx';
@@ -98,6 +99,10 @@ const router = createBrowserRouter([
   {
     path: "/StorePage3",
     element: <StorePage3/>,
+  },
+  {
+    path: "/HomeComment",
+    element: <HomeComment/>,
   },
 ]);
 
