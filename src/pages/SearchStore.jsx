@@ -2,7 +2,8 @@ import React from 'react';
 import Header from "../components/layout/Header.jsx";
 import Footer from '../components/layout/Footer';
 import SearchPicture from'../pages/SearchStoreAll/SearchPicture';
-import SearchCheakBox from'../pages/SearchStoreAll/SearchCheakBox.jsx';
+import SearchSh from'../pages/SearchStoreAll/SearchSh.jsx';
+import SearchPagination from'../pages/SearchStoreAll/SearchPagination.jsx';
 
 
 function SearchStore() {
@@ -10,7 +11,9 @@ function SearchStore() {
     
     <>
     <Header />
+    <SearchSh />
     <SearchPicture />
+    <SearchPagination />
     <Footer />
     </>
     

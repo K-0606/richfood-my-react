@@ -42,9 +42,9 @@ export default function ActionAreaCard() {
           flexDirection: 'column',
           gap: 2,
           alignItems: 'center',
-          transform: 'translateX(150px)', // Right shift cards by 200px
-           // marginLeft: 通过设置 marginLeft: 100px，可以将 Box 整体向右移动 100px。
-    // transform: 通过 transform: translateX(100px)，可以在不改变布局流的情况下向右偏移 Box 元素。
+          transform: 'translateX(100px)', // Right shift cards by 200px
+          // marginLeft: 通过设置 marginLeft: 100px，可以将 Box 整体向右移动 100px。
+          // transform: 通过 transform: translateX(100px)，可以在不改变布局流的情况下向右偏移 Box 元素。
         }}
       >
         {cards.map((card, index) => (
