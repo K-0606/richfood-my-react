@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Select from "react-select";
+// import Select from "react-select";
 import './HomeHeroImage.css'; // 引入樣式檔案
 
 function HomeHeroImage() {
