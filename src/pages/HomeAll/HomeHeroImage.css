@@ -54,3 +54,11 @@
     color: white;
   }
   
+  .slick-slide {
+    display: none;
+  }
+  .slick-center {
+    display: block;  /* 显示当前中心位置的卡片 */
+  }
+  
+  

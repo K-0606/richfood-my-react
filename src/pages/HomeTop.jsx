@@ -8,6 +8,7 @@ import HomePicture2 from '../pages/HomeAll/HomePicture2';
 import HomePicture3 from '../pages/HomeAll/HomePicture3';
 import Footer from '../components/layout/Footer';
 import HomeHeroImage from '../pages/HomeAll/HomeHeroImage';
+import HomeComment from '../pages/HomeAll/HomeComment.jsx';
 
 function HomeTop() {
   return (
@@ -21,6 +22,7 @@ function HomeTop() {
     <HomePicture2 />
     <HomeName3 />
     <HomePicture3 />
+    <HomeComment />
     <Footer />
     </>
     
