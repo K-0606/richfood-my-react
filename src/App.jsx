@@ -50,6 +50,9 @@ const router = createBrowserRouter([
     path: "/",
     element: <Home />,
     errorElement: <ErrorPage />
+    path: "/HomeTop",
+    element: <HomeTop />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/login",
@@ -148,9 +151,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AvatarProvider>
-      <RouterProvider router={router} />
+      <RouterProvider router={router}  />
     </AvatarProvider>
-  );
+  );;
 }
 
 export default App;
