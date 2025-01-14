@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -10,6 +10,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
 export default function SearchPicture() {
+  const [cards, setRestaurant]= useState([]);
+  const [country, setCountry] = useState('');
   const [checkedItem, setCheckedItem] = useState(null);  // 存储当前被选中的项
 
   const handleCheckboxChange = (event) => {
@@ -18,23 +20,35 @@ export default function SearchPicture() {
     // 如果当前选中的项与点击的项不一样，就更新为新的选项
     setCheckedItem(checkedItem === label ? null : label);
 
-    // 打印当前选中的标签
-    if (checkedItem !== label) {
-      console.log(`${label} 已選擇`);
-      fetchData(label);
-    }
-  };
+
   // 发送数据到API
-  const fetchData = (category) => {
+  const fetchData = async (country,category) => {
   // 假设API的URL为 https://example.com/test3/{category}
-  const url = `https://example.com/test3/${category}`;
-  }  
-    
-  const cards = Array(10).fill({
-    title: 'Lizard',
-    description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
-    image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-  });
+  const url = `http://localhost:8080/restaurants`;
+  
+  if (country && category) {
+    url += `/${country}/list/${category}`;
+  } else if (country) {
+    url += `/${country}/list`;
+  } else if (category) {
+    url += `/list/${category}`;
+  }
+
+    const response = await fetch(url);
+
+
+    const data = await response.json();
+
+    setRestaurant(data.content);
+
+
+}
+      // 打印当前选中的标签
+      if (checkedItem !== label) {
+        console.log(`${label} 已選擇`);
+        fetchData(country,label);
+      }
+    };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3, alignItems: 'flex-start', transform: 'translateX(100px)',}}>
@@ -116,7 +130,7 @@ export default function SearchPicture() {
                 {/* Card Content */}
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: 2 }}>
                   <Typography gutterBottom variant="h5" component="div">
-                    {card.title}
+                    {card.name}
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {card.description}

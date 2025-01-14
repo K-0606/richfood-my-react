@@ -3,8 +3,8 @@ import Select from "react-select";
 import './SearchSh.css'; // 引入樣式檔案
 
 function SearchSh() {
-  const [selectedCuisines, setSelectedCuisines] = useState([]);
-  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selectedCuisines, setSelectedCuisines] = useState([null]);
+  const [selectedRegions, setSelectedRegions] = useState([null]);
 
   // 菜系選項
   const cuisines = [
@@ -19,20 +19,43 @@ function SearchSh() {
     { value: "taipei", label: "台北" },
     { value: "taichung", label: "台中" },
     { value: "kaohsiung", label: "高雄" },
-    { value: "taiwan", label: "苗栗" },
-    { value: "new-york", label: "彰化" },
-    { value: "paris", label: "宜蘭" },
+    { value: "miaoli", label: "苗栗" },  
+    { value: "zhanghua", label: "彰化" },  
+    { value: "yilan", label: "宜蘭" },
   ];
 
   // 處理菜系選擇
   const handleCuisineChange = (selectedOptions) => {
     setSelectedCuisines(selectedOptions || []);
+    console.log("Selected Cuisine:", selectedOptions ? selectedOptions.label : null);
   };
 
   // 處理地區選擇
   const handleRegionChange = (selectedOptions) => {
     setSelectedRegions(selectedOptions || []);
+    console.log("Selected Region:", selectedOptions ? selectedOptions.label : null);
   };
+
+  // 发送数据到API
+const sendDataToAPI = async () => {
+  const data = {
+    cuisine: selectedCuisines?.label || "",  // 使用 optional chaining 简化判断
+    region: selectedRegions?.label || "",    // 使用 optional chaining 简化判断
+  };
+
+  try {
+    const response = await fetch("https://your-api-endpoint.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });  
+
+    const result = await response.json();
+    console.log("API Response:", result);
+  } catch (error) {
+    console.error("Error sending data:", error);
+  }
+};
 
   const customStyles = {
     option: (provided, state) => ({
@@ -47,7 +70,7 @@ function SearchSh() {
       padding: "5px",
       width: "300px",
     }),
-    multiValueRemove: (provided) => ({
+    singleValue: (provided) => ({
       ...provided,
       backgroundColor: "transparent",
       border: "none",
@@ -60,68 +83,27 @@ function SearchSh() {
 
         <div className="select-container">
           {/* React-Select 菜系選擇 */}
-          <Select className="cta-button" 
-            isMulti
-            options={cuisines}
-            value={selectedCuisines}
-            onChange={handleCuisineChange}
-            placeholder="搜尋餐廳 或 菜系"
-            isSearchable // 允許搜索
-            closeMenuOnSelect={false} // 保持下拉菜單開啟
-            components={{
-              // DropdownIndicator: () => null, 
-              MultiValueRemove: ({ data }) => (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // 防止選項被選中
-                    setSelectedCuisines((prev) => prev.filter((item) => item.value !== data.value));
-                  }}
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "none",
-                    color: "#747677",
-                    cursor: "pointer",
-                  }}
-                >
-                  &times;
-                </button>
-              ),
-            }}
-            allowCreate // 允許手動輸入並創建新的選項
-            styles={customStyles} 
-          />
-
-          {/* React-Select 地區選擇 */}
           <Select
-            isMulti
-            options={regions}
-            value={selectedRegions}
-            onChange={handleRegionChange}
-            placeholder="搜尋地區 或 地址"
-            isSearchable // 允許搜索
-            closeMenuOnSelect={false} // 保持下拉菜單開啟
-            components={{
-              // DropdownIndicator: () => null,
-              MultiValueRemove: ({ data }) => (
-                <button className="cta-button" 
-                  onClick={(e) => {
-                    e.stopPropagation(); // 防止選項被選中
-                    setSelectedRegions((prev) => prev.filter((item) => item.value !== data.value));
-                  }}
-                  style={{
-                    backgroundColor: "transparent",
-                    border: "none",
-                    color: "#747677",
-                    cursor: "pointer",
-                  }}
-                >
-                  &times;
-                </button>
-              ),
-            }}
-            allowCreate // 允許手動輸入並創建新的選項
-            styles={customStyles} 
-          />
+          
+        options={cuisines}
+        value={selectedCuisines}  // 单选时，value 只有一个选项
+        onChange={handleCuisineChange}
+        placeholder="搜尋餐廳 或 菜系"
+        isSearchable // 允许搜索
+        closeMenuOnSelect={true} // 选择后关闭菜单
+        styles={customStyles} // 自定义样式
+      />
+
+      {/* React-Select 地区选择（单选） */}
+      <Select
+        options={regions}
+        value={selectedRegions} // 单选时，value 只有一个选项
+        onChange={handleRegionChange}
+        placeholder="搜尋地區 或 地址"
+        isSearchable // 允许搜索
+        closeMenuOnSelect={true} // 选择后关闭菜单
+        styles={customStyles} // 自定义样式
+      />
         </div>
   );
 }
