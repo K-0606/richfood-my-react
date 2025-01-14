@@ -28,7 +28,7 @@ export default function SearchPicture() {
   const fetchData = (category) => {
   // 假设API的URL为 https://example.com/test3/{category}
   const url = `https://example.com/test3/${category}`;
-  }
+  }  
     
   const cards = Array(10).fill({
     title: 'Lizard',
