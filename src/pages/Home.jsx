@@ -1,16 +1,16 @@
 import React from 'react';
 import Header from "../components/layout/Header.jsx";
-import HomeName1 from '../pages/HomeAll/HomeName1';
-import HomeName2 from '../pages/HomeAll/HomeName2';
+import HomeName1 from './HomeAll/HomeName1.jsx';
+import HomeName2 from './HomeAll/HomeName2.jsx';
 import HomeName3 from './HomeAll/HomeName3.jsx';
-import HomePicture1 from '../pages/HomeAll/HomePicture1';
-import HomePicture2 from '../pages/HomeAll/HomePicture2';
-import HomePicture3 from '../pages/HomeAll/HomePicture3';
-import Footer from '../components/layout/Footer';
-import HomeHeroImage from '../pages/HomeAll/HomeHeroImage';
-import HomeComment from '../pages/HomeAll/HomeComment.jsx';
+import HomePicture1 from './HomeAll/HomePicture1.jsx';
+import HomePicture2 from './HomeAll/HomePicture2.jsx';
+import HomePicture3 from './HomeAll/HomePicture3.jsx';
+import Footer from '../components/layout/Footer.jsx';
+import HomeHeroImage from './HomeAll/HomeHeroImage.jsx';
+import HomeComment from './HomeAll/HomeComment.jsx';
 
-function HomeTop() {
+function Home() {
   return (
     
     <>
@@ -29,4 +29,4 @@ function HomeTop() {
   );
 }
 
-export default HomeTop;
+export default Home;

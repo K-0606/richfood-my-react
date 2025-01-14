@@ -1,16 +1,35 @@
-/* src/components/layout/Footer.css */
+/* footer 的基本樣式 */
 .footer {
-  background-color: white; /* 背景色設為白色 */
-  color: black;             /* 字體顏色設為黑色 */
-  padding: 20px 0;          /* 頂部和底部內邊距 */
-  text-align: center;       /* 內容居中對齊 */
-  /* position: fixed;          固定在頁面底部 */
-  bottom: 0;
-  width: 100%;              /* 撑满屏幕宽度 */
-  font-size: 16px;          /* 字體大小 */
-  border-top: 1px solid #ddd; /* 底部加一條灰色邊框 */
+  background-color: #e6e6e6;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.footer-content p {
-  margin: 0;
+/* 社交媒體圖標容器 */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;  /* 圖標之間的間距 */
+  margin-bottom: 10px;
+}
+
+/* 設置每個 IconButton 的樣式 */
+.icon-button {
+  color: #fff;
+  transition: color 0.3s ease, transform 0.3s ease; /* 平滑過渡效果 */
+  cursor: pointer;  /* 鼠標變為手形 */
+}
+
+/* hover 效果 */
+.icon-button:hover {
+  color: #ff6600;  /* 當鼠標懸停時，顏色變為橙色 */
+  transform: scale(1.2);  /* 放大效果 */
+}
+
+/* 底部文字樣式 */
+.footer-text {
+  font-size: 14px;
+  color: #aaa;
 }
