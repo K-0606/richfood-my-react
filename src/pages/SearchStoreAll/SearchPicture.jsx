@@ -11,6 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 export default function SearchPicture() {
   const [cards, setRestaurant]= useState([]);
+  const [country, setCountry] = useState('');
   const [checkedItem, setCheckedItem] = useState(null);  // 存储当前被选中的项
 
   const handleCheckboxChange = (event) => {
@@ -21,10 +22,18 @@ export default function SearchPicture() {
 
 
   // 发送数据到API
-  const fetchData = async (category) => {
+  const fetchData = async (country,category) => {
   // 假设API的URL为 https://example.com/test3/{category}
-  const url = `http://localhost:8080/test/test3/${category}`;
+  const url = `http://localhost:8080/restaurants`;
   
+  if (country && category) {
+    url += `/${country}/list/${category}`;
+  } else if (country) {
+    url += `/${country}/list`;
+  } else if (category) {
+    url += `/list/${category}`;
+  }
+
     const response = await fetch(url);
 
 
@@ -37,7 +46,7 @@ export default function SearchPicture() {
       // 打印当前选中的标签
       if (checkedItem !== label) {
         console.log(`${label} 已選擇`);
-        fetchData(label);
+        fetchData(country,label);
       }
     };
 
