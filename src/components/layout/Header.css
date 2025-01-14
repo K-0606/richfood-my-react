@@ -3,18 +3,53 @@
 }
 
 .header {
-display: flex;        
-justify-content: space-between; 
-align-items: center;      
-background-color: #fff; 
-padding: 10px 20px;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;      
+  background-color: #fff; 
+  padding: 10px 20px;
 }
 
+/* .left-container: 用於排列 logo 和圖片 */
+.left-container {
+  display: flex;
+  align-items: center;
+}
+
+/* .logo 樣式 */
 .logo {
   font-size: 42px;
   font-weight: bold;
   color: #707070;
   white-space: nowrap;
+  margin-left: 10px;
+  transition: color 0.3s ease, transform 0.2s ease; /* 平滑過渡顏色和縮放 */
+}
+
+/* .logo hover 效果 */
+.logo:hover {
+  color: #ff6600;  /* 當鼠標懸停時變為橙色 */
+  transform: scale(1.1);  /* 放大效果 */
+  cursor: pointer;
+}
+
+/* .logoImg 樣式 */
+.logoImg {
+  width: 200px;
+  order: -1;  /* 強制圖片在最左邊 */
+  transition: transform 0.3s ease, filter 0.3s ease; /* 平滑過渡縮放和濾鏡效果 */
+}
+
+/* .logoImg hover 效果 */
+.logoImg:hover {
+  transform: scale(1.05); /* 當鼠標懸停時放大圖片 */
+  filter: brightness(1.2); /* 當鼠標懸停時提高圖片亮度 */
+  cursor: pointer;
+}
+
+/* 右側容器，將按鈕推到最右邊 */
+.right-container {
+  margin-left: auto;
 }
 
 /*Header.Button */

@@ -1,6 +1,6 @@
 // src/App.jsx
 import React from 'react';
-import Home from './pages/Home';
+import Home from './pages/Home'
 // import Header from './layout/Header';
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
@@ -24,7 +24,7 @@ import HomeName3 from './pages/HomeAll/HomeName3';
 import HomePicture1 from './pages/HomeAll/HomePicture1';
 import HomePicture2 from './pages/HomeAll/HomePicture2';
 import HomePicture3 from './pages/HomeAll/HomePicture3';
-import HomeTop from './pages/HomeTop';
+
 import Footer from './components/layout/Footer';
 import HomeHeroImage from './pages/HomeAll/HomeHeroImage';
 import SearchStore from './pages/SearchStore';
@@ -36,6 +36,7 @@ import Reservations from './pages/MemberComponents/Reservations';
 import { AvatarProvider } from "./pages/MemberComponents/AvatarContext";  // 引入 AvatarContext
 import MyRecommend from './pages/MyRecommend';
 import StorePage from './pages/StorePage';
+import StoreLoginPage from './pages/StoreLoginPage';
 
 
 // 定義路由
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Home />,
+    element: <Home/>,
     errorElement: <ErrorPage />
     
   },
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
     element: <PaymentPage />
   },
   {
+    path: "/storeLogin",
+    element: <StoreLoginPage/>
+  },
+  {
     path: "/systemManage",
     element: <SystemManage />
   },
@@ -86,10 +91,6 @@ const router = createBrowserRouter([
   {
     path: "/Footer",
     element: <Footer />
-  },
-  {
-    path: "/HomeTop",
-    element: <HomeTop />
   },
   {
     path: "/HomeName1",
