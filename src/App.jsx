@@ -35,6 +35,7 @@ import Coupons from './pages/MemberComponents/Coupons';
 import Reservations from './pages/MemberComponents/Reservations';
 import { AvatarProvider } from "./pages/MemberComponents/AvatarContext";  // 引入 AvatarContext
 import MyRecommend from './pages/MyRecommend';
+import StorePage from './pages/StorePage';
 
 
 // 定義路由
@@ -121,6 +122,10 @@ const router = createBrowserRouter([
   {
     path: "/SearchStore",
     element: <SearchStore />
+  },
+  {
+    path: "/StorePage",
+    element: <StorePage/>
   },
   //memberLogin
   {
