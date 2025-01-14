@@ -34,6 +34,7 @@ import Collections from './pages/MemberComponents/Collections';
 import Coupons from './pages/MemberComponents/Coupons';
 import Reservations from './pages/MemberComponents/Reservations';
 import { AvatarProvider } from "./pages/MemberComponents/AvatarContext";  // 引入 AvatarContext
+import MyRecommend from './pages/MyRecommend';
 
 
 // 定義路由
@@ -50,9 +51,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Home />,
     errorElement: <ErrorPage />
-    path: "/HomeTop",
-    element: <HomeTop />,
-    errorElement: <ErrorPage />,
+    
   },
   {
     path: "/login",
@@ -65,6 +64,10 @@ const router = createBrowserRouter([
   {
     path: "/memberRegister",
     element: <MemberRegister />
+  },
+  {
+    path: "/myRecommend",
+    element: <MyRecommend />
   },
   {
     path: "/paymentPage",
