@@ -5,10 +5,6 @@ import {
   Grid,
   Container,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   InputAdornment,
   IconButton,
 } from "@mui/material";
@@ -16,21 +12,32 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const MemberRegister = () => {
   // 表單的狀態管理
-  const [email, setEmail] = useState("");
+  const [account, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [dob, setDob] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // 處理註冊邏輯，這裡可以加入更多的驗證邏輯
+    // 處理註冊邏輯，可另外加入註冊邏輯
     if (password !== confirmPassword) {
       alert("密碼和確認密碼不匹配！");
       return;
     }
+
+    // 註冊成功，清空表單
     alert("註冊成功！");
+
+    // 重置
+    setAccount("");
+    setPassword("");
+    setConfirmPassword("");
+    setEmail("");
+    setPhone("");
+    setDob("");
   };
 
   return (
@@ -43,11 +50,11 @@ const MemberRegister = () => {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Email"
-              type="email"
+              label="帳號"
+              type="text"
               variant="outlined"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={account}
+              onChange={(e) => setAccount(e.target.value)}
               required
             />
           </Grid>
@@ -88,6 +95,17 @@ const MemberRegister = () => {
           <Grid item xs={12}>
             <TextField
               fullWidth
+              label="Email"
+              type="email"
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
               label="電話"
               type="tel"
               variant="outlined"
@@ -112,7 +130,7 @@ const MemberRegister = () => {
           </Grid>
           <Grid item xs={12}>
             <Button fullWidth type="submit" variant="contained" color="primary">
-              提交
+              註冊
             </Button>
           </Grid>
         </Grid>

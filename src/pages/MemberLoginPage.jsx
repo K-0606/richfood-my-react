@@ -1,7 +1,6 @@
 // src/pages/Home.jsx
 import React, { useState } from 'react';
-import { Button, Box, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Button, Box, Typography, TextField } from '@mui/material';
 import { useAvatar } from './MemberComponents/AvatarContext'; // 引入 AvatarContext
 
 // 導入需要的子組件
@@ -14,7 +13,15 @@ import MemberProfile from './MemberComponents/MemberProfile';
 const Home = () => {
   const { avatarUrl, setAvatarUrl } = useAvatar();  // 從 context 獲取頭像與更新函數
   const [activeContent, setActiveContent] = useState(''); // 用來控制顯示內容
-  const [isEditing, setIsEditing] = useState(false); // 控制是否顯示更換頭像按鈕
+  const [isEditing, setIsEditing] = useState(false); // 控制是否顯示編輯模式
+
+  // 新增狀態變數，保存會員資料
+  const [account, setAccount] = useState('user123');  // 假設預設帳號為 'user123'
+  const [email, setEmail] = useState('user@example.com');  // 假設預設email為 'user@example.com'
+  const [name, setName] = useState('John Doe');  // 預設姓名
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const handleButtonClick = (content) => {
     setActiveContent(content);
   };
@@ -28,6 +35,13 @@ const Home = () => {
       };
       reader.readAsDataURL(file);  // 將圖片轉換為 Base64 格式
     }
+  };
+
+  // 儲存帳號與email
+  const handleSaveChanges = () => {
+    // 這裡可以加上保存的邏輯，比如向後端發送請求保存帳號與email
+    console.log('保存會員資料:', { name, email, account, newPassword });
+    setIsEditing(false);  // 完成編輯後關閉編輯模式
   };
 
   return (
@@ -67,13 +81,103 @@ const Home = () => {
         <Button variant="outlined" onClick={() => handleButtonClick('profile')}>會員資料</Button>
       </Box>
 
-      {/* 進入會員資料頁面顯示相應內容 */}
+      {/* 會員資料頁面顯示各個欄位 */}
       <Box sx={{ marginTop: 4 }}>
+        {activeContent === 'profile' && (
+          <Box>
+            {/* 會員ID (不可編輯) */}
+            <Typography variant="h6">會員ID</Typography>
+            <Typography sx={{ marginBottom: 2 }}>{account}</Typography>
+
+            {/* 會員姓名 */}
+            <Typography variant="h6">會員姓名</Typography>
+            {isEditing ? (
+              <TextField 
+                label="會員姓名"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+            ) : (
+              <Typography>{name}</Typography>
+            )}
+
+            {/* 電子郵件 */}
+            <Typography variant="h6" sx={{ marginTop: 2 }}>電子郵件</Typography>
+            {isEditing ? (
+              <TextField 
+                label="電子郵件"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+            ) : (
+              <Typography>{email}</Typography>
+            )}
+
+            {/* 帳號 */}
+            <Typography variant="h6" sx={{ marginTop: 2 }}>帳號</Typography>
+            {isEditing ? (
+              <TextField 
+                label="帳號"
+                value={account}
+                onChange={(e) => setAccount(e.target.value)}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+            ) : (
+              <Typography>{account}</Typography>
+            )}
+
+            {/* 新密碼 */}
+            <Typography variant="h6" sx={{ marginTop: 2 }}>新密碼</Typography>
+            {isEditing ? (
+              <TextField 
+                type="password"
+                label="新密碼"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+            ) : (
+              <Typography>********</Typography>
+            )}
+
+            {/* 確認密碼 */}
+            <Typography variant="h6" sx={{ marginTop: 2 }}>確認密碼</Typography>
+            {isEditing ? (
+              <TextField 
+                type="password"
+                label="確認密碼"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+            ) : (
+              <Typography>********</Typography>
+            )}
+
+            {/* 編輯模式切換 */}
+            {isEditing ? (
+              <Box display="flex" justifyContent="center" sx={{ marginTop: 2 }}>
+                <Button variant="outlined" onClick={handleSaveChanges}>儲存變更</Button>
+              </Box>
+            ) : (
+              <Box display="flex" justifyContent="center" sx={{ marginTop: 2 }}>
+                <Button variant="outlined" onClick={() => setIsEditing(true)}>編輯</Button>
+              </Box>
+            )}
+          </Box>
+        )}
+
         {activeContent === 'comments' && <Comments />}
         {activeContent === 'collections' && <Collections />}
         {activeContent === 'coupons' && <Coupons />}
         {activeContent === 'reservations' && <Reservations />}
-        {activeContent === 'profile' && <MemberProfile />}
       </Box>
     </Box>
   );
