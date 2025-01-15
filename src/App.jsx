@@ -37,6 +37,7 @@ import { AvatarProvider } from "./pages/MemberComponents/AvatarContext";  // 引
 import MyRecommend from './pages/MyRecommend';
 import StorePage from './pages/StorePage';
 import StoreLoginPage from './pages/StoreLoginPage';
+import Test2 from './pages/SearchStoreAll/Test2';
 
 
 // 定義路由
@@ -127,6 +128,10 @@ const router = createBrowserRouter([
   {
     path: "/StorePage",
     element: <StorePage/>
+  },
+  {
+    path: "/Test2",
+    element: <Test2/>
   },
   //memberLogin
   {
