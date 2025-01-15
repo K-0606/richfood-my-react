@@ -7,6 +7,11 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -18,26 +23,46 @@ const MemberRegister = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [dob, setDob] = useState("");
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("male");
   const [showPassword, setShowPassword] = useState(false);
 
+  // 處理表單提交
   const handleSubmit = (e) => {
     e.preventDefault();
-    // 處理註冊邏輯，可另外加入註冊邏輯
+
+    // 檢查密碼是否匹配
     if (password !== confirmPassword) {
       alert("密碼和確認密碼不匹配！");
+      return;
+    }
+
+    // 檢查Email格式
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(email)) {
+      alert("請輸入有效的Email！");
+      return;
+    }
+
+    // 檢查電話格式
+    const phonePattern = /^[0-9]{10}$/;
+    if (!phonePattern.test(phone)) {
+      alert("電話號碼格式不正確！請輸入10位數字。");
       return;
     }
 
     // 註冊成功，清空表單
     alert("註冊成功！");
 
-    // 重置
+    // 重置表單
     setAccount("");
     setPassword("");
     setConfirmPassword("");
     setEmail("");
     setPhone("");
     setDob("");
+    setName("");
+    setGender("male");
   };
 
   return (
@@ -47,6 +72,20 @@ const MemberRegister = () => {
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
+          {/* 姓名欄位 */}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="姓名"
+              type="text"
+              variant="outlined"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </Grid>
+
+          {/* 帳號欄位 */}
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -58,6 +97,8 @@ const MemberRegister = () => {
               required
             />
           </Grid>
+
+          {/* 密碼欄位 */}
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -81,6 +122,8 @@ const MemberRegister = () => {
               }}
             />
           </Grid>
+
+          {/* 確認密碼欄位 */}
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -92,6 +135,8 @@ const MemberRegister = () => {
               required
             />
           </Grid>
+
+          {/* Email欄位 */}
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -103,6 +148,8 @@ const MemberRegister = () => {
               required
             />
           </Grid>
+
+          {/* 電話欄位 */}
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -114,6 +161,23 @@ const MemberRegister = () => {
               required
             />
           </Grid>
+
+          {/* 性別欄位 */}
+          <Grid item xs={12}>
+            <FormControl component="fieldset" required>
+              <FormLabel component="legend">性別</FormLabel>
+              <RadioGroup
+                row
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
+                <FormControlLabel value="male" control={<Radio />} label="男" />
+                <FormControlLabel value="female" control={<Radio />} label="女" />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+
+          {/* 出生年月日欄位 */}
           <Grid item xs={12}>
             <TextField
               fullWidth
@@ -128,6 +192,8 @@ const MemberRegister = () => {
               }}
             />
           </Grid>
+
+          {/* 註冊按鈕 */}
           <Grid item xs={12}>
             <Button fullWidth type="submit" variant="contained" color="primary">
               註冊
