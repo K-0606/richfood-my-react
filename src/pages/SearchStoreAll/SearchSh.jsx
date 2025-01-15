@@ -105,8 +105,8 @@ const sendDataToAPI = async () => {
 
         <div className="select-container">
           {/* React-Select 菜系選擇 */}
-          <Select
-          
+          <div>
+          <Select className="test"
         options={cuisines}
         value={selectedCuisines}  // 单选时，value 只有一个选项
         onChange={handleCuisineChange}
@@ -114,7 +114,15 @@ const sendDataToAPI = async () => {
         isSearchable // 允许搜索
         closeMenuOnSelect={true} // 选择后关闭菜单
         styles={customStyles} // 自定义样式
+        getOptionLabel={(e) => (
+          <div className={e.className}>
+            {e.label}
+          </div>
+        )}
+        getOptionValue={(e) => e.value}
       />
+      </div>
+      
 
       {/* React-Select 地区选择（单选） */}
       <Select

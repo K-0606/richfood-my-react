@@ -8,12 +8,15 @@ import Box from '@mui/material/Box';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import SearchSh from "./SearchSh";
+
 
 export default function SearchPicture() {
   const [cards, setRestaurant]= useState([]);
   const [country, setCountry] = useState('');
   const [checkedItem, setCheckedItem] = useState(null);  // 存储当前被选中的项
 
+  
   const handleCheckboxChange = (event) => {
     const label = event.target.name;
 
@@ -51,6 +54,9 @@ export default function SearchPicture() {
     };
 
   return (
+    <>
+     <SearchSh /> 
+     <test/>
     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3, alignItems: 'flex-start', transform: 'translateX(100px)',}}>
       {/* FormGroup: Checkbox controls on the left */}
       <FormGroup>
@@ -142,6 +148,7 @@ export default function SearchPicture() {
         ))}
       </Box>
     </Box>
+    </>
   );
 }
 
