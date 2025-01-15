@@ -28,7 +28,7 @@ const MemberRegister = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   // 處理表單提交
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 檢查密碼是否匹配
@@ -51,18 +51,43 @@ const MemberRegister = () => {
       return;
     }
 
-    // 註冊成功，清空表單
-    alert("註冊成功！");
+    // 構建 FormData
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("userAccount", account);
+    formData.append("password", password);
+    formData.append("tel", phone);
+    formData.append("email", email);
+    formData.append("birthday", dob);
+    formData.append("gender", gender);
 
-    // 重置表單
-    setAccount("");
-    setPassword("");
-    setConfirmPassword("");
-    setEmail("");
-    setPhone("");
-    setDob("");
-    setName("");
-    setGender("male");
+    try {
+      const response = await fetch("http://localhost:8080/User/register", {
+        method: "POST",
+        body: formData, // 傳遞 FormData
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "註冊失敗");
+      }
+  
+      const result = await response.json();
+      alert("註冊成功！");
+
+      // 清空表單
+      setAccount("");
+      setPassword("");
+      setConfirmPassword("");
+      setEmail("");
+      setPhone("");
+      setDob("");
+      setName("");
+      setGender("male");
+    } catch (error) {
+      console.error("註冊失敗:", error.message);
+      alert(`註冊失敗：${error.message}`);
+    }
   };
 
   return (

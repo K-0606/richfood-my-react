@@ -11,18 +11,46 @@ const LoginPage = () => {
   const [account, setAccount] = useState('');  // 改為帳號
   const [password, setPassword] = useState('');
 
-  // 提交表單處理函數
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // 這裡可以處理 API 請求，傳送帳號和密碼
-    console.log(`帳號: ${account}, 密碼: ${password}, 用戶類型: ${isStore ? '店家' : '會員'}`);
-  };
-
   // 切換會員/店家登入
   const toggleUserType = (isStoreSelected) => {
+    console.log('切換登入模式:', isStoreSelected ? '店家登入' : '會員登入');
     setIsStore(isStoreSelected);
   };
+  
+  
+  // 提交表單處理函數
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
+    const requestData = {
+      userAccount: account,
+      password: password,
+      userType: isStore ? 'store' : 'member', // 根據 isStore 判斷用戶類型
+    
+  };
+
+  try {
+    const response = await fetch('http://localhost:8080/User/Userlogin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || '登入失敗');
+    }
+
+    const result = await response.json();
+    alert(`登入成功！用戶 ID: ${result.userId}, 類型: ${result.userType}`);
+  } catch (error) {
+    console.error('登入失敗：', error.message);
+    alert(`登入失敗：${error.message}`);
+  }
+};
+  
   return (
     <>
     <Header />
