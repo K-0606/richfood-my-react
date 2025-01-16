@@ -56,7 +56,7 @@ export default function SearchPicture() {
   return (
     <>
      <SearchSh /> 
-     <test/>
+
     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3, alignItems: 'flex-start', transform: 'translateX(100px)',}}>
       {/* FormGroup: Checkbox controls on the left */}
       <FormGroup>

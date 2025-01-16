@@ -36,6 +36,8 @@ import Reservations from './pages/MemberComponents/Reservations';
 import { AvatarProvider } from "./pages/MemberComponents/AvatarContext";  // 引入 AvatarContext
 import MyRecommend from './pages/MyRecommend';
 import StorePage from './pages/StorePage';
+import SearchPicture2 from './pages/SearchStoreAll/SearchPicture2';
+import SearchPicture3 from './pages/SearchStoreAll/SearchPicture3';
 import StoreLoginPage from './pages/StoreLoginPage';
 import Test2 from './pages/SearchStoreAll/Test2';
 
@@ -158,6 +160,15 @@ const router = createBrowserRouter([
     path: "/member-profile",
     element: <MemberProfile />
   },
+  {
+    path: "/SearchPicture2",
+    element: <SearchPicture2 />
+  },
+  {
+    path: "/SearchPicture3",
+    element: <SearchPicture3 />
+  },
+
 
 ])
 
