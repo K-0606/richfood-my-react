@@ -1,6 +1,15 @@
+//餐廳菜系及地區的SearchBox跟CheackBox連動
 import React, { useState } from 'react';
 import { FormControlLabel, Checkbox } from '@mui/material';
 import Select from 'react-select';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import CardActionArea from '@mui/material/CardActionArea';
+import Box from '@mui/material/Box';
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 
 // 菜系選項
 const cuisines = [
@@ -28,7 +37,8 @@ const regions = [
   { value: "yilan", label: "宜蘭" },
 ];
 
-const MyComponent = () => {
+const SearchPicture2 = () => {
+  const [cards, setRestaurant]= useState([]);
   const [checkedCuisine, setCheckedCuisine] = useState(null); // 用來追蹤勾選的菜系
   const [checkedRegion, setCheckedRegion] = useState(null); // 用來追蹤勾選的地區
   const [selectedCuisines, setSelectedCuisines] = useState(null); // 用來追蹤菜系的Select選擇
@@ -178,8 +188,58 @@ const sendDataToAPI = async () => {
           />
         ))}
       </div>
+      {/* Card section on the right */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          alignItems: 'center',
+          transform: 'translateX(100px)', // Right shift cards by 200px
+          // marginLeft: 通过设置 marginLeft: 100px，可以将 Box 整体向右移动 100px。
+          // transform: 通过 transform: translateX(100px)，可以在不改变布局流的情况下向右偏移 Box 元素。
+        }}
+      >
+        {cards.map((card, index) => (
+          <Card key={index} sx={{ maxWidth: 600 }}>
+            <CardActionArea>
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                {/* Card Image */}
+                <CardMedia
+                  component="img"
+                  sx={{ width: 140 }}
+                  image={card.image}
+                  alt="green iguana"
+                />
+                {/* Card Content */}
+                <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: 2 }}>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {card.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {card.description}
+                  </Typography>
+                </CardContent>
+              </Box>
+            </CardActionArea>
+          </Card>
+        ))}
+      </Box>
+      <Stack spacing={2} 
+    sx={{
+        alignItems: 'center',
+        marginTop: '30px', 
+        marginBottom: '30px',
+        }}>
+      <Pagination 
+        count={10}
+        // count={totalPages} // 动态设置页数
+        // page={page} // 当前页数
+        // onChange={handleChange} // 页数变化时更新当前页
+      />
+    </Stack>
     </div>
   );
 };
 
-export default MyComponent;
+export default SearchPicture2;

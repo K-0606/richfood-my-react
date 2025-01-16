@@ -7,7 +7,8 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Box from '@mui/material/Box';
 
 export default function ActionAreaCard() {
-  const cards = Array(10).fill({
+  //餐廳一頁中的數量
+  const cards = Array(15).fill({
     title: 'Lizard',
     description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
     image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
