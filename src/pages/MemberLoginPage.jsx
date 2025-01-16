@@ -2,7 +2,9 @@
 import React, { useState } from 'react';
 import { Button, Box, Typography, TextField } from '@mui/material';
 import { useAvatar } from './MemberComponents/AvatarContext'; // 引入 AvatarContext
+
 import axios from 'axios';
+
 
 // 導入需要的子組件
 import Comments from './MemberComponents/Comments';
@@ -15,7 +17,9 @@ const Home = () => {
   const { avatarUrl, setAvatarUrl } = useAvatar();  // 從 context 獲取頭像與更新函數
   const [activeContent, setActiveContent] = useState(''); // 用來控制顯示內容
   const [isEditing, setIsEditing] = useState(false); // 控制是否顯示編輯模式
+
   const [userDetails, setUserDetails] = useState(null);
+
 
   // 新增狀態變數，保存會員資料
   const [account, setAccount] = useState('user123');  // 假設預設帳號為 'user123'
@@ -23,6 +27,7 @@ const Home = () => {
   const [name, setName] = useState('John Doe');  // 預設姓名
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
 
   // 點擊「會員資料」按鈕時加載資料
   const handleButtonClick = async (content) => {
@@ -79,6 +84,7 @@ const Home = () => {
   };
 
 
+
   // 儲存帳號與email
   const handleSaveChanges = () => {
     // 這裡可以加上保存的邏輯，比如向後端發送請求保存帳號與email
@@ -92,11 +98,13 @@ const Home = () => {
 
       {/* 顯示頭像區域 */}
       <Box display="flex" justifyContent="center" alignItems="center" sx={{ marginBottom: 4 }}>
+
         <img
           src={avatarUrl || 'default-avatar.png'} // 如果 avatarUrl 為空，顯示默認頭像
           alt="會員頭像"
           onError={(e) => (e.target.src = 'default-avatar.png')} // 加載失敗時顯示默認圖片
           style={{ width: 150, height: 150, borderRadius: '50%' }}
+
         />
       </Box>
 
@@ -105,7 +113,9 @@ const Home = () => {
         <Box display="flex" justifyContent="center" sx={{ marginTop: 2 }}>
           <Button variant="outlined" component="label">
             更換頭像
+
             <input type="file" accept="image/*" hidden onChange={handleImageChange} />
+
           </Button>
         </Box>
       )}
@@ -123,6 +133,7 @@ const Home = () => {
       <Box sx={{ marginTop: 4 }}>
         {activeContent === 'profile' && (
           <Box>
+
             {/* 確保 userDetails 已加載 */}
             {userDetails ? (
               <>
@@ -215,6 +226,7 @@ const Home = () => {
               </>
             ) : (
               <Typography>正在加載會員資料...</Typography>
+
             )}
           </Box>
         )}
@@ -223,6 +235,8 @@ const Home = () => {
         {activeContent === 'collections' && <Collections />}
         {activeContent === 'coupons' && <Coupons />}
         {activeContent === 'reservations' && <Reservations />}
+
+
 
       </Box>
     </Box>

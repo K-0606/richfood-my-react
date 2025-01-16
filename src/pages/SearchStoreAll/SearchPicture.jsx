@@ -228,4 +228,6 @@ export default function SearchPicture() {
 //       </Box>
 //     </Box>
 //   );
+
 // }
+
