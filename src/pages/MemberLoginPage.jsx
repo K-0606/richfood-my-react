@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Button, Box, Typography, TextField } from '@mui/material';
 import { useAvatar } from './MemberComponents/AvatarContext'; // 引入 AvatarContext
-
 import axios from 'axios';
 
 
@@ -17,8 +16,10 @@ const Home = () => {
   const { avatarUrl, setAvatarUrl } = useAvatar();  // 從 context 獲取頭像與更新函數
   const [activeContent, setActiveContent] = useState(''); // 用來控制顯示內容
   const [isEditing, setIsEditing] = useState(false); // 控制是否顯示編輯模式
-
   const [userDetails, setUserDetails] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
 
   // 新增狀態變數，保存會員資料
@@ -37,18 +38,18 @@ const Home = () => {
         const response = await axios.get('http://localhost:8080/User/getUserDetails', {
           withCredentials: true, // 確保攜帶 Cookie 或 Session
         });
-  
+
         if (response.status === 200) {
           setUserDetails(response.data); // 更新會員資料
-  
+
           // 如果後端返回頭像 URL，更新 avatarUrl
           if (response.data.icon) {
             const fullIconUrl = `http://localhost:8080${response.data.icon}`;
             console.log('完整頭像 URL:', fullIconUrl);
-              // 防止重複更新 avatarUrl
-          if (avatarUrl !== fullIconUrl) {
-            setAvatarUrl(fullIconUrl);
-          }
+            // 防止重複更新 avatarUrl
+            if (avatarUrl !== fullIconUrl) {
+              setAvatarUrl(fullIconUrl);
+            }
           } else {
             console.warn('未獲取到頭像 URL，將使用默認圖片');
             setAvatarUrl('default-avatar.png');
@@ -57,9 +58,22 @@ const Home = () => {
       } catch (error) {
         console.error('獲取會員資料時發生錯誤:', error);
       }
+    } else if (content === 'comments') {
+      setLoading(true);
+      try {
+        const response = await axios.get('http://localhost:8080/Reviews/myReviews', {
+          withCredentials: true,
+        });
+        setComments(response.data);
+      } catch (err) {
+        setError('無法獲取評論資料，請稍後再試');
+        console.error('獲取評論時發生錯誤:', err);
+      } finally {
+        setLoading(false);
+      }
     }
   };
-  
+
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -231,13 +245,37 @@ const Home = () => {
           </Box>
         )}
 
-        {activeContent === 'comments' && <Comments />}
+        {activeContent === 'comments' && (
+          <Box>
+            {loading ? (
+              <Typography>正在加載評論...</Typography>
+            ) : error ? (
+              <Typography color="error">{error}</Typography>
+            ) : (
+              <Box>
+                <Typography variant="h5" gutterBottom>我的評論</Typography>
+                {comments.length > 0 ? (
+                  <ul>
+                    {comments.map((comment) => (
+                      <li key={comment.reviewId}>
+                        <Typography><strong>餐廳 ID:</strong> {comment.restaurantId}</Typography>
+                        <Typography><strong>評分:</strong> {comment.rating}</Typography>
+                        <Typography><strong>內容:</strong> {comment.content}</Typography>
+                        <Typography><strong>創建時間:</strong> {new Date(comment.createdAt).toLocaleString()}</Typography>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <Typography>目前尚無評論</Typography>
+                )}
+              </Box>
+            )}
+          </Box>
+        )}
+
         {activeContent === 'collections' && <Collections />}
         {activeContent === 'coupons' && <Coupons />}
         {activeContent === 'reservations' && <Reservations />}
-
-
-
       </Box>
     </Box>
   );
