@@ -1,0 +1,35 @@
+/* footer 的基本樣式 */
+.footer {
+  background-color: #e6e6e6;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* 社交媒體圖標容器 */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;  /* 圖標之間的間距 */
+  margin-bottom: 10px;
+}
+
+/* 設置每個 IconButton 的樣式 */
+.icon-button {
+  color: #fff;
+  transition: color 0.3s ease, transform 0.3s ease; /* 平滑過渡效果 */
+  cursor: pointer;  /* 鼠標變為手形 */
+}
+
+/* hover 效果 */
+.icon-button:hover {
+  color: #ff6600;  /* 當鼠標懸停時，顏色變為橙色 */
+  transform: scale(1.2);  /* 放大效果 */
+}
+
+/* 底部文字樣式 */
+.footer-text {
+  font-size: 14px;
+  color: #aaa;
+}
