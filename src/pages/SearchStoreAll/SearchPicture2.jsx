@@ -1,5 +1,5 @@
 //餐廳菜系及地區的SearchBox跟CheackBox連動
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormControlLabel, Checkbox } from '@mui/material';
 import Select from 'react-select';
 import Card from '@mui/material/Card';
@@ -30,7 +30,7 @@ const cuisines = [
 
 const regions = [
   { value: "taipei", label: "台北" },
-  { value: "taichung", label: "台中" },
+  { value: "taichung", label: "臺中市" },
   { value: "kaohsiung", label: "高雄" },
   { value: "miaoli", label: "苗栗" },  
   { value: "zhanghua", label: "彰化" },  
@@ -44,6 +44,45 @@ const SearchPicture2 = () => {
   const [selectedCuisines, setSelectedCuisines] = useState(null); // 用來追蹤菜系的Select選擇
   const [selectedRegions, setSelectedRegions] = useState(null); // 用來追蹤地區的Select選擇
 
+    // 发送数据到API
+    const fetchData = async (country = null, category = null) => {
+      let url = "http://localhost:8080/restaurants";   
+      // 动态构造路径部分
+      const countryLabel = country && typeof country === "object" ? country.label : country;
+      const categoryLabel = category && typeof category === "object" ? category.label : category;
+
+      if (countryLabel && categoryLabel) {
+        url += `/${countryLabel}/list/${categoryLabel}`;
+      } else if (countryLabel) {
+        url += `/${countryLabel}/list`;
+      } else if (categoryLabel) {
+        url += `/list/${categoryLabel}`;
+      }else{
+        url += "/list"
+      }
+      console.log(countryLabel);
+      console.log(categoryLabel);
+      
+      // // 将筛选条件（filters）添加为查询字符串
+      // const params = new URLSearchParams(filters).toString();
+    
+      // // 如果有查询参数，将其附加到 URL
+      // if (params) {
+      //   url += `?${params}`;
+      // }
+    
+      try {
+        const response = await fetch(url, { method: "GET" });
+        const data = await response.json();    
+        setRestaurant(data.content);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    useEffect(() => {
+      fetchData(); // 初始加载，获取所有餐厅
+    }, []);
   // Checkbox 勾選菜系變更處理
   const handleCuisineCheckboxChange = (event) => {
     const { checked, name } = event.target;
@@ -55,11 +94,14 @@ const SearchPicture2 = () => {
       setCheckedCuisine(name);
       setSelectedCuisines(selectedCuisine); // 更新Select菜系
       console.log(`勾選的菜系: ${name}`);
+      fetchData(checkedRegion,name);
     } else {
       setCheckedCuisine(null);
       setSelectedCuisines(null);
       console.log(`取消勾選的菜系: ${name}`);
+      fetchData(checkedRegion,null);
     }
+
   };
 
   // Checkbox 勾選地區變更處理
@@ -73,10 +115,12 @@ const SearchPicture2 = () => {
       setCheckedRegion(name);
       setSelectedRegions(selectedRegion); // 更新Select地區
       console.log(`勾選的地區: ${name}`);
+      fetchData(name,checkedCuisine);
     } else {
       setCheckedRegion(null);
       setSelectedRegions(null);
       console.log(`取消勾選的地區: ${name}`);
+      fetchData(null,checkedCuisine);
     }
   };
 
@@ -85,35 +129,18 @@ const SearchPicture2 = () => {
     console.log(`Cuisine Select changed - Selected option: ${selectedOption ? selectedOption.label : 'None'}`);
     setSelectedCuisines(selectedOption);
     setCheckedCuisine(selectedOption ? selectedOption.label : null);
+    fetchData(selectedRegions,selectedOption ? selectedOption.label : null);
   };
+
 
   // Select 改變地區時處理
   const handleRegionSelectChange = (selectedOption) => {
     console.log(`Region Select changed - Selected option: ${selectedOption ? selectedOption.label : 'None'}`);
     setSelectedRegions(selectedOption);
     setCheckedRegion(selectedOption ? selectedOption.label : null);
+    fetchData(selectedOption ? selectedOption.label : null,selectedCuisines);
   };
 
-  // 发送数据到API
-const sendDataToAPI = async () => {
-  const data = {
-    cuisine: selectedCuisines?.label || "",  // 使用 optional chaining 简化判断
-    region: selectedRegions?.label || "",    // 使用 optional chaining 简化判断
-  };
-
-  try {
-    const response = await fetch("https://your-api-endpoint.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });  
-
-    const result = await response.json();
-    console.log("API Response:", result);
-  } catch (error) {
-    console.error("Error sending data:", error);
-  }
-};
 //樣式
   const customStyles = {
     option: (provided, state) => ({
@@ -214,7 +241,7 @@ const sendDataToAPI = async () => {
                 {/* Card Content */}
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: 2 }}>
                   <Typography gutterBottom variant="h5" component="div">
-                    {card.name}
+                    {card.name}                  
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {card.description}
