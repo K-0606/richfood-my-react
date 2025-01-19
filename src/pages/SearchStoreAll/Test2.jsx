@@ -18,13 +18,16 @@ const MyComponent = () => {
   const handleCheckboxChange = (event) => {
     const { checked, name } = event.target;
 
-    // 更新 checkedItem
-    if (checked && name === '火鍋') {
+    // 根據勾選狀態動態處理
+    if (checked) {
+      // 當勾選任意菜系時，將菜系的 value 和 label 設置為選中項目
+      const selectedCuisine = cuisines.find((cuisine) => cuisine.label === name);
       setCheckedItem(name);
-      setSelectedCuisines({ value: 'hotpot', label: '火鍋' }); // 當勾選火鍋時，選擇火鍋
+      setSelectedCuisines(selectedCuisine); // 更新Select選擇
     } else {
+      // 當取消勾選時，清空選擇
       setCheckedItem(null);
-      setSelectedCuisines(null); // 取消勾選時清空選擇
+      setSelectedCuisines(null);
     }
   };
 
@@ -33,31 +36,37 @@ const MyComponent = () => {
     setSelectedCuisines(selectedOption);
     
     // 根據 Select 選擇的項目來勾選或取消勾選 Checkbox
-    if (selectedOption && selectedOption.value === 'hotpot') {
-      setCheckedItem(true); // 如果選擇了火鍋，則勾選 Checkbox
+    if (selectedOption) {
+      setCheckedItem(selectedOption.label); // 如果選擇了某個菜系，則勾選對應的 Checkbox
     } else {
-      setCheckedItem(false); // 其他菜系，取消勾選
+      setCheckedItem(null); // 清除選擇
     }
   };
 
   return (
     <div>
-      {/* Checkbox 來選擇火鍋 */}
-      <FormControlLabel
-        control={<Checkbox checked={checkedItem} onChange={handleCheckboxChange} name="火鍋" />}
-        label="火鍋"
-      />
-      
-      {/* React-Select 菜系選擇 */}
-      <div className="select-container">
-        <Select
-          options={cuisines}
-          value={selectedCuisines} // 綁定已選的菜系
-          onChange={handleCuisineChange}
-          placeholder="搜尋餐廳 或 菜系"
-          isSearchable
-          closeMenuOnSelect={true}
-        />
+      {/* 包裹兩個元素的容器，使用 Flexbox 來控制位置 */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        {/* Checkbox 來選擇不同的菜系 */}
+        {cuisines.map((cuisine) => (
+          <FormControlLabel
+            key={cuisine.value}
+            control={<Checkbox checked={checkedItem === cuisine.label} onChange={handleCheckboxChange} name={cuisine.label} />}
+            label={cuisine.label}
+          />
+        ))}
+        
+        {/* React-Select 菜系選擇 */}
+        <div className="select-container">
+          <Select
+            options={cuisines}
+            value={selectedCuisines} // 綁定已選的菜系
+            onChange={handleCuisineChange}
+            placeholder="搜尋餐廳 或 菜系"
+            isSearchable
+            closeMenuOnSelect={true}
+          />
+        </div>
       </div>
     </div>
   );

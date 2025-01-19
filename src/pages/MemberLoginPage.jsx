@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Button, Box, Typography } from '@mui/material';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+import axios from 'axios';
+
 
 // 導入需要的子組件
 import Comments from './MemberComponents/Comments';
@@ -98,5 +100,6 @@ const Home = () => {
     </>
   );
 };
+
 
 export default Home;

@@ -35,6 +35,9 @@ const LoginPage = () => {
       headers: {
         'Content-Type': 'application/json',
       },
+
+      credentials: 'include', // 確保攜帶 Cookie
+
       body: JSON.stringify(requestData),
     });
 
