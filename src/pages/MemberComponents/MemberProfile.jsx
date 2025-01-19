@@ -1,46 +1,37 @@
 // src/pages/MemberComponents/MemberProfile.jsx
 import React, { useState } from 'react';
-import { TextField, Button, Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Avatar } from '@mui/material';
-import { PhotoCamera } from '@mui/icons-material';
+import { TextField, Button, Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
-const MemberProfile = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [memberData, setMemberData] = useState({
-    id: '12345',
-    name: 'Rich Food',
-    gender: 'Male',
-    email: 'richfood@example.com',
-    password: '',
-    confirmPassword: '',
-    avatarUrl: 'https://megapx-assets.dcard.tw/images/7d91a6c1-e79c-4f43-a57e-66670e71fca2/1280.webp', // 預設頭像
-  });
+const MemberProfile = ({
+  memberData,
+  onSave,
+  isEditing,
+  setIsEditing,
+  isChangingPassword,
+  setIsChangingPassword,
+  newPassword,
+  setNewPassword,
+  confirmNewPassword,
+  setConfirmNewPassword,
+  handleSavePassword,
+  passwordError
+}) => {
+  
+  const [editedData, setEditedData] = useState({ ...memberData });
 
+  // 處理會員資料變更
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setMemberData((prevData) => ({
+    setEditedData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value
     }));
   };
 
+  // 儲存會員資料
   const handleSave = () => {
-    // 這裡可以放保存的邏輯
-    console.log('Saved Member Data: ', memberData);
+    onSave(editedData); // 儲存編輯後的資料
     setIsEditing(false);
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setMemberData((prevData) => ({
-          ...prevData,
-          avatarUrl: reader.result, // 更新頭像URL為選擇的圖片
-        }));
-      };
-      reader.readAsDataURL(file); // 將圖片轉為Base64格式
-    }
   };
 
   return (
@@ -48,8 +39,18 @@ const MemberProfile = () => {
       <Typography variant="h4" gutterBottom>會員資料</Typography>
 
       <Grid container spacing={2}>
-        
-        {/* 其他會員資料欄位 */}
+        {/* 顯示頭像 */}
+        <Grid item xs={12} sm={4}>
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <img
+              src={memberData.avatarUrl}
+              alt="會員頭像"
+              style={{ width: 150, height: 150, borderRadius: '50%' }}
+            />
+          </Box>
+        </Grid>
+
+        {/* 顯示會員資料表單 */}
         <Grid item xs={12} sm={8}>
           <TextField
             label="會員 ID"
@@ -61,7 +62,7 @@ const MemberProfile = () => {
           />
           <TextField
             label="會員姓名"
-            value={memberData.name}
+            value={editedData.name}
             onChange={handleInputChange}
             name="name"
             fullWidth
@@ -72,62 +73,96 @@ const MemberProfile = () => {
           <FormControl fullWidth disabled={!isEditing} sx={{ marginBottom: 2 }}>
             <InputLabel>性別</InputLabel>
             <Select
-              name="gender"
-              value={memberData.gender}
+              value={editedData.gender}
               onChange={handleInputChange}
-              label="性別"
+              name="gender"
             >
-              <MenuItem value="Male">男</MenuItem>
-              <MenuItem value="Female">女</MenuItem>
+              <MenuItem value="male">男性</MenuItem>
+              <MenuItem value="female">女性</MenuItem>
+              <MenuItem value="other">其他</MenuItem>
             </Select>
           </FormControl>
           <TextField
-            label="電子郵件"
-            value={memberData.email}
+            label="會員帳號"
+            value={editedData.account}
+            onChange={handleInputChange}
+            name="account"
             fullWidth
-            disabled
             variant="outlined"
+            disabled={!isEditing}
             sx={{ marginBottom: 2 }}
           />
-          
-          {/* 密碼修改部分 */}
-          {isEditing && (
-            <>
-              <TextField
-                label="新密碼"
-                type="password"
-                value={memberData.password}
-                onChange={handleInputChange}
-                name="password"
-                fullWidth
-                variant="outlined"
-                sx={{ marginBottom: 2 }}
-              />
-              <TextField
-                label="確認密碼"
-                type="password"
-                value={memberData.confirmPassword}
-                onChange={handleInputChange}
-                name="confirmPassword"
-                fullWidth
-                variant="outlined"
-                sx={{ marginBottom: 2 }}
-              />
-            </>
-          )}
+          <TextField
+            label="電子郵件"
+            value={editedData.email}
+            onChange={handleInputChange}
+            name="email"
+            fullWidth
+            variant="outlined"
+            disabled={!isEditing}
+            sx={{ marginBottom: 2 }}
+          />
+          <TextField
+            label="電話"
+            value={editedData.phone}
+            onChange={handleInputChange}
+            name="phone"
+            fullWidth
+            variant="outlined"
+            disabled={!isEditing}
+            sx={{ marginBottom: 2 }}
+          />
 
-          {/* 按鈕顯示 */}
-          <Grid item xs={12}>
+          {/* 儲存或編輯模式切換 */}
+          <Box display="flex" justifyContent="center" sx={{ marginTop: 2 }}>
             {isEditing ? (
               <Button variant="contained" onClick={handleSave}>
-                保存變更
+                儲存變更
               </Button>
             ) : (
               <Button variant="outlined" onClick={() => setIsEditing(true)}>
                 編輯資料
               </Button>
             )}
-          </Grid>
+          </Box>
+
+          {/* 變更密碼區塊 */}
+          <Box display="flex" justifyContent="center" sx={{ marginTop: 4 }}>
+            <Button variant="outlined" onClick={() => setIsChangingPassword(!isChangingPassword)}>
+              變更密碼
+            </Button>
+          </Box>
+
+          {isChangingPassword && (
+            <Box sx={{ marginTop: 3 }}>
+              <TextField
+                label="新密碼"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              <TextField
+                label="確認新密碼"
+                type="password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                fullWidth
+                sx={{ marginBottom: 2 }}
+              />
+              {passwordError && (
+                <Typography color="error" sx={{ marginBottom: 2 }}>
+                  {passwordError}
+                </Typography>
+              )}
+              <Box display="flex" justifyContent="center">
+                <Button variant="contained" onClick={handleSavePassword}>
+                  儲存密碼
+                </Button>
+              </Box>
+            </Box>
+          )}
         </Grid>
       </Grid>
     </Box>

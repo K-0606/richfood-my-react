@@ -36,8 +36,12 @@ import Reservations from './pages/MemberComponents/Reservations';
 import { AvatarProvider } from "./pages/MemberComponents/AvatarContext";  // 引入 AvatarContext
 import MyRecommend from './pages/MyRecommend';
 import StorePage from './pages/StorePage';
+import PopularPage from './pages/PopularPage';
 import StoreLoginPage from './pages/StoreLoginPage';
 import Test2 from './pages/SearchStoreAll/Test2';
+import Coupon from './pages/MemberComponents/Coupons';
+import UseCoupon from './pages/MemberComponents/UseCoupon';
+import StoreQRCodeScanner from './pages/StoreComponents/StoreQRCodeScanner';
 
 
 // 定義路由
@@ -83,6 +87,14 @@ const router = createBrowserRouter([
   {
     path: "/systemManage",
     element: <SystemManage />
+  },
+  {
+    path: "/PopularPage",
+    element: <PopularPage/>
+  },
+  {
+    path: "/StoreQRCodeScanner",
+    element: <StoreQRCodeScanner/>
   },
   // 珈珈---------------------------------------
   {
@@ -157,6 +169,14 @@ const router = createBrowserRouter([
   {
     path: "/member-profile",
     element: <MemberProfile />
+  },
+  {
+    path: "/coupons",
+    element: <Coupon/>
+  },
+  {
+    path: "/use-coupon/:couponId",
+    element: <UseCoupon/>
   },
 
 ])
