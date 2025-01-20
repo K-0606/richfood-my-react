@@ -19,6 +19,7 @@ const LoginPage = () => {
     setIsStore(isStoreSelected);
   };
   
+  
   // 提交表單處理函數
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,49 +50,46 @@ const LoginPage = () => {
 
   return (
     <>
-      <Header />
-      <Container component="main" maxWidth="xs">
-        <Paper elevation={3} sx={{ padding: 3 }}>
-          <Typography variant="h5" align="center" sx={{ mb: 2 }}>
-            {isStore ? '店家登入' : '會員登入'}
-          </Typography>
-          
-          {/* 顯示切換登入模式的按鈕 */}
-          <Grid container spacing={2} justifyContent="space-between" sx={{ mb: 2 }}>
-            <Grid item>
-              <Button
-                variant={isStore ? 'outlined' : 'contained'}
-                color="primary"
-                onClick={() => toggleUserType(false)} // 切換到會員登入
-              >
-                會員登入
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant={isStore ? 'contained' : 'outlined'}
-                color="primary"
-                onClick={() => toggleUserType(true)} // 切換到店家登入
-              >
-                店家登入
-              </Button>
-            </Grid>
+    <Header />
+    <Container component="main" maxWidth="xs">
+      <Paper elevation={3} sx={{ padding: 3 }}>
+        <Typography variant="h5" align="center" sx={{ mb: 2 }}>
+          {isStore ? '店家登入' : '會員登入'}
+        </Typography>
+        
+        {/* 顯示切換登入模式的按鈕 */}
+        <Grid container spacing={2} justifyContent="space-between" sx={{ mb: 2 }}>
+          <Grid item>
+            <Button
+              variant={isStore ? 'outlined' : 'contained'}
+              color="primary"
+              onClick={() => toggleUserType(false)} // 切換到會員登入
+            >
+              會員登入
+            </Button>
           </Grid>
+          <Grid item>
+            <Button
+              variant={isStore ? 'contained' : 'outlined'}
+              color="primary"
+              onClick={() => toggleUserType(true)} // 切換到店家登入
+            >
+              店家登入
+            </Button>
+          </Grid>
+        </Grid>
 
-          {/* 顯示錯誤訊息 */}
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-            {/* 帳號輸入欄位 */}
-            <TextField
-              label="帳號"
-              type="text"
-              fullWidth
-              required
-              value={account}
-              onChange={(e) => setAccount(e.target.value)}
-              sx={{ mb: 2 }}
-            />
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          {/* 帳號輸入欄位 */}
+          <TextField
+            label="帳號"
+            type="text"
+            fullWidth
+            required
+            value={account}
+            onChange={(e) => setAccount(e.target.value)}
+            sx={{ mb: 2 }}
+          />
 
             {/* 密碼輸入欄位 */}
             <TextField
