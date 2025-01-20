@@ -7,6 +7,8 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Paper, styled } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { data } from 'react-router-dom';
 
 // 创建一个样式化的 Item
 const Item = styled(Paper)(({ theme }) => ({
@@ -54,23 +56,46 @@ const MapComponent = () => {
 
 export default function StorePage() {
   // 只保留3个卡片
-  const cards = [
-    {
-      title: 'Lizard 1',
-      description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
-      image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    },
-    {
-      title: 'Lizard 2',
-      description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
-      image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    },
-    {
-      title: 'Lizard 3',
-      description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
-      image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    },
-  ];
+  // const cards = [
+  //   {
+  //     title: 'Lizard 1',
+  //     description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
+  //     image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+  //   },
+  //   {
+  //     title: 'Lizard 2',
+  //     description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
+  //     image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+  //   },
+  //   {
+  //     title: 'Lizard 3',
+  //     description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
+  //     image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+  //   },
+  // ];
+      const [cards, setCards] = useState([]);
+      useEffect(()=>{
+        //頁面做好這邊要修改
+        // const params = new URLSearchParams(window.location.search);
+        // const storeIdParam = params.get('storeId');
+        // setStoreId(storeIdParam);
+
+        // fetch(`http://localhost:8080/coupons/selectCoupon?storeId=${storeIdParam}`)
+        fetch(`http://localhost:8080/coupons/selectCoupon?storeId=4`)
+        .then((res)=>{
+          if(!res.ok){
+            throw new Error("no response");
+          }
+          return res.json();
+        })
+        .then((data)=>{
+          const limitedCards=data.slice(0,3);
+          setCards(limitedCards);
+        })
+        .catch((error)=>{
+          console.log(error);
+        })
+      },[]);
 
   return (
     <Box sx={{ 
