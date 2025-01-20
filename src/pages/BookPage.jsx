@@ -94,7 +94,13 @@ function BookPage() {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => alert('訂位已確認！')}
+        onClick={() => {
+          alert('訂位已確認！')
+          console.log(peopleCount)
+          console.log(date)
+          console.log(time)
+          // console.log(step)
+        }}
         fullWidth
         style={{ marginBottom: '10px' }}
       >
