@@ -30,22 +30,23 @@ const Header = () => {
     navigate('/');
   };
 
+  // 進入店家頁面
+  const handleStoreRedirect = () => {
+    navigate('/SearchStore');
+  };
+  
   // 進入熱門餐廳頁面
   const handlePopularRedirect = () => {
     navigate('/popularpage');
   };
 
-  // 進入店家頁面
-  const handleStoreRedirect = () => {
-    navigate('/storePage');
-  };
 
   // 進入會員或店家資料頁面
   const handleProfileRedirect = () => {
     if (user?.type === 'store') {
-      navigate('/storeLoginPage');  // 假設是店家頁面
+      navigate('/storePage');  // 假設是店家頁面
     } else {
-      navigate('/memberLoginPage');  // 假設是會員頁面
+      navigate('/memberPage');  // 假設是會員頁面
     }
   };
 
@@ -53,6 +54,7 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem('user');  // 清除 localStorage 中的用戶資料
     setUser(null);  // 更新狀態，觸發渲染
+    navigate('/');  // 登出後跳轉到首頁
   };
 
   const variant = "btnPrimary";

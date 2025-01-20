@@ -18,9 +18,6 @@ import ContactUsPage from './pages/ContactUsPage';
 import PaymentPage from './pages/PaymentPage';
 import ErrorPage from './pages/ErrorPage';
 import Header from './components/layout/Header';
-import HomeName1 from './pages/HomeAll/HomeName1';
-import HomeName2 from './pages/HomeAll/HomeName2';
-import HomeName3 from './pages/HomeAll/HomeName3';
 import HomePicture1 from './pages/HomeAll/HomePicture1';
 import HomePicture2 from './pages/HomeAll/HomePicture2';
 import HomePicture3 from './pages/HomeAll/HomePicture3';
@@ -106,18 +103,6 @@ const router = createBrowserRouter([
   {
     path: "/Footer",
     element: <Footer />
-  },
-  {
-    path: "/HomeName1",
-    element: <HomeName1 />
-  },
-  {
-    path: "/HomeName2",
-    element: <HomeName2 />
-  },
-  {
-    path: "/HomeName3",
-    element: <HomeName3 />
   },
   {
     path: "/HomePicture1",

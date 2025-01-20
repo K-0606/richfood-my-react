@@ -96,7 +96,10 @@ function BookPage() {
         color="primary"
         onClick={() => {
           alert('訂位已確認！')
-          handleBook()
+          console.log(peopleCount)
+          console.log(date)
+          console.log(time)
+          // console.log(step)
         }}
         fullWidth
         style={{ marginBottom: '10px' }}
