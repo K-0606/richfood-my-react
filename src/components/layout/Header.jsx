@@ -30,15 +30,16 @@ const Header = () => {
     navigate('/');
   };
 
+  // 進入店家頁面
+  const handleStoreRedirect = () => {
+    navigate('/SearchStore');
+  };
+  
   // 進入熱門餐廳頁面
   const handlePopularRedirect = () => {
     navigate('/popularpage');
   };
 
-  // 進入店家頁面
-  const handleStoreRedirect = () => {
-    navigate('/storePage');
-  };
 
   // 進入會員或店家資料頁面
   const handleProfileRedirect = () => {

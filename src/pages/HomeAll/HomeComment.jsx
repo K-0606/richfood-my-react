@@ -6,7 +6,6 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css"; 
@@ -28,13 +27,16 @@ export default function BoxSx() {
     slidesToShow: 3,          // 每次展示3张卡片
     slidesToScroll: 1,        // 每次滑动1张卡片
     focusOnSelect: true,
+    justifyContent: 'center',
+    alignItems: 'center',
     responsive: [
       {
-        breakpoint: 768,     // 在1024px以下屏幕显示1张卡片
+        breakpoint: 1024,     // 在1024px以下屏幕显示1张卡片
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
           justifyContent: 'center',
+          alignItems: 'center',
         },
       },
     ],
@@ -43,17 +45,14 @@ export default function BoxSx() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <Container fixed>
         <Box 
           sx={{
             width: '100%',
-            height: '200px',
-            position: 'relative',
             backgroundColor: 'gray',
-            marginBottom: '50px', // 为了防止内容被遮挡
-            position: 'absolute',
-            left:0,
-            right:0,
+            bottom: 0,          // 距离底部0
+            zIndex: 10,         // 确保footer位于最上
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           <Slider {...settings}>
@@ -61,38 +60,46 @@ export default function BoxSx() {
             {cards.map((card, index) => (
               <Box key={index} 
               sx={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
                 padding: '20px',
+                gap: 2,
               }}>
                 {/* Card */}
                 <Card 
-                style={{ maxWidth: '90%', height: '80%' }}
+                style={{ maxWidth: '95%', }}
                 sx={{ 
                   width: '300px', 
                   height: '150px', 
                   display: 'flex', 
-                  justifyContent: 'flex-start',
                   gap: 2,
+                  margin: '0 auto', // 使卡片居中显示
                 }}>
                   <CardActionArea>
                     <Box sx={{ 
                         display: 'flex', 
                         flexDirection: 'row', 
-                        width: '300px' 
+                        width: '300px' ,
+                        
                         }}>
                       {/* Card Image */}
                       <CardMedia
                         component="img"
                         sx={{ 
-                            width: '70px', 
-                            height: '70px' 
+                          width: '70px', 
+                          height: '70px' ,
+                          objectFit: 'cover',  // 保持图片比例，裁剪多余部分
+                          margin: '0 auto',    // 使图片水平居中
                         }}
                         image={card.image}
                         alt={card.title}
                       />
                       {/* Card Content */}
-                      <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: 2 }}>
+                      <CardContent 
+                      sx={{ 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        justifyContent: 'center', 
+                        paddingLeft: 2, 
+                        }}>
                         <Typography gutterBottom variant="h5" component="div">
                           {card.title}
                         </Typography>
@@ -108,7 +115,6 @@ export default function BoxSx() {
             ))}
           </Slider>
         </Box>
-      </Container>
     </React.Fragment>
   );
 }
