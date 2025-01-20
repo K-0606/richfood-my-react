@@ -39,6 +39,7 @@ const regions = [
 
 const SearchPicture2 = () => {
   const [cards, setRestaurant]= useState([]);
+  const [page, setPage]= useState([]);
   const [checkedCuisine, setCheckedCuisine] = useState(null); // 用來追蹤勾選的菜系
   const [checkedRegion, setCheckedRegion] = useState(null); // 用來追蹤勾選的地區
   const [selectedCuisines, setSelectedCuisines] = useState(null); // 用來追蹤菜系的Select選擇
@@ -75,6 +76,7 @@ const SearchPicture2 = () => {
         const response = await fetch(url, { method: "GET" });
         const data = await response.json();    
         setRestaurant(data.content);
+        setPage(data.page)
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -259,7 +261,7 @@ const SearchPicture2 = () => {
         marginBottom: '30px',
         }}>
       <Pagination 
-        count={10}
+        count={page.totalPages}
         // count={totalPages} // 动态设置页数
         // page={page} // 当前页数
         // onChange={handleChange} // 页数变化时更新当前页
