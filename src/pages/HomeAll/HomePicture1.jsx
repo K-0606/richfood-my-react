@@ -7,9 +7,13 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 export default function HomePicture1() {
   return (
     <>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '10vh', paddingTop: '20px' }}>
+        <h1 style={{ fontSize: '24px', fontFamily: 'Arial, sans-serif', whiteSpace: 'nowrap' }}>
+          依地區搜尋餐廳
+        </h1>
+      </div>
     <ImageList style={{ maxWidth: '70%', height: '80%' }}
       sx={{
-        // width: 200px, height: 100px,
         overflow: 'hidden', // 隱藏滾動條
         flexWrap: 'wrap', // 讓圖片自動換行
         gap: 5, // 圖片間距
