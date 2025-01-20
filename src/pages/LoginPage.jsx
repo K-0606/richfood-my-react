@@ -16,7 +16,43 @@ const LoginPage = () => {
     console.log('切換登入模式:', isStoreSelected ? '店家登入' : '會員登入');
     setIsStore(isStoreSelected);
   };
+  console.log(isStore)
+
+
+  // 店家登入處理函數
+  const handleStoreLogin = async (event) => {
+    event.preventDefault();
+    const requestData = {
+      storeAccount: account,
+      password: password,
+      };
   
+    try {
+      const response = await fetch('http://localhost:8080/store/storeLogin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include', // 確保攜帶 Cookie
+        body: JSON.stringify(requestData),
+      });
+      console.log('發送的請求資料：', requestData);
+      
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '店家登入失敗');
+      }
+  
+        const result = await response.json();
+        console.log(result)
+        alert(`店家登入成功！店家 ID: ${result.storeId}`);
+      } catch (error) {
+        console.error('店家登入失敗：', error.message);
+        alert(`店家登入失敗：${error.message}`);
+      }
+    };
+
   
   // 提交表單處理函數
   const handleSubmit = async (event) => {
@@ -85,7 +121,8 @@ const LoginPage = () => {
           </Grid>
         </Grid>
 
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        
+        <Box component="form" onSubmit={isStore ? handleStoreLogin :handleSubmit } sx={{ mt: 2 }}>
           {/* 帳號輸入欄位 */}
           <TextField
             label="帳號"
