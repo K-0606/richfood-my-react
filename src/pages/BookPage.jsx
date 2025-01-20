@@ -75,8 +75,8 @@ function BookPage() {
           onChange={handleTimeChange}
           label="選擇時間"
         >
-          <MenuItem value="午餐">中午</MenuItem>
-          <MenuItem value="晚餐">晚上</MenuItem>
+          <MenuItem value="中午">中午</MenuItem>
+          <MenuItem value="晚上">晚上</MenuItem>
         </Select>
       </FormControl>
     </Grid>
@@ -122,6 +122,36 @@ function BookPage() {
     </Grid>
   );
 
+  const handleBook = async (event) => {
+    const requestData = {
+      storeId: 10,// 預約按鍵進去後要修改這個編號
+      reservationDate:date,
+      reservationTime:time,
+      numPeople:peopleCount 
+      };
+    console.log(requestData);
+  
+    try {
+      const response = await fetch('http://localhost:8080/reservation/addseat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include', // 確保攜帶 Cookie
+        body: JSON.stringify(requestData),
+      });
+
+        console.log('發送的請求資料：', requestData);
+     
+        const result = await response.json();
+        console.log(result);
+        
+      } catch (error) {
+        console.error(error.message);
+        
+      }
+    };
+
   return (
     <Box sx={{ maxWidth: 500, margin: '0 auto', padding: 2 }}>
       <h2>訂位</h2>
@@ -161,6 +191,7 @@ function BookPage() {
       )}
     </Box>
   );
+
 }
 
 export default BookPage;
