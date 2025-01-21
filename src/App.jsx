@@ -46,7 +46,7 @@ import StoreQRCodeScanner from './pages/StoreComponents/StoreQRCodeScanner';
 // 定義路由
 const router = createBrowserRouter([
   {
-    path: "/book",
+    path: "/StorePage/book",
     element: <BookPage />
   },
   {

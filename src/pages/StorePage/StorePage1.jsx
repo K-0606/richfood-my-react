@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import { Carousel } from 'react-responsive-carousel'; // 引入轮播图库
 import Typography from '@mui/material/Typography';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // 引入轮播图样式
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -57,7 +58,12 @@ const ImageCarousel = ({ Restaurant }) => (
 
 export default function BStorePage1() {
   const [Restaurant, setRestaurant]= useState([]);
-
+  const navigate = useNavigate();
+  
+  const handleBookRedirect = () => {
+    
+    navigate('book');
+  }
 //fetch API
 const fetchData = async () => {
   
@@ -110,7 +116,7 @@ const fetchData = async () => {
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>地址：{Restaurant.country}{Restaurant.district}{Restaurant.address}</Typography> 
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>電話：{Restaurant.phone}</Typography> 
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>店家媒體：</Typography> 
-        <Item>預約</Item>
+        <Item onClick={handleBookRedirect}>預約</Item>
         <Item>評論</Item>
       </Stack>
     </Box>
