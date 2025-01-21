@@ -8,7 +8,8 @@ export default function HomePicture1() {
   const navigate = useNavigate(); // 使用 navigate
 
   const handleCardClick = (value) => {
-    navigate('/SearchStore', { state: { selectedRegions: value } }); // 点击后跳转并传递 selectedCity
+    console.log('P1 console log:',{itemData1:value});
+    navigate('/SearchStore', { state: { itemData1: value } }); // 点击后跳转并传递 selectedCity
   };
 
   return (
@@ -31,7 +32,7 @@ export default function HomePicture1() {
           '@media (max-width: 1200px)': { cols: 3 },
           '@media (max-width: 768px)': { cols: 1 },
         }} cols={3} gap={10}>
-        {itemData.map((item) => (
+        {itemData1.map((item) => (
           <ImageListItem key={item.img} sx={{ border: 'none' }} style={{ maxWidth: '248px', height: 'auto' }}
           onClick={() => handleCardClick(item.value)} // 点击事件
           >
@@ -68,53 +69,53 @@ export default function HomePicture1() {
   );
 }
 
-const itemData = [
+const itemData1 = [
   {
     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: '台北',value: "taipei",
+    title: '台北',value: "台北",
   },
   {
     img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: '桃園',
+    title: '桃園',value: "桃園",
   },
   {
     img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: '苗栗',
+    title: '苗栗',value: "苗栗",
   },
   {
     img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: '台中',
+    title: '台中',value: "台中",
   },
   {
     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: '南投',
+    title: '南投',value: "南投",
   },
   {
     img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: '高雄',
+    title: '高雄',value: "高雄",
   },
   {
     img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: '台南',
+    title: '台南',value: "台南",
   },
   {
     img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: '屏東',
+    title: '屏東',value: "屏東",
   },
   {
     img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: '嘉義',
+    title: '嘉義',value: "嘉義",
   },
   {
     img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: '雲林',
+    title: '雲林',value: "雲林",
   },
   {
     img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-    title: '宜蘭',
+    title: '宜蘭',value: "宜蘭",
   },
   {
     img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
-    title: '新竹',
+    title: '新竹',value: "新竹",
   },
 ];

@@ -41,7 +41,8 @@ import Test2 from './pages/SearchStoreAll/Test2';
 import Coupon from './pages/MemberComponents/Coupons';
 import UseCoupon from './pages/MemberComponents/UseCoupon';
 import StoreQRCodeScanner from './pages/StoreComponents/StoreQRCodeScanner';
-
+import Test3 from './pages/Test3';
+import Test4 from './pages/Test4';
 
 // 定義路由
 const router = createBrowserRouter([
@@ -173,6 +174,14 @@ const router = createBrowserRouter([
   {
     path: "/use-coupon/:couponId",
     element: <UseCoupon/>
+  },
+  {
+    path: "/Test3",
+    element: <Test3/>
+  },
+  {
+    path: "/Test4",
+    element: <Test4/>
   },
 
 ])
