@@ -60,7 +60,7 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
   };
 
   // 確認修改密碼
-  const handleConfirmPasswordChange = () => {
+  const handleConfirmPasswordChange = async() => {
     // 密碼校驗
     if (newPassword && newPassword !== confirmPassword) {
       alert('新密碼和確認密碼不一致');
@@ -73,6 +73,34 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
       avatar, // 頭像保持不變
       newPassword, // 新密碼儲存
     };
+
+    const requestData = {
+      password: newPassword
+      };
+
+    try {
+      const response = await fetch('http://localhost:8080/store/updateStore', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include', // 確保攜帶 Cookie
+        body: JSON.stringify(requestData),
+      });
+      console.log('發送的請求資料：', requestData);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message );
+      }
+  
+        const result = await response.json();
+        console.log(result)
+        alert("ok");
+      } catch (error) {
+        console.error(error.message);
+        alert(error.message);
+      }
 
     // 模擬回傳更新的資料
     console.log("更新的密碼: ", newPassword);
