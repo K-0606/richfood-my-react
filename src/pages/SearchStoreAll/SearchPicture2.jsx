@@ -13,31 +13,6 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 
-// 菜系選項
-const cuisines = [
-  { value: "hotpot", label: "火鍋" },
-  { value: "japanese", label: "日式料理" },
-  { value: "italian", label: "義式料理" },
-  { value: "mexican", label: "墨西哥餐" },
-  { value: "brunch", label: "早午餐" },
-  { value: "snack", label: "小吃" },
-  { value: "bistro", label: "餐酒館" },
-  { value: "bar", label: "酒吧" },
-  { value: "date_night", label: "約會餐廳" },
-  { value: "dessert", label: "甜點" },
-  { value: "bbq", label: "燒肉" },
-  { value: "izakaya", label: "居酒屋" },
-  { value: "chinese", label: "中式料理" },
-];
-
-const regions = [
-  { value: "taipei", label: "台北" },
-  { value: "taichung", label: "臺中市" },
-  { value: "kaohsiung", label: "高雄" },
-  { value: "miaoli", label: "苗栗" },  
-  { value: "zhanghua", label: "彰化" },  
-  { value: "yilan", label: "宜蘭" },
-];
 
 const SearchPicture2 = () => {
   const { state } = useLocation(); // 获取传递过来的 state 数据
@@ -49,6 +24,11 @@ const SearchPicture2 = () => {
   const [selectedRegions, setSelectedRegions] = useState(state?.selectedRegions || ''); // 用來追蹤地區的Select選擇
   // const [page, setPage] = useState(1); // 記錄當前頁數
   // const [totalPages, setTotalPages] = useState(1); // 記錄總頁數
+  const { itemDate1 } = state || {}; // 確保 itemDate1 正確接收到
+  console.log("接收到的 state:", state);
+  console.log('接收到的城市名稱:',  state.itemDate1);
+
+
 
     // 发送数据到API
     const fetchData = async (country = null, category = null) => {
@@ -68,22 +48,7 @@ const SearchPicture2 = () => {
       }
       console.log(countryLabel);
       console.log(categoryLabel);
-
-      // useEffect(() => {
-      //   if (state?.selectedRegions) {
-      //     setCheckedRegion(state.selectedRegions); // 设置勾选的地区
-      //   }
-      // }, [state]);
-
-  // 处理地区 checkbox 变更
-  // const handleRegionCheckboxChange = (event) => {
-  //   const { checked, name } = event.target;
-  //   if (checked) {
-  //     setCheckedRegion(name);  // 勾选的地区
-  //   } else {
-  //     setCheckedRegion(null);  // 取消勾选时
-  //   }
-  // };
+     
       
       // // 将筛选条件（filters）添加为查询字符串
       // const params = new URLSearchParams(filters).toString();
@@ -103,9 +68,35 @@ const SearchPicture2 = () => {
       }
     };
 
-    // useEffect(() => {
-    //   fetchData(); // 初始加载，获取所有餐厅
-    // }, []);
+    useEffect(() => {
+      fetchData(); // 初始加载，获取所有餐厅
+      console.log (itemDate1+'@@@@');
+      setCheckedRegion(itemDate1); // 更新地區勾選
+      const selectedRegion = regions.find(region => region.label === itemDate1);
+      setSelectedRegions(selectedRegion); // 更新地區選擇
+      fetchData(itemDate1, checkedCuisine); // 根據選擇的地區發送 API 請求
+
+
+      
+    }, [itemDate1, checkedCuisine]);
+
+//{---------餐廳----------}
+// 菜系選項
+const cuisines = [
+  { value: "hotpot", label: "火鍋" },
+  { value: "japanese", label: "日式料理" },
+  { value: "italian", label: "義式料理" },
+  { value: "mexican", label: "墨西哥餐" },
+  { value: "brunch", label: "早午餐" },
+  { value: "snack", label: "小吃" },
+  { value: "bistro", label: "餐酒館" },
+  { value: "bar", label: "酒吧" },
+  { value: "date_night", label: "約會餐廳" },
+  { value: "dessert", label: "甜點" },
+  { value: "bbq", label: "燒肉" },
+  { value: "izakaya", label: "居酒屋" },
+  { value: "chinese", label: "中式料理" },
+];
   // Checkbox 勾選菜系變更處理
   const handleCuisineCheckboxChange = (event) => {
     const { checked, name } = event.target;
@@ -127,9 +118,33 @@ const SearchPicture2 = () => {
 
   };
 
+    // Select 改變菜系時處理
+    const handleCuisineSelectChange = (selectedOption) => {
+      console.log(`Cuisine Select changed - Selected option: ${selectedOption ? selectedOption.label : 'None'}`);
+      setSelectedCuisines(selectedOption);
+      setCheckedCuisine(selectedOption ? selectedOption.label : null);
+      fetchData(selectedRegions,selectedOption ? selectedOption.label : null);
+    };
+//{---------地區----------}
+    const regions = [
+      { value: "taipei", label: "台北" },
+      { value: "taoyuan", label: "桃園" },
+      { value: "miaoli", label: "苗栗" },  
+      { value: "taichung", label: "台中" },
+      { value: "nantou", label: "南投" },
+      { value: "kaohsiung", label: "高雄" },
+      { value: "tainan", label: "台南" },
+      { value: "pingtung", label: "屏東" },
+      { value: "chiayi", label: "嘉義" },
+      { value: "yunlin", label: "雲林" },
+      { value: "yilan", label: "宜蘭" },
+      { value: "zhanghua", label: "彰化" },
+      { value: "hsinchu", label: "新竹" }, 
+    ];
+
   // Checkbox 勾選地區變更處理
   const handleRegionCheckboxChange = (event) => {
-    const { checked, name } = event.target;
+    const { checked,name } = event.target;
 
     console.log(`Region Checkbox changed - Name: ${name}, Checked: ${checked}`);
 
@@ -146,15 +161,6 @@ const SearchPicture2 = () => {
       fetchData(null,checkedCuisine);
     }
   };
-
-  // Select 改變菜系時處理
-  const handleCuisineSelectChange = (selectedOption) => {
-    console.log(`Cuisine Select changed - Selected option: ${selectedOption ? selectedOption.label : 'None'}`);
-    setSelectedCuisines(selectedOption);
-    setCheckedCuisine(selectedOption ? selectedOption.label : null);
-    fetchData(selectedRegions,selectedOption ? selectedOption.label : null);
-  };
-
 
   // Select 改變地區時處理
   const handleRegionSelectChange = (selectedOption) => {
@@ -189,9 +195,23 @@ const SearchPicture2 = () => {
       cursor: "pointer",
     }),
   };
+  // const cards = Array(10).fill({
+  //       title: 'Lizard',
+  //       description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
+  //       image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+  //     });
 
   return (
-    <div>
+    <div
+    // style={{
+    //   display: 'block',               // 开启 Flexbox 布局
+    //   justifyContent: 'space-between', // 在主轴上分配空间
+    //   alignItems: 'flex-start',       // 在交叉轴上对齐子元素顶部
+    //   gap: '20px',                    // 为子元素之间添加间距
+    //   width: '100%',                  // 父容器宽度占满屏幕
+    //   padding: '20px',                // 父容器的内边距
+    // }}
+    >
       {/* React-Select 菜系選擇 */}
       <div className="select-container" >
         <Select
@@ -216,6 +236,7 @@ const SearchPicture2 = () => {
       </div>
 
       {/* 包裹菜系選擇的 Checkbox  */}
+      <div>
       <h2 style={{transform: 'translateX(100px)',marginTop: '20px', color:'gray',}}>餐廳選擇</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' ,transform: 'translateX(100px)',}}>
         {cuisines.map((cuisine) => (
@@ -238,22 +259,26 @@ const SearchPicture2 = () => {
           />
         ))}
       </div>
+      </div>
       {/* Card section on the right */}
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
+          // transform: 'translateX(100px)', 
+          justifyContent: 'space-between',
+          flex: 1,
           alignItems: 'center',
-          transform: 'translateX(100px)', // Right shift cards by 200px
-          // marginLeft: 通过设置 marginLeft: 100px，可以将 Box 整体向右移动 100px。
+          marginTop: '-950px',  // 适当的顶部间距
           // transform: 通过 transform: translateX(100px)，可以在不改变布局流的情况下向右偏移 Box 元素。
         }}
       >
         {cards.map((card, index) => (
           <Card key={index} sx={{ maxWidth: 600 }}>
             <CardActionArea>
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+              <Box 
+              sx={{ display: 'flex', flexDirection: 'row' }}>
                 {/* Card Image */}
                 <CardMedia
                   component="img"
@@ -262,7 +287,12 @@ const SearchPicture2 = () => {
                   alt="green iguana"
                 />
                 {/* Card Content */}
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingLeft: 2 }}>
+                <CardContent sx={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  justifyContent: 'center', 
+                  paddingLeft: 2 ,
+                  }}>
                   <Typography gutterBottom variant="h5" component="div">
                     {card.name}                  
                   </Typography>
