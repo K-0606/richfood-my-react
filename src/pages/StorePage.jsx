@@ -5,6 +5,7 @@ import StorePage1 from '../pages/StorePage/StorePage1.jsx';
 import StorePage3 from '../pages/StorePage/StorePage3.jsx';
 import StorePage4 from '../pages/StorePage/StorePage4.jsx';
 import StoreNamePicture from '../pages/StorePage/StoreNamePicture.jsx';
+import FloatingButtons from '../components/common/FloatingButtons.jsx';
 
 
 function StorePage() {
@@ -16,10 +17,12 @@ function StorePage() {
     <StorePage3 />
     <StorePage4 />
     <StoreNamePicture />
+    <FloatingButtons/>
     <Footer />
-    </>
     
-  );
+    
+  </>
+  )
 }
 
 export default StorePage;

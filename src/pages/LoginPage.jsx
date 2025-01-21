@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Typography, Paper, Box, Grid, Alert } from '@mui/material';
+import { TextField, Button, Container, Typography, Paper, Box, Grid, Alert, Link } from '@mui/material';
 import Header from '../components/layout/Header';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,8 +18,7 @@ const LoginPage = () => {
   const toggleUserType = (isStoreSelected) => {
     setIsStore(isStoreSelected);
   };
-  
-  
+
   // 提交表單處理函數
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -50,46 +49,53 @@ const LoginPage = () => {
 
   return (
     <>
-    <Header />
-    <Container component="main" maxWidth="xs">
-      <Paper elevation={3} sx={{ padding: 3 }}>
-        <Typography variant="h5" align="center" sx={{ mb: 2 }}>
-          {isStore ? '店家登入' : '會員登入'}
-        </Typography>
-        
-        {/* 顯示切換登入模式的按鈕 */}
-        <Grid container spacing={2} justifyContent="space-between" sx={{ mb: 2 }}>
-          <Grid item>
-            <Button
-              variant={isStore ? 'outlined' : 'contained'}
-              color="primary"
-              onClick={() => toggleUserType(false)} // 切換到會員登入
-            >
-              會員登入
-            </Button>
+      <Header />
+      <Container component="main" maxWidth="xs">
+        <Paper elevation={3} sx={{ padding: 3 }}>
+          <Typography variant="h5" align="center" sx={{ mb: 2 }}>
+            {isStore ? '店家登入' : '會員登入'}
+          </Typography>
+          
+          {/* 顯示切換登入模式的按鈕 */}
+          <Grid container spacing={2} justifyContent="space-between" sx={{ mb: 2 }}>
+            <Grid item>
+              <Button
+                variant={isStore ? 'outlined' : 'contained'}
+                color="primary"
+                onClick={() => toggleUserType(false)} // 切換到會員登入
+              >
+                會員登入
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant={isStore ? 'contained' : 'outlined'}
+                color="primary"
+                onClick={() => toggleUserType(true)} // 切換到店家登入
+              >
+                店家登入
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button
-              variant={isStore ? 'contained' : 'outlined'}
-              color="primary"
-              onClick={() => toggleUserType(true)} // 切換到店家登入
-            >
-              店家登入
-            </Button>
-          </Grid>
-        </Grid>
 
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-          {/* 帳號輸入欄位 */}
-          <TextField
-            label="帳號"
-            type="text"
-            fullWidth
-            required
-            value={account}
-            onChange={(e) => setAccount(e.target.value)}
-            sx={{ mb: 2 }}
-          />
+          {/* 顯示錯誤訊息 */}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            {/* 帳號輸入欄位 */}
+            <TextField
+              label="帳號"
+              type="text"
+              fullWidth
+              required
+              value={account}
+              onChange={(e) => setAccount(e.target.value)}
+              sx={{ mb: 2 }}
+            />
 
             {/* 密碼輸入欄位 */}
             <TextField
@@ -106,6 +112,28 @@ const LoginPage = () => {
             <Button type="submit" fullWidth variant="contained" color="primary">
               登入
             </Button>
+
+            {/* 註冊會員和忘記密碼的連結 */}
+            <Grid container justifyContent="space-between" sx={{ mt: 2 }}>
+              <Grid item>
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => navigate('/MemberRegister')}  // 假設註冊頁面的路由是 "/register"
+                >
+                  註冊會員
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link
+                  component="button"
+                  variant="body2"
+                  onClick={() => navigate('/forgot-password')}  // 假設忘記密碼頁面的路由是 "/forgot-password"
+                >
+                  忘記密碼
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
         </Paper>
       </Container>

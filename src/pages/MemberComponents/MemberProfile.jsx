@@ -1,6 +1,6 @@
-// src/pages/MemberComponents/MemberProfile.jsx
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { TextField, Button, Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { useAvatar } from './AvatarContext';  // 引入 AvatarContext
 
 const MemberProfile = ({
   memberData,
@@ -17,7 +17,9 @@ const MemberProfile = ({
   passwordError
 }) => {
   
+  const { avatarUrl, setAvatarUrl } = useAvatar();  // 取得 avatarUrl 和 setAvatarUrl
   const [editedData, setEditedData] = useState({ ...memberData });
+  const [newAvatar, setNewAvatar] = useState(null);  // 用於儲存上傳的頭像
 
   // 處理會員資料變更
   const handleInputChange = (e) => {
@@ -30,8 +32,24 @@ const MemberProfile = ({
 
   // 儲存會員資料
   const handleSave = () => {
+    // 儲存編輯後的資料並且更新頭像 URL
+    if (newAvatar) {
+      setAvatarUrl(newAvatar);
+    }
     onSave(editedData); // 儲存編輯後的資料
     setIsEditing(false);
+  };
+
+  // 處理頭像上傳
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewAvatar(reader.result);  // 更新預覽用的頭像 URL
+      };
+      reader.readAsDataURL(file);  // 將圖片讀取為 base64
+    }
   };
 
   return (
@@ -43,10 +61,22 @@ const MemberProfile = ({
         <Grid item xs={12} sm={4}>
           <Box display="flex" justifyContent="center" alignItems="center">
             <img
-              src={memberData.avatarUrl}
+              src={newAvatar || avatarUrl}  // 使用新的頭像或預設頭像
               alt="會員頭像"
               style={{ width: 150, height: 150, borderRadius: '50%' }}
             />
+          </Box>
+          {/* 變更頭像按鈕 */}
+          <Box display="flex" justifyContent="center" sx={{ marginTop: 2 }}>
+            <Button variant="outlined" component="label">
+              變更頭像
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleAvatarChange}
+              />
+            </Button>
           </Box>
         </Grid>
 
@@ -89,7 +119,7 @@ const MemberProfile = ({
             name="account"
             fullWidth
             variant="outlined"
-            disabled={!isEditing}
+            disabled
             sx={{ marginBottom: 2 }}
           />
           <TextField

@@ -4,6 +4,7 @@ import StoreComments from './StoreComponents/StoreComments';
 import StoreReservations from './StoreComponents/StoreReservations';
 import StoreCoupons from './StoreComponents/StoreCoupons';
 import StoreUpdateInfo from './StoreComponents/StoreUpdateInfo';
+import ReservationManagement from './StoreComponents/ReservationManagement'; 
 import Rating from '@mui/material/Rating';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
@@ -57,8 +58,9 @@ const StoreLoginPage = () => {
       <Box sx={{ mt: 2 }}>
         <Button variant="contained" onClick={() => setActiveTab("comments")} sx={{ mr: 2 }}>所有評論</Button>
         <Button variant="contained" onClick={() => setActiveTab("reservations")} sx={{ mr: 2 }}>已預約日期</Button>
+        <Button variant="contained" onClick={() => setActiveTab("reservationManagement")} sx={{ mr: 2 }}>預約管理</Button> {/* 新增預約管理按鈕 */}
         <Button variant="contained" onClick={() => setActiveTab("coupons")} sx={{ mr: 2 }}>餐券管理</Button>
-        <Button variant="contained" onClick={() => setActiveTab("updateInfo")}>更新資訊</Button>
+        <Button variant="contained" onClick={() => setActiveTab("updateInfo")} sx={{ mr: 2 }}>更新資訊</Button>
       </Box>
 
       {/* 顯示不同內容區域 */}
@@ -67,6 +69,7 @@ const StoreLoginPage = () => {
         {activeTab === "reservations" && <StoreReservations />}
         {activeTab === "coupons" && <StoreCoupons />}
         {activeTab === "updateInfo" && <StoreUpdateInfo storeData={storeData} onUpdateStoreData={handleUpdateStoreData} />}
+        {activeTab === "reservationManagement" && <ReservationManagement />} {/* 顯示預約管理頁面 */}
       </Box>
 
       {/* QR Code 掃描器區域 */}
