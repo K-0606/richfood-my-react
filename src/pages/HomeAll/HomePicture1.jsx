@@ -1,10 +1,16 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom'; // 引入 useNavigate
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 
-
 export default function HomePicture1() {
+  const navigate = useNavigate(); // 使用 navigate
+
+  const handleCardClick = (value) => {
+    navigate('/SearchStore', { state: { selectedRegions: value } }); // 点击后跳转并传递 selectedCity
+  };
+
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '10vh', paddingTop: '20px' }}>
@@ -12,60 +18,52 @@ export default function HomePicture1() {
           依地區搜尋餐廳
         </h1>
       </div>
-    <ImageList style={{ maxWidth: '70%', height: '80%' }}
-      sx={{
-        overflow: 'hidden', // 隱藏滾動條
-        flexWrap: 'wrap', // 讓圖片自動換行
-        gap: 5, // 圖片間距
-        margin: '0 auto',
-        // padding: '100px 100px',
-        display: 'flex', // 使用 flexbox 居中
-        justifyContent: 'center', // 水平居中
-        alignItems: 'center', // 垂直居中
-
-
-        // RWD 設置列數
-        '@media (min-width: 1200px)': {
-          cols: 4, // 大螢幕顯示 4 列
-        },
-        '@media (max-width: 1200px)': {
-          cols: 3, // 中螢幕顯示 3 列
-        },
-        '@media (max-width: 768px)': {
-          cols: 1, // 小螢幕顯示 1 列
-        },
-      }} cols={3} gap={10}>
-      {itemData.map((item) => (
-        <ImageListItem key={item.img} sx={{ border: 'none' }} style={{ maxWidth: '248px', height: 'auto' }}>
-          <img
-            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-            src={`${item.img}?w=248&fit=crop&auto=format`}
-            alt={item.title}
-            loading="lazy"
-            style={{
-              display: 'block',
-              width: '200px', // 設置統一寬度
-              height: '100px', // 設置統一高度
-              objectFit: 'cover', // 保持比例，裁剪多餘的部分
-              borderRadius: '5%',
-            }} />
-          <ImageListItemBar
+      <ImageList style={{ maxWidth: '70%', height: '80%' }}
+        sx={{
+          overflow: 'hidden',
+          flexWrap: 'wrap',
+          gap: 5,
+          margin: '0 auto',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          '@media (min-width: 1200px)': { cols: 4 },
+          '@media (max-width: 1200px)': { cols: 3 },
+          '@media (max-width: 768px)': { cols: 1 },
+        }} cols={3} gap={10}>
+        {itemData.map((item) => (
+          <ImageListItem key={item.img} sx={{ border: 'none' }} style={{ maxWidth: '248px', height: 'auto' }}
+          onClick={() => handleCardClick(item.value)} // 点击事件
+          >
+            <img
+              srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+              src={`${item.img}?w=248&fit=crop&auto=format`}
+              alt={item.title}
+              loading="lazy"
+              style={{
+                display: 'block',
+                width: '200px',
+                height: '100px',
+                objectFit: 'cover',
+                borderRadius: '5%',
+              }} />
+            <ImageListItemBar
               title={item.title}
               position="below"
               sx={{
                 display: 'flex',
-                justifyContent: 'center', // 水平居中
-                alignItems: 'center', // 垂直居中
-                fontSize: '24px', // 設置字體大小
-                fontWeight: 'bold', // 可選，設置字體加粗
-                width: '100%', // 使區塊佔滿整個寬度
-                textAlign: 'center', // 確保文字居中對齊
-                padding: '10px 0', // 可以調整內邊距來達到更好的視覺效果
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: '24px',
+                fontWeight: 'bold',
+                width: '100%',
+                textAlign: 'center',
+                padding: '10px 0',
               }}
             />
-        </ImageListItem>
-      ))}
-    </ImageList>
+          </ImageListItem>
+        ))}
+      </ImageList>
     </>
   );
 }
@@ -73,7 +71,7 @@ export default function HomePicture1() {
 const itemData = [
   {
     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: '台北',
+    title: '台北',value: "taipei",
   },
   {
     img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
@@ -97,19 +95,19 @@ const itemData = [
   },
   {
     img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: '台南'
+    title: '台南',
   },
   {
     img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: '屏東'
+    title: '屏東',
   },
   {
     img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-    title: '嘉義'
+    title: '嘉義',
   },
   {
     img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-    title: '雲林'
+    title: '雲林',
   },
   {
     img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',

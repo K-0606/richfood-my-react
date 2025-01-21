@@ -1,5 +1,6 @@
 //餐廳菜系及地區的SearchBox跟CheackBox連動
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FormControlLabel, Checkbox } from '@mui/material';
 import Select from 'react-select';
 import Card from '@mui/material/Card';
@@ -10,6 +11,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Box from '@mui/material/Box';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
+
 
 // 菜系選項
 const cuisines = [
@@ -38,12 +40,15 @@ const regions = [
 ];
 
 const SearchPicture2 = () => {
+  const { state } = useLocation(); // 获取传递过来的 state 数据
   const [cards, setRestaurant]= useState([]);
   const [page, setPage]= useState([]);
   const [checkedCuisine, setCheckedCuisine] = useState(null); // 用來追蹤勾選的菜系
   const [checkedRegion, setCheckedRegion] = useState(null); // 用來追蹤勾選的地區
   const [selectedCuisines, setSelectedCuisines] = useState(null); // 用來追蹤菜系的Select選擇
-  const [selectedRegions, setSelectedRegions] = useState(null); // 用來追蹤地區的Select選擇
+  const [selectedRegions, setSelectedRegions] = useState(state?.selectedRegions || ''); // 用來追蹤地區的Select選擇
+  // const [page, setPage] = useState(1); // 記錄當前頁數
+  // const [totalPages, setTotalPages] = useState(1); // 記錄總頁數
 
     // 发送数据到API
     const fetchData = async (country = null, category = null) => {
@@ -63,6 +68,22 @@ const SearchPicture2 = () => {
       }
       console.log(countryLabel);
       console.log(categoryLabel);
+
+      // useEffect(() => {
+      //   if (state?.selectedRegions) {
+      //     setCheckedRegion(state.selectedRegions); // 设置勾选的地区
+      //   }
+      // }, [state]);
+
+  // 处理地区 checkbox 变更
+  // const handleRegionCheckboxChange = (event) => {
+  //   const { checked, name } = event.target;
+  //   if (checked) {
+  //     setCheckedRegion(name);  // 勾选的地区
+  //   } else {
+  //     setCheckedRegion(null);  // 取消勾选时
+  //   }
+  // };
       
       // // 将筛选条件（filters）添加为查询字符串
       // const params = new URLSearchParams(filters).toString();
@@ -82,9 +103,9 @@ const SearchPicture2 = () => {
       }
     };
 
-    useEffect(() => {
-      fetchData(); // 初始加载，获取所有餐厅
-    }, []);
+    // useEffect(() => {
+    //   fetchData(); // 初始加载，获取所有餐厅
+    // }, []);
   // Checkbox 勾選菜系變更處理
   const handleCuisineCheckboxChange = (event) => {
     const { checked, name } = event.target;
