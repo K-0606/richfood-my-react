@@ -17,7 +17,7 @@ import Stack from '@mui/material/Stack';
 
 const SearchPicture2 = () => {
   const { state } = useLocation(); // 获取传递过来的 state 数据
-  // const [restaurantId, setRestaurant]= useState([]);
+  const [restaurantId, setRestaurant]= useState([]);
   const [page, setPage]= useState([]);
   const [checkedCuisine, setCheckedCuisine] = useState(null); // 用來追蹤勾選的菜系
   const [checkedRegion, setCheckedRegion] = useState(null); // 用來追蹤勾選的地區
@@ -66,7 +66,7 @@ const SearchPicture2 = () => {
       try {
         const response = await fetch(url, { method: "GET" });
         const data = await response.json();    
-        restaurantId(data.content);
+        setRestaurant(data.content);
         console.log(data.content);
         setPage(data.page)
       } catch (error) {
@@ -208,11 +208,11 @@ const cuisines = [
       cursor: "pointer",
     }),
   };
-  const restaurantId = Array(10).fill({
-        title: 'Lizard',
-        description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
-        image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-      });
+  // const restaurantId = Array(10).fill({
+  //       title: 'Lizard',
+  //       description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
+  //       image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+  //     });
 
   return (
     <div

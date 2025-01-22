@@ -6,6 +6,8 @@ import { styled } from '@mui/material/styles';
 import { Carousel } from 'react-responsive-carousel'; // 引入轮播图库
 import Typography from '@mui/material/Typography';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // 引入轮播图样式
+import { useLocation } from 'react-router-dom';
+
 // import { useNavigate } from 'react-router-dom';
 
 
@@ -39,7 +41,7 @@ const ImageCarousel = ({ Restaurant }) => (
     dynamicHeight={true} //高度根据每一张图片实际高度动态调整
   >
     <div>
-      <img src={restaurantId.image} alt="Image 1" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+      <img src={Restaurant.image} alt="Image 1" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
     </div>
     <div>
       <img src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e" alt="Image 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
@@ -60,17 +62,18 @@ export default function BStorePage1() {
   const { state } = useLocation();
   const [Restaurant, setRestaurant]= useState([]);
   // const navigate = useNavigate();
-  const { restaurantId } = state  || {}; // 確保 itemData1 正確接收到
+  const restaurantId =state.restaurant.restaurantId;
+  // const { restaurantId } = state  || {}; // 確保 itemData1 正確接收到
   console.log("接收到的 state:", restaurantId); 
-  console.log("接收到的 state:", state);
+  console.log("接收到的 state:", state.restaurant.restaurantId);
 
   const handleBookRedirect = () => {
     navigate('book');
   }
 //fetch API
-const fetchData = async () => {
+const fetchData = async (restaurantId) => {
   
-  let url = "http://localhost:8080/restaurants/1";   
+  let url = `http://localhost:8080/restaurants/${restaurantId}`;   
 
   try {
     const response = await fetch(url, { method: "GET" });
@@ -82,7 +85,7 @@ const fetchData = async () => {
   }
 };
   useEffect(() => {
-    fetchData().then(() => {
+    fetchData(restaurantId).then(() => {
       console.log(restaurantId);  // 檢查回傳的資料
     });
   }, []);
@@ -114,10 +117,10 @@ const fetchData = async () => {
           // alignItems: 'flex-start',  // 左对齐 Stack 内部的元素
         }}
       >
-        <Typography variant="h1" sx={{ fontSize: '3rem' }}>{restaurantId.name}</Typography> 
-        <Typography variant="h2" sx={{ fontSize: '1rem' }}>平均消費：{restaurantId.average}</Typography> 
-        <Typography variant="h2" sx={{ fontSize: '1rem' }}>地址：{restaurantId.country}{restaurantId.district}{Restaurant.address}</Typography> 
-        <Typography variant="h2" sx={{ fontSize: '1rem' }}>電話：{restaurantId.phone}</Typography> 
+        <Typography variant="h1" sx={{ fontSize: '3rem' }}>{Restaurant.name}</Typography> 
+        <Typography variant="h2" sx={{ fontSize: '1rem' }}>平均消費：{Restaurant.average}</Typography> 
+        <Typography variant="h2" sx={{ fontSize: '1rem' }}>地址：{Restaurant.country}{Restaurant.district}{Restaurant.address}</Typography> 
+        <Typography variant="h2" sx={{ fontSize: '1rem' }}>電話：{Restaurant.phone}</Typography> 
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>營業時間：</Typography> 
         <Item onClick={handleBookRedirect}>預約</Item>
         <Item>評論</Item>
