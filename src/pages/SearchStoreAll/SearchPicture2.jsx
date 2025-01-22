@@ -1,6 +1,7 @@
 //餐廳菜系及地區的SearchBox跟CheackBox連動
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FormControlLabel, Checkbox } from '@mui/material';
 import Select from 'react-select';
 import Card from '@mui/material/Card';
@@ -16,7 +17,7 @@ import Stack from '@mui/material/Stack';
 
 const SearchPicture2 = () => {
   const { state } = useLocation(); // 获取传递过来的 state 数据
-  const [cards, setRestaurant]= useState([]);
+  // const [cards, setRestaurant]= useState([]);
   const [page, setPage]= useState([]);
   const [checkedCuisine, setCheckedCuisine] = useState(null); // 用來追蹤勾選的菜系
   const [checkedRegion, setCheckedRegion] = useState(null); // 用來追蹤勾選的地區
@@ -26,11 +27,12 @@ const SearchPicture2 = () => {
   // const [totalPages, setTotalPages] = useState(1); // 記錄總頁數
   const { itemData1 } = state || {}; // 確保 itemData1 正確接收到
   const { itemData2 } = state || {}; // 確保 itemData1 正確接收到
-  // const [itemData1] = useState(state?.itemData1 || null); 
-  // const itemData1 = state?.itemData1;
   console.log("接收到的 state:", state);
   console.log('接收到的城市名稱:', itemData1);
   console.log('接收到的城市名稱:', itemData2);
+
+
+
 
 
 
@@ -74,20 +76,26 @@ const SearchPicture2 = () => {
 
     useEffect(() => {
       fetchData(); // 初始加载，获取所有餐厅
-      console.log (itemData1+'@@@@');
-      setCheckedRegion(itemData1); // 更新地區勾選
-      const selectedRegion = regions.find(region => region.label === itemData1);
-      setSelectedRegions(selectedRegion); // 更新地區選擇
-      fetchData(itemData1, checkedCuisine); // 根據選擇的地區發送 API 請求
 
-      console.log (itemData2+'@@@@');
+      // 跳轉更新菜系選擇
       const selectedCuisine = cuisines.find((cuisine) => cuisine.label === itemData2);
       setCheckedCuisine(itemData2);
-      setSelectedCuisines(selectedCuisine); // 更新Select菜系
+      setSelectedCuisines(selectedCuisine); 
       console.log(`勾選的菜系: ${itemData2}`);
       fetchData(checkedRegion,itemData2);
+
+      // 跳轉更新地區選擇
+      setCheckedRegion(itemData1); // 更新地區勾選
+      const selectedRegion = regions.find(region => region.label === itemData1);
+      setSelectedRegions(selectedRegion); 
+      fetchData(itemData1, checkedCuisine); 
       
     }, []);
+
+    const navigate = useNavigate();  // 使用 navigate 跳转
+    const handleCardClick = (card) => {
+      navigate('/StorePage', { state: { restaurant: card } });  // 传递餐厅数据到目标页面
+    };
 
 //{---------餐廳----------}
 // 菜系選項
@@ -204,11 +212,11 @@ const cuisines = [
       cursor: "pointer",
     }),
   };
-  // const cards = Array(10).fill({
-  //       title: 'Lizard',
-  //       description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
-  //       image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-  //     });
+  const cards = Array(10).fill({
+        title: 'Lizard',
+        description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
+        image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+      });
 
   return (
     <div
@@ -279,12 +287,14 @@ const cuisines = [
           justifyContent: 'space-between',
           flex: 1,
           alignItems: 'center',
-          marginTop: '-950px',  // 适当的顶部间距
+          marginTop: '-1000px',  // 适当的顶部间距
           // transform: 通过 transform: translateX(100px)，可以在不改变布局流的情况下向右偏移 Box 元素。
         }}
       >
         {cards.map((card, index) => (
-          <Card key={index} sx={{ maxWidth: 600 }}>
+          <Card key={index} sx={{ maxWidth: 600 }}
+          onClick={() => handleCardClick(card)}
+          >
             <CardActionArea>
               <Box 
               sx={{ display: 'flex', flexDirection: 'row' }}>
