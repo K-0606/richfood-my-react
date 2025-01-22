@@ -17,7 +17,7 @@ import Stack from '@mui/material/Stack';
 
 const SearchPicture2 = () => {
   const { state } = useLocation(); // 获取传递过来的 state 数据
-  // const [cards, setRestaurant]= useState([]);
+  // const [restaurantId, setRestaurant]= useState([]);
   const [page, setPage]= useState([]);
   const [checkedCuisine, setCheckedCuisine] = useState(null); // 用來追蹤勾選的菜系
   const [checkedRegion, setCheckedRegion] = useState(null); // 用來追蹤勾選的地區
@@ -28,13 +28,12 @@ const SearchPicture2 = () => {
   const { itemData1 } = state || {}; // 確保 itemData1 正確接收到
   const { itemData2 } = state || {}; // 確保 itemData1 正確接收到
   console.log("接收到的 state:", state);
-  console.log('接收到的城市名稱:', itemData1);
-  console.log('接收到的城市名稱:', itemData2);
 
-
-
-
-
+  const navigate2 = useNavigate();  // 使用 navigate 跳转
+  const handleCardClick = (restaurantId) => {
+    console.log('SP1 console log:',{restaurant: restaurantId});
+    navigate2('/StorePage', { state: { restaurant: restaurantId } });  // 传递餐厅数据到目标页面
+  };
 
     // 发送数据到API
     const fetchData = async (country = null, category = null) => {
@@ -67,7 +66,8 @@ const SearchPicture2 = () => {
       try {
         const response = await fetch(url, { method: "GET" });
         const data = await response.json();    
-        setRestaurant(data.content);
+        restaurantId(data.content);
+        console.log(data.content);
         setPage(data.page)
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -89,13 +89,9 @@ const SearchPicture2 = () => {
       const selectedRegion = regions.find(region => region.label === itemData1);
       setSelectedRegions(selectedRegion); 
       fetchData(itemData1, checkedCuisine); 
-      
     }, []);
 
-    const navigate = useNavigate();  // 使用 navigate 跳转
-    const handleCardClick = (card) => {
-      navigate('/StorePage', { state: { restaurant: card } });  // 传递餐厅数据到目标页面
-    };
+
 
 //{---------餐廳----------}
 // 菜系選項
@@ -212,7 +208,7 @@ const cuisines = [
       cursor: "pointer",
     }),
   };
-  const cards = Array(10).fill({
+  const restaurantId = Array(10).fill({
         title: 'Lizard',
         description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
         image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
@@ -291,9 +287,9 @@ const cuisines = [
           // transform: 通过 transform: translateX(100px)，可以在不改变布局流的情况下向右偏移 Box 元素。
         }}
       >
-        {cards.map((card, index) => (
+        {restaurantId.map((restaurantId, index) => (
           <Card key={index} sx={{ maxWidth: 600 }}
-          onClick={() => handleCardClick(card)}
+          onClick={() => handleCardClick(restaurantId)}
           >
             <CardActionArea>
               <Box 
@@ -302,7 +298,7 @@ const cuisines = [
                 <CardMedia
                   component="img"
                   sx={{ width: 140 }}
-                  image={card.image}
+                  image={restaurantId.image}
                   alt="green iguana"
                 />
                 {/* Card Content */}
@@ -313,10 +309,10 @@ const cuisines = [
                   paddingLeft: 2 ,
                   }}>
                   <Typography gutterBottom variant="h5" component="div">
-                    {card.name}                  
+                    {restaurantId.name}                  
                   </Typography>
                   <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    {card.description}
+                    {restaurantId.description}
                   </Typography>
                 </CardContent>
               </Box>
