@@ -14,38 +14,83 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);  // 用來顯示錯誤訊息
 
-  // 切換會員/店家登入
-  const toggleUserType = (isStoreSelected) => {
-    setIsStore(isStoreSelected);
-  };
+    // 切換會員/店家登入
+    const toggleUserType = (isStoreSelected) => {
+      console.log('切換登入模式:', isStoreSelected ? '店家登入' : '會員登入');
+      setIsStore(isStoreSelected);
+    };
+  
+  // 店家登入處理函數
+  const handleStoreLogin = async (event) => {
+    event.preventDefault();
+    const requestData = {
+      storeAccount: account,
+      password: password,
+      };
 
-  // 提交表單處理函數
+    try {
+      const response = await fetch('http://localhost:8080/store/storeLogin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include', // 確保攜帶 Cookie
+        body: JSON.stringify(requestData),
+      });
+      console.log('發送的請求資料：', requestData);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '店家登入失敗');
+      }
+  
+        const result = await response.json();
+        console.log(result)
+        alert(`店家登入成功！店家 ID: ${result.storeId}`);
+      } catch (error) {
+        console.error('店家登入失敗：', error.message);
+        alert(`店家登入失敗：${error.message}`);
+      }
+    };
+
+     // 提交表單處理函數
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // 這裡設置帳號和密碼驗證邏輯
-    const correctAccount = 'john';
-    const correctPassword = '123456';
-
-    if (account === correctAccount && password === correctPassword) {
-      // 登入成功，儲存用戶資料
-      const userData = {
-        userId: '12345',
-        userType: isStore ? 'store' : 'member',
-        name: 'John Doe',  // 假資料
-        avatar: 'https://example.com/avatar.jpg',  // 假資料
-      };
-
-      localStorage.setItem('user', JSON.stringify(userData));
-      alert(`登入成功！用戶 ID: ${userData.userId}, 類型: ${userData.userType}`);
-      navigate('/');  // 登入成功後跳轉到首頁
-    } else {
-      // 登入失敗，顯示錯誤訊息
-      setError('帳號或密碼錯誤');
-      setAccount('');  // 清空帳號欄位
-      setPassword('');  // 清空密碼欄位
-    }
+    const requestData = {
+      userAccount: account,
+      password: password,
+      userType: isStore ? 'store' : 'member', // 根據 isStore 判斷用戶類型
+    
   };
+
+  try {
+    const response = await fetch('http://localhost:8080/User/Userlogin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      credentials: 'include', // 確保攜帶 Cookie
+
+      body: JSON.stringify(requestData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || '登入失敗');
+    }
+
+    const result = await response.json();
+    alert(`登入成功！用戶 ID: ${result.userId}, 類型: ${result.userType}`);
+  } catch (error) {
+    console.error('登入失敗：', error.message);
+    alert(`登入失敗：${error.message}`);
+  }
+};
+
+
+  
 
   return (
     <>
@@ -85,7 +130,7 @@ const LoginPage = () => {
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+          <Box component="form" onSubmit={isStore ? handleStoreLogin :handleSubmit} sx={{ mt: 2 }}>
             {/* 帳號輸入欄位 */}
             <TextField
               label="帳號"
