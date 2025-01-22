@@ -24,9 +24,9 @@ const SearchPicture2 = () => {
   const [selectedRegions, setSelectedRegions] = useState(state?.selectedRegions || ''); // 用來追蹤地區的Select選擇
   // const [page, setPage] = useState(1); // 記錄當前頁數
   // const [totalPages, setTotalPages] = useState(1); // 記錄總頁數
-  const { itemDate1 } = state || {}; // 確保 itemDate1 正確接收到
+  const { itemData1 } = state || {itemData1}; // 確保 itemData1 正確接收到
   console.log("接收到的 state:", state);
-  console.log('接收到的城市名稱:',  state.itemDate1);
+  console.log('接收到的城市名稱:', itemData1);
 
 
 
@@ -70,15 +70,20 @@ const SearchPicture2 = () => {
 
     useEffect(() => {
       fetchData(); // 初始加载，获取所有餐厅
-      console.log (itemDate1+'@@@@');
-      setCheckedRegion(itemDate1); // 更新地區勾選
-      const selectedRegion = regions.find(region => region.label === itemDate1);
+      console.log (itemData1+'@@@@');
+      setCheckedRegion(itemData1); // 更新地區勾選
+      const selectedRegion = regions.find(region => region.label === itemData1);
       setSelectedRegions(selectedRegion); // 更新地區選擇
-      fetchData(itemDate1, checkedCuisine); // 根據選擇的地區發送 API 請求
-
+      fetchData(itemData1, checkedCuisine); // 根據選擇的地區發送 API 請求
+      console.log (itemData2+'@@@@');
+      const selectedCuisine = cuisines.find((cuisine) => cuisine.label === itemData2);
+      setCheckedCuisine(itemData2);
+      setSelectedCuisines(selectedCuisine); // 更新Select菜系
+      console.log(`勾選的菜系: ${itemData2}`);
+      fetchData(checkedRegion,itemData2);
 
       
-    }, [itemDate1, checkedCuisine]);
+    }, []);
 
 //{---------餐廳----------}
 // 菜系選項

@@ -1,10 +1,18 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 
 
 export default function Home() {
+  const navigate = useNavigate(); // 使用 navigate
+
+  const handleCardClick = (value) => {
+    console.log('P1 console log:',{itemData2:value});
+    navigate('/SearchStore', { state: { itemData2: value } }); // 点击后跳转并传递 selectedCity
+  };
+  
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', height: '10vh', paddingTop: '20px' }}>
@@ -36,7 +44,7 @@ export default function Home() {
           cols: 1, // 小螢幕顯示 1 列
         },
       }} cols={3} gap={10}>
-      {itemData.map((item) => (
+      {itemData2.map((item) => (
         <ImageListItem key={item.img} sx={{ border: 'none' }} style={{ maxWidth: '248px', height: 'auto' }}>
           <img
             srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
@@ -71,7 +79,7 @@ export default function Home() {
   );
 }
 
-const itemData = [
+const itemData2 = [
   {
     img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
     title: '壽司',

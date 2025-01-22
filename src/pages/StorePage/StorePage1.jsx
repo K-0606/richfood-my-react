@@ -115,7 +115,7 @@ const fetchData = async () => {
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>平均消費：{Restaurant.average}</Typography> 
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>地址：{Restaurant.country}{Restaurant.district}{Restaurant.address}</Typography> 
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>電話：{Restaurant.phone}</Typography> 
-        <Typography variant="h2" sx={{ fontSize: '1rem' }}>店家媒體：</Typography> 
+        <Typography variant="h2" sx={{ fontSize: '1rem' }}>營業時間：</Typography> 
         <Item onClick={handleBookRedirect}>預約</Item>
         <Item>評論</Item>
       </Stack>
