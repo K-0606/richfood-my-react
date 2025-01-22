@@ -84,7 +84,7 @@ const itemData1 = [
   },
   {
     img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: '台中',value: "台中",
+    title: '台中',value: "臺中市",
   },
   {
     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',

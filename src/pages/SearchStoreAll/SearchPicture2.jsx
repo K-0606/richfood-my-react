@@ -75,7 +75,6 @@ const SearchPicture2 = () => {
     };
 
     useEffect(() => {
-      fetchData(); // 初始加载，获取所有餐厅
 
       // 跳轉更新菜系選擇
       const selectedCuisine = cuisines.find((cuisine) => cuisine.label === itemData2);
@@ -89,6 +88,8 @@ const SearchPicture2 = () => {
       const selectedRegion = regions.find(region => region.label === itemData1);
       setSelectedRegions(selectedRegion); 
       fetchData(itemData1, checkedCuisine); 
+
+      // fetchData(); // 初始加载，获取所有餐厅
     }, []);
 
 
@@ -143,7 +144,7 @@ const cuisines = [
       { value: "taipei", label: "台北" },
       { value: "taoyuan", label: "桃園" },
       { value: "miaoli", label: "苗栗" },  
-      { value: "taichung", label: "台中" },
+      { value: "taichung", label: "臺中市" },
       { value: "nantou", label: "南投" },
       { value: "kaohsiung", label: "高雄" },
       { value: "tainan", label: "台南" },
@@ -250,13 +251,27 @@ const cuisines = [
 
       {/* 包裹菜系選擇的 Checkbox  */}
       <div>
-      <h2 style={{transform: 'translateX(100px)',marginTop: '20px', color:'gray',}}>餐廳選擇</h2>
+      <h2 
+      style={{transform: 'translateX(100px)',marginTop: '20px', color:'gray',}}
+      sx={{
+        '@media (max-width: 1200px)': {
+        display: 'none', // 1200px 以下屏幕隐藏 checkbox
+        },
+
+        }}>餐廳選擇</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' ,transform: 'translateX(100px)',}}>
         {cuisines.map((cuisine) => (
           <FormControlLabel
             key={cuisine.value}
-            control={<Checkbox checked={checkedCuisine === cuisine.label} onChange={handleCuisineCheckboxChange} name={cuisine.label} />}
+            control={<Checkbox 
+            checked={checkedCuisine === cuisine.label} 
+            onChange={handleCuisineCheckboxChange} 
+            name={cuisine.label} />}
             label={cuisine.label}
+            sx={{
+              '@media (max-width: 1200px)': {
+                display: 'none', // 1200px 以下屏幕隐藏 checkbox
+              },}}
           />
         ))}
       </div>
@@ -267,8 +282,14 @@ const cuisines = [
         {regions.map((region) => (
           <FormControlLabel
             key={region.value}
-            control={<Checkbox checked={checkedRegion === region.label} onChange={handleRegionCheckboxChange} name={region.label} />}
+            control={<Checkbox checked={checkedRegion === region.label} 
+            onChange={handleRegionCheckboxChange} 
+            name={region.label} />}
             label={region.label}
+            sx={{
+              '@media (max-width: 1200px)': {
+                display: 'none', // 1200px 以下屏幕隐藏 checkbox
+              },}}
           />
         ))}
       </div>
