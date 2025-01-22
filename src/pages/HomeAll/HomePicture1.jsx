@@ -5,11 +5,11 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 
 export default function HomePicture1() {
-  const navigate = useNavigate(); // 使用 navigate
+  const navigate1 = useNavigate(); // 使用 navigate
 
   const handleCardClick = (value) => {
     console.log('P1 console log:',{itemData1:value});
-    navigate('/SearchStore', { state: { itemData1: value } }); // 点击后跳转并传递 selectedCity
+    navigate1('/SearchStore', { state: { itemData1: value } }); // 点击后跳转并传递 selectedCity
   };
 
   return (

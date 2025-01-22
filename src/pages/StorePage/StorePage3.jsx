@@ -9,6 +9,7 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Paper, styled } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { data } from 'react-router-dom';
+import MapComponent from '../../components/common/MapComponent';
 
 // 创建一个样式化的 Item
 const Item = styled(Paper)(({ theme }) => ({
@@ -28,31 +29,31 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 // Google地图组件
-const MapComponent = () => {
-  const mapStyles = {
-    height: "300px",  // 设置地图容器的高度
-    width: "400px",   // 设置地图容器的宽度
-    padding: "20px",
-  };
+// const MapComponent = () => {
+//   const mapStyles = {
+//     height: "300px",  // 设置地图容器的高度
+//     width: "400px",   // 设置地图容器的宽度
+//     padding: "20px",
+//   };
 
-  const defaultCenter = {
-    lat: 25.0330,  // 修改为你的店铺的经纬度
-    lng: 121.5654, // 修改为你的店铺的经纬度
-  };
+//   const defaultCenter = {
+//     lat: 25.0330,  // 修改为你的店铺的经纬度
+//     lng: 121.5654, // 修改为你的店铺的经纬度
+//   };
 
-  return (
-    <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY"> {/* 替换为你的 Google API 密钥 */}
-      <GoogleMap
-        mapContainerStyle={mapStyles}  // 使用上面定义的地图样式
-        center={defaultCenter} // 地图中心位置
-        zoom={14} // 缩放级别
-      >
-        {/* 添加标记 */}
-        <Marker position={defaultCenter} />
-      </GoogleMap>
-    </LoadScript>
-  );
-};
+//   return (
+//     <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY"> {/* 替换为你的 Google API 密钥 */}
+//       <GoogleMap
+//         mapContainerStyle={mapStyles}  // 使用上面定义的地图样式
+//         center={defaultCenter} // 地图中心位置
+//         zoom={14} // 缩放级别
+//       >
+//         {/* 添加标记 */}
+//         <Marker position={defaultCenter} />
+//       </GoogleMap>
+//     </LoadScript>
+//   );
+// };
 
 export default function StorePage() {
   // 只保留3个卡片
@@ -107,7 +108,8 @@ export default function StorePage() {
       marginTop: '-250px',  // 使整体布局有一些空隙
       gap: 3,
     }}>
-      {/* Google地图部分 */}
+      
+      {/* Google地图部分
       <Box sx={{ 
         width: '400px',  
         height: '400px',
@@ -119,8 +121,8 @@ export default function StorePage() {
         position: 'relative', 
       }}>
         <MapComponent />
-      </Box>
-
+      </Box> */}
+      
       {/* 卡片部分 */}
       <Box sx={{ 
         width: '400px', 
