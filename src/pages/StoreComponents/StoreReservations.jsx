@@ -24,6 +24,11 @@ const StoreReservations = () => {
     console.log(today)
     return () => clearInterval(timer); // 組件卸載時清除定時器
   }, []);
+  const getNextDay = (dateString) => {
+    const date = new Date(dateString); // 將字串轉為 Date 物件
+    date.setDate(date.getDate() + 1); // 日期加1
+    return date.toISOString().split('T')[0]; // 回傳 YYYY-MM-DD 格式
+  };
 
   // 當頁面加載時從後端獲取訂單資料
   useEffect(() => {
@@ -218,7 +223,10 @@ const StoreReservations = () => {
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: 'flex-end' }}>
-                    {reservation.reservationDate !== today&&(
+                    {reservation.reservationDate !== today
+                    &&
+                    reservation.reservationDate !== getNextDay(today)
+                    &&(
                     <Button variant="contained" color="error" onClick={() => handleCancelReservation(reservation.reservationId)}>
                       取消訂單
                     </Button>
