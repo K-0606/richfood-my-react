@@ -6,7 +6,9 @@ import { styled } from '@mui/material/styles';
 import { Carousel } from 'react-responsive-carousel'; // 引入轮播图库
 import Typography from '@mui/material/Typography';
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // 引入轮播图样式
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
+// import { useNavigate } from 'react-router-dom';
 
 
 
@@ -57,17 +59,21 @@ const ImageCarousel = ({ Restaurant }) => (
 );
 
 export default function BStorePage1() {
+  const { state } = useLocation();
   const [Restaurant, setRestaurant]= useState([]);
-  const navigate = useNavigate();
-  
+  // const navigate = useNavigate();
+  const restaurantId =state.restaurant.restaurantId;
+  // const { restaurantId } = state  || {}; // 確保 itemData1 正確接收到
+  console.log("接收到的 state:", restaurantId); 
+  console.log("接收到的 state:", state.restaurant.restaurantId);
+
   const handleBookRedirect = () => {
-    
     navigate('book');
   }
 //fetch API
-const fetchData = async () => {
+const fetchData = async (restaurantId) => {
   
-  let url = "http://localhost:8080/restaurants/1";
+  let url = `http://localhost:8080/restaurants/${restaurantId}`;
 
   try {
     const response = await fetch(url, { method: "GET" });
@@ -79,8 +85,8 @@ const fetchData = async () => {
   }
 };
   useEffect(() => {
-    fetchData().then(() => {
-      console.log(Restaurant);  // 檢查回傳的資料
+    fetchData(restaurantId).then(() => {
+      console.log(restaurantId);  // 檢查回傳的資料
     });
   }, []);
 
@@ -99,7 +105,7 @@ const fetchData = async () => {
         height: '500px', 
         marginRight: 5 
       }}>
-        <ImageCarousel Restaurant={Restaurant}/>
+        <ImageCarousel Restaurant={restaurantId}/>
       </Box>
 
       {/* Stack 部分 */}
@@ -115,7 +121,7 @@ const fetchData = async () => {
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>平均消費：{Restaurant.average}</Typography> 
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>地址：{Restaurant.country}{Restaurant.district}{Restaurant.address}</Typography> 
         <Typography variant="h2" sx={{ fontSize: '1rem' }}>電話：{Restaurant.phone}</Typography> 
-        <Typography variant="h2" sx={{ fontSize: '1rem' }}>店家媒體：</Typography> 
+        <Typography variant="h2" sx={{ fontSize: '1rem' }}>營業時間：</Typography> 
         <Item onClick={handleBookRedirect}>預約</Item>
         <Item>評論</Item>
       </Stack>
