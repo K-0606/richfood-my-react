@@ -9,6 +9,21 @@ const StoreReservations = () => {
   const [pastReservations, setPastReservations] = useState([]); // 過去訂單資料
   const [futureReservations, setFutureReservations] = useState([]); // 未來訂單的假資料
   const [tabValue, setTabValue] = useState(0); // 0: 過去訂單, 1: 未來訂單
+  const [today, setToday] = useState(() => {
+    const now = new Date();
+    const localOffset = now.getTimezoneOffset(); // 取得當地與 UTC 的時間差（分鐘）
+    const localTime = new Date(now.getTime() - localOffset * 60 * 1000); // 調整為當地時間
+    return localTime.toISOString().split('T')[0]; // 取得 YYYY-MM-DD 格式
+  });
+
+  //設定當天時間
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setToday(new Date().toISOString().split('T')[0]);
+    }, 60 * 60 * 1000); // 每小時檢查一次
+    console.log(today)
+    return () => clearInterval(timer); // 組件卸載時清除定時器
+  }, []);
 
   // 當頁面加載時從後端獲取訂單資料
   useEffect(() => {
@@ -29,6 +44,7 @@ const StoreReservations = () => {
   
         const formattedData = data.map((item) => ({
           reservationId: item.reservationId,
+          reservationDate: item.reservationDate, // 單獨存儲日期部分
           reservationTime: item.reservationDate + ' ' + item.reservationTime,
           peopleCount: item.numPeople,
           name: item.users.name,
@@ -202,9 +218,11 @@ const StoreReservations = () => {
                     </Typography>
                   </CardContent>
                   <CardActions sx={{ justifyContent: 'flex-end' }}>
+                    {reservation.reservationDate !== today&&(
                     <Button variant="contained" color="error" onClick={() => handleCancelReservation(reservation.reservationId)}>
                       取消訂單
                     </Button>
+                  )}
                   </CardActions>
                 </Card>
               ))}
