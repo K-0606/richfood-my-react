@@ -67,7 +67,7 @@ export default function BStorePage1() {
 //fetch API
 const fetchData = async () => {
   
-  let url = "http://localhost:8080/restaurants/1";   
+  let url = "http://localhost:8080/restaurants/1";
 
   try {
     const response = await fetch(url, { method: "GET" });
