@@ -42,6 +42,7 @@ const FloatingButtons = () => {
 
       {/* 顯示推薦餐廳的卡片 */}
       {showRecommendation && recommendedRestaurant && (
+        
         <Card sx={{
           position: 'absolute',
           bottom: '110px',
@@ -54,10 +55,11 @@ const FloatingButtons = () => {
           boxShadow: 3,  // 增加陰影效果
         }}>
           {/* 圖片部分 */}
+          
           <CardMedia
             component="img"
-            image={recommendedRestaurant.image}
-            alt={recommendedRestaurant.name}
+            image={recommendedRestaurant[0].image}
+            alt={recommendedRestaurant[0].name}
             sx={{
               height: '250px',  // 增加圖片的高度
               width: '100%',  // 讓圖片填滿寬度
@@ -69,13 +71,12 @@ const FloatingButtons = () => {
           
           <CardContent sx={{ padding: '16px' }}>
             <Typography variant="h6" sx={{ fontWeight: 'bold', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-              {recommendedRestaurant.name}
+              {recommendedRestaurant[0].name}
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {recommendedRestaurant.address}
+              {recommendedRestaurant[0].address}
             </Typography>
           </CardContent>
-          
           {/* 關閉按鈕 */}
           <IconButton
             onClick={handleCloseCard}
