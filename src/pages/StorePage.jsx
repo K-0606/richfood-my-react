@@ -16,7 +16,7 @@ function StorePage() {
     <Header />
     <StorePage1 />
     <StorePage3 />
-    <MapComponent/>
+    
     <StorePage4 />
     <StoreNamePicture />
     <FloatingButtons/>

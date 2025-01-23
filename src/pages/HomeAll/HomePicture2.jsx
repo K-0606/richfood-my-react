@@ -131,7 +131,7 @@ const itemData2 = [
     title: '居酒屋',value: "居酒屋"
   },
   {
-    img: 'https://images.unsplash.com/photo-1589118949245-7d38baf380d6',
+    img: 'https://www.gomaji.com/blog/wp-content/uploads/2021/03/IMG_9218.jpg',
     title: '中式料理', value: "中式料理"
   },
 ];
