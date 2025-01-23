@@ -128,7 +128,10 @@ function BookPage() {
       <Button
         variant="contained"
         color="primary"
-        onClick={handleBook}
+        onClick={() => {
+          handleBook(); // 執行 handleBook 函數
+          alert('訂位已確認！'); // 顯示確認訊息
+        }}
         fullWidth
         style={{ marginBottom: '10px' }}
       >
