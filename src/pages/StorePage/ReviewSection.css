@@ -1,0 +1,8 @@
+/* ReviewSection.css */
+.review-section {
+    display: inline-block;
+    width: auto; /* 可以依需要調整寬度，讓它不佔滿整行 */
+    margin-right: 20px; /* 右邊留點空間 */
+    vertical-align: top; /* 確保它對齊上方 */
+  }
+  

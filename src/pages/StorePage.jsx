@@ -7,6 +7,7 @@ import StorePage4 from '../pages/StorePage/StorePage4.jsx';
 import StoreNamePicture from '../pages/StorePage/StoreNamePicture.jsx';
 import FloatingButtons from '../components/common/FloatingButtons.jsx';
 import MapComponent from '../components/common/MapComponent.jsx';
+import ReviewSection from './StorePage/ReviewSection.jsx';
 
 
 function StorePage() {
@@ -16,8 +17,8 @@ function StorePage() {
     <Header />
     <StorePage1 />
     <StorePage3 />
-    
-    <StorePage4 />
+    <ReviewSection/>
+    {/* <StorePage4 /> */}
     <StoreNamePicture />
     <FloatingButtons/>
     <Footer />
