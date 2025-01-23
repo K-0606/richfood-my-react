@@ -118,7 +118,7 @@ const BookPage = () => {
                           onClick={() => handleBookClick(item.date, periodLabel, item[period])}
                         >
                           {item[period] === 0 ? '無座位' : `${item[period]} 位可預訂`}
-                        </Button>
+ˇ                        </Button>
                       </Grid>
                     );
                   })}
