@@ -5,11 +5,9 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Paper, styled } from "@mui/material";
 import { useEffect, useState } from "react";
 import { data } from "react-router-dom";
-import MapComponent from "../../components/common/MapComponent";
 
 // 创建一个样式化的 Item
 const Item = styled(Paper)(({ theme }) => ({
@@ -28,60 +26,9 @@ const Item = styled(Paper)(({ theme }) => ({
   },
 }));
 
-// Google地图组件
-// const MapComponent = () => {
-//   const mapStyles = {
-//     height: "300px",  // 设置地图容器的高度
-//     width: "400px",   // 设置地图容器的宽度
-//     padding: "20px",
-//   };
-
-//   const defaultCenter = {
-//     lat: 25.0330,  // 修改为你的店铺的经纬度
-//     lng: 121.5654, // 修改为你的店铺的经纬度
-//   };
-
-//   return (
-//     <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY"> {/* 替换为你的 Google API 密钥 */}
-//       <GoogleMap
-//         mapContainerStyle={mapStyles}  // 使用上面定义的地图样式
-//         center={defaultCenter} // 地图中心位置
-//         zoom={14} // 缩放级别
-//       >
-//         {/* 添加标记 */}
-//         <Marker position={defaultCenter} />
-//       </GoogleMap>
-//     </LoadScript>
-//   );
-// };
-
 export default function StorePage() {
-  // 只保留3个卡片
-  // const cards = [
-  //   {
-  //     title: 'Lizard 1',
-  //     description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
-  //     image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-  //   },
-  //   {
-  //     title: 'Lizard 2',
-  //     description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
-  //     image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-  //   },
-  //   {
-  //     title: 'Lizard 3',
-  //     description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species.',
-  //     image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-  //   },
-  // ];
   const [cards, setCards] = useState([]);
   useEffect(() => {
-    //頁面做好這邊要修改
-    // const params = new URLSearchParams(window.location.search);
-    // const storeIdParam = params.get('storeId');
-    // setStoreId(storeIdParam);
-
-    // fetch(`http://localhost:8080/coupons/selectCoupon?storeId=${storeIdParam}`)
     fetch(`http://localhost:8080/coupons/selectCoupon?storeId=4`)
       .then((res) => {
         if (!res.ok) {
@@ -102,28 +49,14 @@ export default function StorePage() {
     <Box
       sx={{
         display: "flex",
-        justifyContent: "center", // 水平居中
-        alignItems: "center", // 垂直居中
+        justifyContent: "center",
+        alignItems: "center",
         width: "100%",
-        height: "100vh", // 使容器占满整个视口高度
-        marginTop: "-280px", // 使整体布局有一些空隙
+        height: "100vh",
+        marginTop: "-280px",
         gap: 3,
       }}
     >
-      {/* Google地图部分
-      <Box sx={{ 
-        width: '400px',  
-        height: '400px',
-        padding: '20px', 
-        boxSizing: 'border-box',
-        display: 'flex',  
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        position: 'relative', 
-      }}>
-        <MapComponent />
-      </Box> */}
-
       {/* 卡片部分 */}
       <Box
         sx={{
@@ -142,10 +75,11 @@ export default function StorePage() {
             key={index}
             sx={{
               display: "flex",
-              justifyContent: "space-between", // 确保卡片在左侧排列
+              justifyContent: "space-between",
               alignItems: "center",
               gap: 2,
             }}
+            cols={3}
           >
             {/* Card */}
             <Card
