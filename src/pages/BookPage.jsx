@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, TextField, MenuItem, Select, InputLabel, FormControl, Grid, Box, Typography } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 
 function BookPage() {
   // State to store each step's selected value
@@ -7,6 +8,8 @@ function BookPage() {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [step, setStep] = useState(1); // Track the current step
+  const location=useLocation();
+  const storeId =location.state?.storeId;
 
   // Handler functions to update states
   const handlePeopleCountChange = (e) => {
@@ -75,6 +78,7 @@ function BookPage() {
           onChange={handleTimeChange}
           label="選擇時間"
         >
+          <MenuItem value="早上">早上</MenuItem>
           <MenuItem value="中午">中午</MenuItem>
           <MenuItem value="晚上">晚上</MenuItem>
         </Select>
@@ -94,7 +98,7 @@ function BookPage() {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => {
+        onClick={(handleBook) => {
           alert('訂位已確認！')
           console.log(peopleCount)
           console.log(date)
@@ -124,12 +128,13 @@ function BookPage() {
 
   const handleBook = async (event) => {
     const requestData = {
-      storeId: 10,// 預約按鍵進去後要修改這個編號
+      storeId: storeId,// 預約按鍵進去後要修改這個編號
       reservationDate:date,
       reservationTime:time,
       numPeople:peopleCount 
       };
     console.log(requestData);
+    console.log("bookpage"+storeId);
   
     try {
       const response = await fetch('http://localhost:8080/reservation/addseat', {

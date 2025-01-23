@@ -87,6 +87,8 @@ export default function BStorePage1() {
   const [rating, setRating] = useState(2); // 初始评分为2颗星
   const [comment, setComment] = useState("");
   const restaurantId = state.restaurant.restaurantId;
+  const [storeId, setStoreId] = useState("");
+
   // const { restaurantId } = state  || {}; // 確保 itemData1 正確接收到
   console.log("接收到的 state:", restaurantId);
   console.log("接收到的 state:", state.restaurant.restaurantId);
@@ -99,7 +101,7 @@ export default function BStorePage1() {
   // const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // 假設這裡使用 localStorage 來檢查登入狀態
 
   const handleBookRedirect = () => {
-    navigate("book");
+    navigate("book",{state:{storeId}});
   };
 
   const fetchData = async (restaurantId) => {
@@ -109,6 +111,7 @@ export default function BStorePage1() {
       const response = await fetch(url, { method: "GET" });
       const data = await response.json();
       setRestaurant(data);
+      setStoreId(data.storeId);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
