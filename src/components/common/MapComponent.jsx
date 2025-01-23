@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
-import { CircularProgress, Box } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
+import { CircularProgress, Box } from "@mui/material";
 
 // 定義 libraries 來避免重複創建
-const libraries = ['places'];
+const libraries = ["places"];
 
 const containerStyle = {
-  width: '50%',
-  height: '400px',
+  width: "45%",
+  height: "400px",
+  marginLeft: "150px",
+  marginTop: "-30px",
 };
 
 // 預設地址
-const defaultAddress = '408台中市南屯區文心路二段436號';
+const defaultAddress = "408台中市南屯區文心路二段436號";
 
 // 設置紅色標記圖標
 const redMarkerIcon = {
@@ -38,7 +45,7 @@ function MapComponent({ adressStorePage }) {
 
       // 呼叫 geocode 方法
       geocoder.geocode({ address }, (results, status) => {
-        if (status === 'OK' && results[0]) {
+        if (status === "OK" && results[0]) {
           const { lat, lng } = results[0].geometry.location;
           setLocation({ lat: lat(), lng: lng() });
 
@@ -54,7 +61,9 @@ function MapComponent({ adressStorePage }) {
 
   // 使用 Places API 獲取更多位置資訊
   const fetchPlaceDetails = (placeId) => {
-    const service = new window.google.maps.places.PlacesService(document.createElement('div'));
+    const service = new window.google.maps.places.PlacesService(
+      document.createElement("div")
+    );
 
     service.getDetails({ placeId }, (place, status) => {
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
@@ -76,7 +85,12 @@ function MapComponent({ adressStorePage }) {
     <div>
       {/* 顯示 Loading 畫面，直到 Google Maps 加載完成 */}
       {loading && (
-        <Box display="flex" justifyContent="center" alignItems="center" style={{ height: '400px' }}>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          style={{ height: "400px" }}
+        >
           <CircularProgress />
         </Box>
       )}
@@ -104,18 +118,47 @@ function MapComponent({ adressStorePage }) {
 
             {/* 顯示商業資訊的 InfoWindow */}
             {showInfoWindow && placeDetails && (
-              <InfoWindow position={location} onCloseClick={() => setShowInfoWindow(false)}>
-                <div style={{ width: '300px', fontFamily: 'Arial, sans-serif', padding: '10px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
-                  <h4 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>
+              <InfoWindow
+                position={location}
+                onCloseClick={() => setShowInfoWindow(false)}
+              >
+                <div
+                  style={{
+                    width: "300px",
+                    fontFamily: "Arial, sans-serif",
+                    padding: "10px",
+                    backgroundColor: "#fff",
+                    borderRadius: "8px",
+                    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      marginBottom: "10px",
+                    }}
+                  >
                     {placeDetails.name}
                   </h4>
-                  <p><strong>地址:</strong> {placeDetails.formatted_address}</p>
+                  <p>
+                    <strong>地址:</strong> {placeDetails.formatted_address}
+                  </p>
                   {placeDetails.formatted_phone_number && (
-                    <p><strong>電話:</strong> {placeDetails.formatted_phone_number}</p>
+                    <p>
+                      <strong>電話:</strong>{" "}
+                      {placeDetails.formatted_phone_number}
+                    </p>
                   )}
                   {placeDetails.website && (
-                    <p><strong>網站:</strong>
-                      <a href={placeDetails.website} target="_blank" rel="noopener noreferrer" style={{ color: '#007BFF', textDecoration: 'none' }}>
+                    <p>
+                      <strong>網站:</strong>
+                      <a
+                        href={placeDetails.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "#007BFF", textDecoration: "none" }}
+                      >
                         訪問網站
                       </a>
                     </p>
