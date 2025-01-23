@@ -29,6 +29,16 @@ import Test2 from './pages/SearchStoreAll/Test2';
 import Test3 from './pages/Test3';
 import Test4 from './pages/Test4';
 import UseCoupon from './pages/MemberComponents/UseCoupon';
+// 英文版
+import HomeEnglish from './pages/HomeEnglish';
+import HomeName1E from './pages/HomeAllEnglish/HomeName1E';
+import HomeName2E from './pages/HomeAllEnglish/HomeName2E';
+import HomeName3E from './pages/HomeAllEnglish/HomeName3E';
+import HomePicture1E from './pages/HomeAllEnglish/HomePicture1E';
+import HomePicture2E from './pages/HomeAllEnglish/HomePicture2E';
+import HomePicture3E from './pages/HomeAllEnglish/HomePicture3E';
+import HomeHeroImageE from './pages/HomeAllEnglish/HomeHeroImageE';
+
 
 // 定義路由配置
 const routes = [
@@ -65,6 +75,17 @@ const routes = [
   { path: '/Test2', element: <Test2 /> },
   { path: '/Test3', element: <Test3 /> },
   { path: '/Test4', element: <Test4 /> },
+
+  // 英文版  
+  { path: "/HomeEnglish", element: <HomeEnglish /> }, 
+  { path: "/HomeName1E", element: <HomeName1E /> }, 
+  { path: "/HomeName2E", element: <HomeName2E /> }, 
+  { path: "/HomeName3E", element: <HomeName3E /> }, 
+  { path: "/HomePicture1E", element: <HomePicture1E /> }, 
+  { path: "/HomePicture2E", element: <HomePicture2E /> }, 
+  { path: "/HomePicture3E", element: <HomePicture3E /> }, 
+  { path: "/HomeHeroImageE", element: <HomeHeroImageE /> }
+
 ];
 
 export default routes;
