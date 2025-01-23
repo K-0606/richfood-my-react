@@ -1,0 +1,23 @@
+/* 默认显示 */
+.my-Checkbox {
+    display: none;
+    
+  }
+  @media (min-width: 1200px) {
+    .my-Checkbox {
+      display:block ;
+
+    }
+  }
+  
+  .CardBox {
+    margin-top: 20px;
+    margin-top: 50px;
+    
+  }
+    @media (min-width: 1200px) {
+        .CardBox {
+            margin-top: -1200px;
+    
+        }
+  } 
