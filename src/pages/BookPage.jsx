@@ -31,6 +31,36 @@ function BookPage() {
       default: return false;
     }
   };
+  const handleBook = async (event) => {
+    const requestData = {
+      storeId: storeId,// 預約按鍵進去後要修改這個編號
+      reservationDate:date,
+      reservationTime:time,
+      numPeople:peopleCount 
+      };
+    console.log(requestData);
+    console.log("bookpage"+storeId);
+  
+    try {
+      const response = await fetch('http://localhost:8080/reservation/addseat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include', // 確保攜帶 Cookie
+        body: JSON.stringify(requestData),
+      });
+
+        console.log('發送的請求資料：', requestData);
+     
+        const result = await response.json();
+        console.log(result);
+        
+      } catch (error) {
+        console.error(error.message);
+        
+      }
+    };
 
   // Step 1: Select people count
   const renderStep1 = () => (
@@ -98,13 +128,7 @@ function BookPage() {
       <Button
         variant="contained"
         color="primary"
-        onClick={(handleBook) => {
-          alert('訂位已確認！')
-          console.log(peopleCount)
-          console.log(date)
-          console.log(time)
-          // console.log(step)
-        }}
+        onClick={handleBook}
         fullWidth
         style={{ marginBottom: '10px' }}
       >
@@ -126,36 +150,7 @@ function BookPage() {
     </Grid>
   );
 
-  const handleBook = async (event) => {
-    const requestData = {
-      storeId: storeId,// 預約按鍵進去後要修改這個編號
-      reservationDate:date,
-      reservationTime:time,
-      numPeople:peopleCount 
-      };
-    console.log(requestData);
-    console.log("bookpage"+storeId);
   
-    try {
-      const response = await fetch('http://localhost:8080/reservation/addseat', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-          },
-        credentials: 'include', // 確保攜帶 Cookie
-        body: JSON.stringify(requestData),
-      });
-
-        console.log('發送的請求資料：', requestData);
-     
-        const result = await response.json();
-        console.log(result);
-        
-      } catch (error) {
-        console.error(error.message);
-        
-      }
-    };
 
   return (
     <Box sx={{ maxWidth: 500, margin: '0 auto', padding: 2 }}>
