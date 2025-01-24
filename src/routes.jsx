@@ -38,6 +38,8 @@ import HomePicture1E from './pages/HomeAllEnglish/HomePicture1E';
 import HomePicture2E from './pages/HomeAllEnglish/HomePicture2E';
 import HomePicture3E from './pages/HomeAllEnglish/HomePicture3E';
 import HomeHeroImageE from './pages/HomeAllEnglish/HomeHeroImageE';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 
 // 定義路由配置
@@ -54,6 +56,8 @@ const routes = [
   { path: '/StoreQRCodeScanner', element: <StoreQRCodeScanner /> },
   { path: '/contactUs', element: <ContactUsPage /> },
   { path: '/StorePage/book', element: <BookPage /> },
+  { path: '/forgot-password', element: <ForgotPasswordPage /> },
+  { path: '/reset-password', element: <ResetPasswordPage /> },
   
   // Members-related routes
   { path: '/profile', element: <MemberProfile /> },

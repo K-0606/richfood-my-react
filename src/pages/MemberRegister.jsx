@@ -14,6 +14,8 @@ import {
   FormLabel,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import Header from "../components/layout/Header";
+import { useNavigate } from "react-router-dom";
 
 const MemberRegister = () => {
   // 表單的狀態管理
@@ -26,6 +28,8 @@ const MemberRegister = () => {
   const [name, setName] = useState("");
   const [gender, setGender] = useState("male");
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   // 處理表單提交
   const handleSubmit = async (e) => {
@@ -74,6 +78,7 @@ const MemberRegister = () => {
   
       const result = await response.json();
       alert("註冊成功！");
+      navigate('/Login')
 
       // 清空表單
       setAccount("");
@@ -91,6 +96,8 @@ const MemberRegister = () => {
   };
 
   return (
+    <>
+    <Header/>
     <Container component="main" maxWidth="xs">
       <Typography variant="h5" align="center" gutterBottom>
         註冊帳號
@@ -227,6 +234,7 @@ const MemberRegister = () => {
         </Grid>
       </form>
     </Container>
+    </>
   );
 };
 
