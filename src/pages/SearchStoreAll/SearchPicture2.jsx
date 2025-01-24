@@ -371,17 +371,17 @@ const SearchPicture2 = () => {
                   <Typography gutterBottom variant="h5" component="div">
                     {restaurantId.name}
                   </Typography>
-                  {/* 評分 */}
+
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    <strong>評分:</strong> {restaurantId.rating}
+                    <strong>評分:</strong> {restaurantId.score}
                   </Typography>
                   <Box sx={{ display: "flex", gap: 1 }}>
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
                         sx={{
-                          color: i < restaurantId.rating ? "gold" : "gray",
-                          fontSize: "20px",
+                          color: i < restaurantId.score ? "gold" : "gray",
+                          fontSize: "25px",
                         }}
                       />
                     ))}
