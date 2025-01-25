@@ -112,27 +112,27 @@ const Home = () => {
     if (updatedData.email) formData.append('email', updatedData.email);
     if (updatedData.gender) formData.append('gender', updatedData.gender);
     if (updatedData.iconFile) formData.append('iconFile', updatedData.iconFile);
-
+  
     setLoading(true);
-
+  
     axios
       .put('http://localhost:8080/User/updateUser', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true,
       })
       .then((response) => {
-        alert(response.data.message || '资料更新成功');
+        alert(response.data.message || '資料更新成功');
         setError(null);
         setMemberData((prevData) => ({
           ...prevData,
           ...updatedData,
           avatarUrl: updatedData.iconFile
-            ? `http://localhost:8080${response.data.icon}?t=${Date.now()}`
-            : prevData.avatarUrl || '/default-avatar.png',
+            ? `http://localhost:8080${response.data.icon}?t=${Date.now()}` // 確保刷新圖片
+            : prevData.avatarUrl,
         }));
       })
       .catch((err) => {
-        setError('更新失败，请稍后再试');
+        setError('更新失敗，請稍後再試');
       })
       .finally(() => {
         setLoading(false);
