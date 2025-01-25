@@ -1,105 +1,199 @@
-// src/pages/Home.jsx
-import React, { useState } from 'react';
-import { Button, Box, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button, Box, Typography, CircularProgress } from '@mui/material';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import axios from 'axios';
 
-
-// 導入需要的子組件
+// 子组件
 import Comments from './MemberComponents/Comments';
 import Collections from './MemberComponents/Collections';
 import Coupons from './MemberComponents/Coupons';
 import Reservations from './MemberComponents/Reservations';
-import MemberProfile from './MemberComponents/MemberProfile'; // 引入 MemberProfile
+import MemberProfile from './MemberComponents/MemberProfile';
 
 const Home = () => {
-  const [activeContent, setActiveContent] = useState('comments'); // 預設顯示 我的評論
-  const [isEditing, setIsEditing] = useState(false); // 控制是否顯示編輯模式
-  const [isChangingPassword, setIsChangingPassword] = useState(false); // 控制是否顯示變更密碼區塊
+  const [activeContent, setActiveContent] = useState('comments'); // 默认显示 我的评论
+  const [isEditing, setIsEditing] = useState(false); // 控制是否显示编辑模式
+  const [isChangingPassword, setIsChangingPassword] = useState(false); // 控制是否显示修改密码块
   const [newPassword, setNewPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [error, setError] = useState(null); // 控制错误信息
+  const [loading, setLoading] = useState(false); // 加载状态
+  const [reviews, setReviews] = useState([]); // 存放評論數據
+  const [collections, setCollections] = useState([]); // 存放珍藏數據
 
-  // 預設會員資料
+  // 会员数据初始化
   const [memberData, setMemberData] = useState({
-    id: '12345',
-    name: 'Rich Food',
-    gender: 'male',
-    account:'user123',
-    email: 'richfood@example.com',
-    phone: '0987654321',
-    avatarUrl: 'https://megapx-assets.dcard.tw/images/7d91a6c1-e79c-4f43-a57e-66670e71fca2/1280.webp',
-    password: '', // 密碼為空，會與用戶輸入的密碼做比較
+    id: '',
+    name: '',
+    gender: '',
+    account: '',
+    email: '',
+    phone: '',
+    avatarUrl: '',
+    password: '',
   });
 
-  const handleButtonClick = (content) => {
-    setActiveContent(content); // 控制顯示的內容
-  };
-
-  const handleSaveProfile = (updatedData) => {
-    setMemberData(updatedData); // 儲存會員資料
-    console.log('儲存的會員資料:', updatedData);
-    setIsEditing(false); // 停止編輯模式
-  };
-
-  const handleSavePassword = () => {
-    // 密碼校驗邏輯
-    if (newPassword !== confirmNewPassword) {
-      setPasswordError('新密碼和確認密碼不一致');
-      return;
+  // 拉取会员数据
+  useEffect(() => {
+    if (activeContent === 'profile') {
+      setLoading(true);
+      axios
+        .get('http://localhost:8080/User/getUserDetails', { withCredentials: true })
+        .then((response) => {
+          const data = response.data;
+          setMemberData({
+            id: data.userId || '',
+            name: data.name || '',
+            gender: data.gender || 'other',
+            account: data.userAccount || '',
+            email: data.email || '',
+            phone: data.tel || '',
+            avatarUrl: data.icon ? `http://localhost:8080${data.icon}` : '',
+          });
+          setLoading(false);
+        })
+        .catch((err) => {
+          setError('无法加载会员数据，请稍后再试');
+          setLoading(false);
+        });
     }
-    // 密碼一致後，進行儲存操作
-    setMemberData((prevData) => ({
-      ...prevData,
-      password: newPassword, // 更新密碼
-    }));
-    setPasswordError('');
-    setIsChangingPassword(false); // 停止變更密碼模式
-    setNewPassword('');
-    setConfirmNewPassword('');
-    alert('密碼已更新');
+  }, [activeContent]);
+
+  // 拉取评论数据
+  useEffect(() => {
+    if (activeContent === 'comments') {
+      setLoading(true);
+      axios
+        .get('http://localhost:8080/Reviews/myReviews', { withCredentials: true })
+        .then((response) => {
+          const formattedReviews = response.data.map((review) => ({
+            restaurantName: `餐廳 ${review.restaurantId}`,
+            restaurantId: review.restaurantId,
+            rating: review.rating,
+            content: review.content,
+            date: new Date(review.createdAt).toLocaleDateString(),
+          }));
+          setReviews(formattedReviews);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setError('无法加载评论数据，请稍后再试');
+          setLoading(false);
+        });
+    }
+  }, [activeContent]);
+
+  // 拉取珍藏数据
+  useEffect(() => {
+    if (activeContent === 'collections') {
+      setLoading(true);
+      axios
+        .get('http://localhost:8080/favorite/restaurants', { withCredentials: true })
+        .then((response) => {
+          setCollections(response.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setError('无法加载珍藏数据，请稍后再试');
+          setLoading(false);
+        });
+    }
+  }, [activeContent]);
+
+  // 处理更新会员数据
+  const handleUpdateMemberData = (updatedData) => {
+    const formData = new FormData();
+    formData.append('userId', memberData.id);
+    if (updatedData.name) formData.append('name', updatedData.name);
+    if (updatedData.phone) formData.append('tel', updatedData.phone);
+    if (updatedData.email) formData.append('email', updatedData.email);
+    if (updatedData.gender) formData.append('gender', updatedData.gender);
+    if (updatedData.iconFile) formData.append('iconFile', updatedData.iconFile);
+
+    setLoading(true);
+
+    axios
+      .put('http://localhost:8080/User/updateUser', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
+      })
+      .then((response) => {
+        alert(response.data.message || '资料更新成功');
+        setError(null);
+        setMemberData((prevData) => ({
+          ...prevData,
+          ...updatedData,
+          avatarUrl: updatedData.iconFile
+            ? `http://localhost:8080${response.data.icon}?t=${Date.now()}`
+            : prevData.avatarUrl || '/default-avatar.png',
+        }));
+      })
+      .catch((err) => {
+        setError('更新失败，请稍后再试');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <>
       <Header />
       <Box sx={{ padding: 3 }}>
-        {/* 顯示五個按鈕 */}
         <Box display="flex" justifyContent="center" sx={{ marginBottom: 4 }}>
-          <Button variant="outlined" onClick={() => handleButtonClick('comments')}>我的評論</Button>
-          <Button variant="outlined" onClick={() => handleButtonClick('collections')}>我的珍藏</Button>
-          <Button variant="outlined" onClick={() => handleButtonClick('coupons')}>我的餐券</Button>
-          <Button variant="outlined" onClick={() => handleButtonClick('reservations')}>我的訂位</Button>
-          <Button variant="outlined" onClick={() => handleButtonClick('profile')}>會員資料</Button>
+          <Button variant="outlined" onClick={() => setActiveContent('comments')}>
+            我的评论
+          </Button>
+          <Button variant="outlined" onClick={() => setActiveContent('collections')}>
+            我的珍藏
+          </Button>
+          <Button variant="outlined" onClick={() => setActiveContent('coupons')}>
+            我的餐券
+          </Button>
+          <Button variant="outlined" onClick={() => setActiveContent('reservations')}>
+            我的订位
+          </Button>
+          <Button variant="outlined" onClick={() => setActiveContent('profile')}>
+            会员资料
+          </Button>
         </Box>
 
-        {/* 根據 activeContent 顯示不同的組件 */}
-        {activeContent === 'comments' && <Comments />}
-        {activeContent === 'collections' && <Collections />}
-        {activeContent === 'coupons' && <Coupons />}
-        {activeContent === 'reservations' && <Reservations />}
-        {activeContent === 'profile' && (
-          <MemberProfile 
-            memberData={memberData} 
-            onSave={handleSaveProfile} 
-            isEditing={isEditing} 
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" sx={{ height: '50vh' }}>
+            <CircularProgress />
+          </Box>
+        ) : activeContent === 'profile' ? (
+          <MemberProfile
+            memberData={memberData}
+            onSave={handleUpdateMemberData}
+            isEditing={isEditing}
             setIsEditing={setIsEditing}
-            isChangingPassword={isChangingPassword} 
-            setIsChangingPassword={setIsChangingPassword} 
+            isChangingPassword={isChangingPassword}
+            setIsChangingPassword={setIsChangingPassword}
+            currentPassword={currentPassword}
+            setCurrentPassword={setCurrentPassword}
             newPassword={newPassword}
             setNewPassword={setNewPassword}
             confirmNewPassword={confirmNewPassword}
             setConfirmNewPassword={setConfirmNewPassword}
-            handleSavePassword={handleSavePassword}
             passwordError={passwordError}
           />
+        ) : activeContent === 'comments' ? (
+          <Comments reviews={reviews} error={error} />
+        ) : activeContent === 'collections' ? (
+          <Collections collections={collections} />
+        ) : activeContent === 'coupons' ? (
+          <Coupons />
+        ) : (
+          <Reservations />
         )}
       </Box>
       <Footer />
     </>
   );
 };
-
 
 export default Home;
