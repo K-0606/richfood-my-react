@@ -1,8 +1,17 @@
-import React from 'react';
-import { Box, Typography, Card, CardContent, CardMedia, Grid } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Card, CardContent, CardMedia, Grid, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const Collections = ({ collections }) => {
+  const [expandedIndexes, setExpandedIndexes] = useState({}); // 儲存展開/收起狀態
+
+  const toggleExpand = (index) => {
+    setExpandedIndexes((prevState) => ({
+      ...prevState,
+      [index]: !prevState[index],
+    }));
+  };
+
   return (
     <Box sx={{ padding: 3 }}>
       <Typography variant="h4" gutterBottom>
@@ -10,7 +19,7 @@ const Collections = ({ collections }) => {
       </Typography>
       <Grid container spacing={3}>
         {collections && collections.length > 0 ? (
-          collections.map((item) => (
+          collections.map((item, index) => (
             <Grid item xs={12} sm={6} md={4} key={item.restaurantId}>
               <Card>
                 {/* 餐廳圖片 */}
@@ -32,13 +41,32 @@ const Collections = ({ collections }) => {
                   <Typography variant="body2" color="text.secondary">
                     <strong>營業時間：</strong>
                   </Typography>
-                  <div>
-                    {item.businessHours.map((hours, index) => (
-                      <div key={index}>
-                        {hours.dayOfWeek}: {hours.startTime} - {hours.endTime}
-                      </div>
-                    ))}
-                  </div>
+                  {expandedIndexes[index] ? (
+                    <div>
+                      {item.businessHours.map((hours, idx) => (
+                        <div key={idx}>
+                          {hours.dayOfWeek}: {hours.startTime} - {hours.endTime}
+                        </div>
+                      ))}
+                      <Button
+                        size="small"
+                        variant="text"
+                        onClick={() => toggleExpand(index)}
+                        sx={{ marginTop: 1 }}
+                      >
+                        收起
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      size="small"
+                      variant="text"
+                      onClick={() => toggleExpand(index)}
+                      sx={{ marginTop: 1 }}
+                    >
+                      展開營業時間
+                    </Button>
+                  )}
 
                   {/* 地址 */}
                   <Typography variant="body2" color="text.secondary" sx={{ marginTop: 1 }}>
@@ -49,7 +77,7 @@ const Collections = ({ collections }) => {
             </Grid>
           ))
         ) : (
-          <Typography></Typography>
+          <Typography>目前沒有珍藏的餐廳。</Typography>
         )}
       </Grid>
     </Box>
