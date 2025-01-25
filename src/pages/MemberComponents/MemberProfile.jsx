@@ -1,6 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { TextField, Button, Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { useAvatar } from './AvatarContext';  // 引入 AvatarContext
+import { useAvatar } from './AvatarContext'; // 引入 AvatarContext
+import axios from 'axios';
+
+
+const BASE_URL = "http://localhost:8080"; // 基底 URL
 
 const MemberProfile = ({
   memberData,
@@ -16,10 +20,21 @@ const MemberProfile = ({
   handleSavePassword,
   passwordError
 }) => {
-  
-  const { avatarUrl, setAvatarUrl } = useAvatar();  // 取得 avatarUrl 和 setAvatarUrl
+  const { avatarUrl, setAvatarUrl } = useAvatar(); // 取得 avatarUrl 和 setAvatarUrl
   const [editedData, setEditedData] = useState({ ...memberData });
-  const [newAvatar, setNewAvatar] = useState(null);  // 用於儲存上傳的頭像
+  const [newAvatar, setNewAvatar] = useState(null); // 用於儲存上傳的頭像
+
+  // 初始化頭像 URL
+  useEffect(() => {
+    if (memberData && memberData.avatarUrl) {
+      // console.log('Avatar URL:', memberData.avatarUrl); // 確認 URL 是否正確
+      setAvatarUrl(memberData.avatarUrl);
+    } else {
+      // console.warn('No avatarUrl found, using default avatar.');
+      setAvatarUrl('/default-avatar.png');
+    }
+  }, [memberData]);
+
 
   // 處理會員資料變更
   const handleInputChange = (e) => {
@@ -32,11 +47,8 @@ const MemberProfile = ({
 
   // 儲存會員資料
   const handleSave = () => {
-    // 儲存編輯後的資料並且更新頭像 URL
-    if (newAvatar) {
-      setAvatarUrl(newAvatar);
-    }
-    onSave(editedData); // 儲存編輯後的資料
+    // 調用父組件的 `onSave` 方法，將變更的數據和文件傳遞到父組件
+    onSave(editedData);
     setIsEditing(false);
   };
 
@@ -44,13 +56,34 @@ const MemberProfile = ({
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewAvatar(reader.result);  // 更新預覽用的頭像 URL
-      };
-      reader.readAsDataURL(file);  // 將圖片讀取為 base64
+      // 預覽圖片
+      const objectUrl = URL.createObjectURL(file);
+      setAvatarUrl(objectUrl);
+
+      // 發送到後端
+      const formData = new FormData();
+      formData.append('userId', memberData.id); // 傳遞用戶 ID
+      formData.append('iconFile', file); // 傳遞文件
+
+      // 向後端上傳頭像
+      axios
+        .put(`${BASE_URL}/User/updateUser`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        })
+        .then((response) => {
+          alert('頭像更新成功！');
+          setAvatarUrl(`${BASE_URL}${response.data.icon}?t=${Date.now()}`); // 更新最新頭像
+        })
+        .catch((err) => {
+          alert('頭像更新失敗，請稍後再試');
+        })
+        .finally(() => {
+          URL.revokeObjectURL(objectUrl); // 清理對象 URL
+        });
     }
   };
+
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -61,10 +94,16 @@ const MemberProfile = ({
         <Grid item xs={12} sm={4}>
           <Box display="flex" justifyContent="center" alignItems="center">
             <img
-              src={newAvatar || avatarUrl}  // 使用新的頭像或預設頭像
+              src={avatarUrl || '/default-avatar.png'}
               alt="會員頭像"
               style={{ width: 150, height: 150, borderRadius: '50%' }}
+              onError={(e) => {
+                console.error('Image failed to load, using default avatar');
+                e.target.onerror = null; // 防止重複觸發
+                e.target.src = '/default-avatar.png';
+              }}
             />
+
           </Box>
           {/* 變更頭像按鈕 */}
           <Box display="flex" justifyContent="center" sx={{ marginTop: 2 }}>
@@ -115,8 +154,6 @@ const MemberProfile = ({
           <TextField
             label="會員帳號"
             value={editedData.account}
-            onChange={handleInputChange}
-            name="account"
             fullWidth
             variant="outlined"
             disabled
