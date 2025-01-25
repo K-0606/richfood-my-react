@@ -8,12 +8,38 @@ const StoreUpdateInfo = ({ onUpdateStoreData }) => {
   const [avatar, setAvatar] = useState('');
   const [isPasswordChange, setIsPasswordChange] = useState(false); // 控制顯示新密碼欄位
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false); // 密碼是否更新過
+  const [storeId, setStoreId] = useState(null); 
 
   //初始值
   useEffect(() => {
-    const fetchStoreData = async () => {
+    const fetchStoreId = async () => {
       try {
-        const response = await fetch("http://localhost:8080/store/getStore?storeId=1", {
+        const response = await fetch('http://localhost:8080/store/selectStore', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        console.log("取得的 storeId:", data.storeId);
+        setStoreId(data.storeId); // 更新 storeId
+      } catch (error) {
+        console.error("取得 storeId 失敗:", error.message);
+        alert("無法取得 storeId，請稍後再試");
+      }
+    };
+  
+    fetchStoreId();
+  }, []);
+
+
+  useEffect(() => {
+
+    const fetchStoreData = async () => {
+      if(!storeId){return}
+      try {
+        const response = await fetch(`http://localhost:8080/store/getStore?storeId=${storeId}`, {
           method: "GET",
           credentials: "include", // 攜帶 Cookie
         });
@@ -43,7 +69,7 @@ const StoreUpdateInfo = ({ onUpdateStoreData }) => {
     };
 
     fetchStoreData();
-  }, []);
+  }, [storeId]);
 
 
 
