@@ -1,19 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import { Box, Button, Grid, TextField, Typography, Avatar } from '@mui/material';
 
-const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
-  const [editStoreData, setEditStoreData] = useState({
-    name: storeData.name,
-    address: storeData.address,
-    businessHours: storeData.businessHours,
-    phone: storeData.phone,
-  });
-
+const StoreUpdateInfo = ({ onUpdateStoreData }) => {
+  const [editStoreData, setEditStoreData] = useState({});
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [avatar, setAvatar] = useState(storeData.avatar);
+  const [avatar, setAvatar] = useState('');
   const [isPasswordChange, setIsPasswordChange] = useState(false); // 控制顯示新密碼欄位
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false); // 密碼是否更新過
+
+  //初始值
+  useEffect(() => {
+    const fetchStoreData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/store/getStore?storeId=1", {
+          method: "GET",
+          credentials: "include", // 攜帶 Cookie
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message);
+        }
+
+        const data = await response.json();
+        console.log("取得的店家資料:", data);
+
+        // 將資料填入表單
+        setEditStoreData({
+          name: data.restaurants.name,
+          address: data.restaurants.country+
+                   data.restaurants.district+
+                   data.restaurants.address,
+          businessHours: '',
+          phone: data.restaurants.phone,
+        });
+
+        setAvatar(''); // 如果有頭像的欄位
+      } catch (error) {
+        console.error("資料抓取失敗:", error.message);
+        alert("無法取得店家資料，請稍後再試");
+      }
+    };
+
+    fetchStoreData();
+  }, []);
+
+
 
   // 當欄位變更時更新對應狀態
   const handleChange = (e) => {
@@ -60,7 +92,7 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
   };
 
   // 確認修改密碼
-  const handleConfirmPasswordChange = () => {
+  const handleConfirmPasswordChange = async () => {
     // 密碼校驗
     if (newPassword && newPassword !== confirmPassword) {
       alert('新密碼和確認密碼不一致');
@@ -78,6 +110,34 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
     console.log("更新的密碼: ", newPassword);
 
     // 更新密碼並回傳到父組件
+    const requestData = {
+      password: newPassword
+      };
+    try {
+      const response = await fetch('http://localhost:8080/store/updateStore', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include', // 確保攜帶 Cookie
+        body: JSON.stringify(requestData),
+      });
+      console.log('發送的請求資料：', requestData);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message );
+      }
+  
+        const result = await response.json();
+        console.log(result)
+        alert("ok");
+      } catch (error) {
+        console.error(error.message);
+        alert(error.message);
+      }
+
+
     onUpdateStoreData(updatedData);
 
     // 密碼更新成功，隱藏密碼欄位並提示
