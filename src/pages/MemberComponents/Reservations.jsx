@@ -37,7 +37,9 @@ const Reservations = () => {
           id: item.reservationId,
           restaurant:item.store.restaurants.name,
           date:item.reservationDate+' '+item.reservationTime,
-          address:item.store.restaurants.address
+          address:item.store.restaurants.country+
+                  item.store.restaurants.district+
+                  item.store.restaurants.address
 
         }));
   

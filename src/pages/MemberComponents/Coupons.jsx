@@ -1,19 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect }  from 'react';
 import { Box, Typography, Button, Grid, Card, CardContent } from '@mui/material';
 import axios from 'axios';  // 引入 axios 库來發送 HTTP 請求
 
 const Coupons = () => {
   const [selectedCoupon, setSelectedCoupon] = useState(null); // 儲存選中的餐券
   const [coupons, setCoupons] = useState([
-    { id: 1, name: '餐券A', restaurant: '餐廳A', couponCode: 'A12345', used: false },
-    { id: 2, name: '餐券B', restaurant: '餐廳B', couponCode: 'B12345', used: true },
-    { id: 3, name: '餐券C', restaurant: '餐廳C', couponCode: 'C12345', used: false }
+    // { id: 1, name: '餐券A', restaurant: '餐廳A', couponCode: 'A12345', used: false },
+    // { id: 2, name: '餐券B', restaurant: '餐廳B', couponCode: 'B12345', used: true },
+    // { id: 3, name: '餐券C', restaurant: '餐廳C', couponCode: 'C12345', used: false }
   ]);
   const [showQRCode, setShowQRCode] = useState(false); // 控制 QR code 顯示與否
 
+  useEffect(() => {
+      const fetchCoupons = async () => {
+        try {
+          const url ='http://localhost:8080/couponsOrder/selectAllCouponsOrder'
+    
+          const response = await fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+    
+          const formattedData = data.map((item) => ({
+            id:item.orderId, 
+            name:`${item.coupons.name}\n${item.coupons.description}`, 
+            restaurant:item.store.restaurants.name, 
+            couponCode:`http://localhost:8080/couponsOrder/usedCoupon?orderId=${item.orderId}`, 
+            used: item.status ,
+
+          }));
+          setCoupons(formattedData);
+        } catch (error) {
+          console.error('Error fetching reservations:', error);
+        }
+      };
+    
+      fetchCoupons();
+    }, []);
+
   // 處理選擇餐券
   const handleSelectCoupon = (coupon) => {
-    if (!coupon.used) {
+    if (coupon.used) {
       setSelectedCoupon(coupon); // 顯示選中的餐券詳細資訊
       setShowQRCode(true); // 顯示 QR code
     }
@@ -21,25 +52,30 @@ const Coupons = () => {
 
   // 處理完成按鈕，發送更新請求到後端
   const handleComplete = async () => {
-    if (selectedCoupon && !selectedCoupon.used) {
+    
       try {
         // 假設後端有個 API 用來更新餐券狀態
-        const response = await axios.post(`/api/coupons/${selectedCoupon.id}/use`, {});
+        const url =`http://localhost:8080/couponsOrder/usedCoupon?orderId=${selectedCoupon.id}`;
 
-        if (response.data.success) {
-          // 更新本地餐券狀態
-          setCoupons(coupons.map(coupon =>
-            coupon.id === selectedCoupon.id
-              ? { ...coupon, used: true }  // 將選中的餐券標記為已使用
-              : coupon
+
+        const response = await axios.get(url, {}, { 
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        // 更新本地餐券狀態
+        setCoupons(coupons.map(coupon =>
+          coupon.id === selectedCoupon.id
+            ? { ...coupon, used: false }  // 將選中的餐券標記為已使用
+            : coupon
           ));
           alert('餐券已成功使用');
-        }
+        
       } catch (error) {
         console.error('更新餐券狀態失敗:', error);
         alert('更新餐券狀態失敗，請稍後再試');
       }
-    }
+    
   };
 
   // 隱藏 QR code
@@ -60,10 +96,10 @@ const Coupons = () => {
                 <Typography variant="h6">{coupon.restaurant}</Typography>
                 <Typography variant="body2">{coupon.name}</Typography>
                 <Typography variant="body2">
-                  {coupon.used ? '已使用' : '可使用'}
+                  {coupon.used ? '可使用' : '已使用'}
                 </Typography>
                 {/* 如果餐券未使用，可以點擊查看詳情 */}
-                {!coupon.used ? (
+                {coupon.used ? (
                   <Button
                     variant="contained"
                     color="primary"
