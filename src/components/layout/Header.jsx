@@ -34,7 +34,7 @@ const Header = () => {
   const handleProfileRedirect = () => {
     console.log(user?.userType);  // 這裡改為 userType
     // 確保 user 資料已正確載入並檢查 userType
-    if (user?.userType === 'store') {
+    if (user?.userType != 'member') {
       navigate('/StoreLogin');  // 店家登入
     } else if (user?.userType === 'member') {
       navigate('/MemberLogin');  // 會員登入
@@ -68,7 +68,8 @@ const Header = () => {
             <div className="profile-container">
               <Button className="member" variant="contained" onClick={handleProfileRedirect}>
                 <Avatar alt={user.name} src={user.avatar} sx={{ width: 24, height: 24, mr: 1 }} />
-                {user.name}
+                {user.userType === "member" ? `${user.name}` : `${user.restaurants.name}`} {/* 根據身份顯示 */}
+                {/* {user.name} */}
               </Button>
               <Button className="member" variant="contained" onClick={handleLogout}>登出</Button>
             </div>

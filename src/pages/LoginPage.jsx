@@ -96,8 +96,8 @@ const LoginPage = () => {
       }
 
       const result = await response.json();
+      console.log(result);
       login(result); // 更新 UserContext 狀態
-      alert(`店家登入成功！店家 ID: ${result.storeId}`);
       navigate("/"); // 跳轉到首頁
     } catch (error) {
       setError(error.message);
