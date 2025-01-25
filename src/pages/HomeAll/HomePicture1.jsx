@@ -5,11 +5,11 @@ import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 
 export default function HomePicture1() {
-  const navigate = useNavigate(); // 使用 navigate
+  const navigate1 = useNavigate(); // 使用 navigate
 
   const handleCardClick = (value) => {
     console.log('P1 console log:',{itemData1:value});
-    navigate('/SearchStore', { state: { itemData1: value } }); // 点击后跳转并传递 selectedCity
+    navigate1('/SearchStore', { state: { itemData1: value } }); // 点击后跳转并传递 selectedCity
   };
 
   return (
@@ -84,7 +84,7 @@ const itemData1 = [
   },
   {
     img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: '台中',value: "台中",
+    title: '台中',value: "臺中市",
   },
   {
     img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',

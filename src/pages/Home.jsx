@@ -6,17 +6,20 @@ import HomePicture3 from './HomeAll/HomePicture3.jsx';
 import Footer from '../components/layout/Footer.jsx';
 import HomeHeroImage from './HomeAll/HomeHeroImage.jsx';
 import HomeComment from './HomeAll/HomeComment.jsx';
+import FloatingButtons from '../components/common/FloatingButtons.jsx';
 
 function Home() {
   return (
     
     <>
     <Header />
+    
     <HomeHeroImage/>
     <HomePicture1 />
     <HomePicture2 />
     <HomePicture3 />
     <HomeComment />
+    <FloatingButtons/>
     <Footer />
     </>
     
