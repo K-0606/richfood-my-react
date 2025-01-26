@@ -71,11 +71,14 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     // 保證評論數量、珍藏數量和評分不丟失
     const updatedData = {
       ...editStoreData,
-      avatar, // 更新頭像
+      avatar,
+      reviewsCount: storeData.reviewsCount,  // 保持評論數量
+      favoritesCount: storeData.favoritesCount,  // 保持珍藏數量
+      averageRating: storeData.averageRating,  // 保持評分
     };
   
     // 輸出修改前的資料和修改後的資料（方便調試）
@@ -88,6 +91,7 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
     // 提示使用者店家資訊已更新
     alert('店家資訊已更新');
   };
+  
 
   const handleConfirmPasswordChange = () => {
     console.log('更新前的店家資訊:', storeData); // 輸出修改前的資料
@@ -99,10 +103,12 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
     // 保留原來的店家資訊，並只更新密碼
     const updatedData = {
       ...editStoreData,
-      avatar, // 頭像保持不變
-      newPassword, // 新密碼儲存
+      avatar,
+      newPassword,
+      reviewsCount: storeData.reviewsCount,  // 保持評論數量
+      favoritesCount: storeData.favoritesCount,  // 保持珍藏數量
+      averageRating: storeData.averageRating,  // 保持評分
     };
-  
     console.log('更新後的店家資訊:', updatedData); // 輸出更新後的資料
   
     // const requestData = {
