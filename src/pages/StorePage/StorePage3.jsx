@@ -28,22 +28,65 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function StorePage() {
   const [cards, setCards] = useState([]);
+  const storeId = window.storeId;
+
   useEffect(() => {
-    fetch(`http://localhost:8080/coupons/selectCoupon?storeId=4`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("no response");
+
+    const fetchCoupons = async () => {
+      try {
+        const storeId = window.storeId; // 從全局變數中讀取 storeId
+
+        if (storeId) {
+          const response = await fetch(`http://localhost:8080/coupons/selectCoupon?storeId=${storeId}`);
+          if (!response.ok) throw new Error('網路錯誤');
+          
+          const data = await response.json();
+          setCards(data.slice(0, 3)); // 限制顯示 3 個卡片
         }
-        return res.json();
-      })
-      .then((data) => {
-        const limitedCards = data.slice(0, 3);
-        setCards(limitedCards);
-      })
-      .catch((error) => {
-        console.log(error);
+      } catch (error) {
+        console.error('抓取錯誤: ', error);
+      }
+    };
+    fetchCoupons();
+    
+  }, [storeId]);
+
+  const handlePurchase = async (couponId, price) => {
+    const quantity = 1; // 固定1
+    console.log('送出數據', {
+      couponId,
+      quantity,
+      price,
+      storeId
+    });
+    try {
+      const response = await fetch("http://localhost:8080/couponsOrder/addCouponsOrder", {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          couponId,
+          quantity,
+          price,
+          storeId,
+        }),
       });
-  }, []);
+
+      if (!response.ok) throw new Error("下單失敗");
+      const paymentUrl = await response.text(); 
+      
+      
+      if (response) {
+        window.location.href = paymentUrl;
+      } else {
+        console.error("未收到付款網址");
+      }
+    } catch (error) {
+      console.error("購買失敗: ", error);
+    }
+  };
 
   return (
     <Box
@@ -133,6 +176,7 @@ export default function StorePage() {
                 height: "100px",
                 width: "100px",
               }}
+              onClick={() => handlePurchase(card.couponId, card.price)}
             >
               <Item>購買</Item>
             </CardActionArea>

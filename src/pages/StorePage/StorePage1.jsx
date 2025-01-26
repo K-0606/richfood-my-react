@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { createContext,useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -132,6 +132,7 @@ export default function BStorePage1() {
       const data = await response.json();
       setRestaurant(data);
       setStoreId(data.storeId);
+      window.storeId = data.storeId; 
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -162,6 +163,7 @@ export default function BStorePage1() {
     alert("評論已提交！");
     handleCloseDialog();
   };
+
 
   return (
     <Box>
