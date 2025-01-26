@@ -1,21 +1,77 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { Box, Button, Grid, TextField, Typography, Avatar, Divider } from '@mui/material';
 
 const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
-  const [editStoreData, setEditStoreData] = useState({
-    name: storeData.name,
-    country: storeData.country || '',
-    district: storeData.district || '',
-    address: storeData.address || '',
-    businessHours: storeData.businessHours || Array(7).fill([]), // 初始化為 7 個空陣列
-    phone: storeData.phone,
-  });
-
+  const [editStoreData, setEditStoreData] = useState({});
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [avatar, setAvatar] = useState('');
   const [isPasswordChange, setIsPasswordChange] = useState(false); // 控制顯示新密碼欄位
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false); // 密碼是否更新過
+  const [storeId, setStoreId] = useState(null); 
+  const [restaurantId, setRestaurantId] = useState(null); 
+
+   //初始值
+   useEffect(() => {
+    const fetchStoreId = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/store/selectStore', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        // console.log("取得的 storeId:", data.storeId);
+        setStoreId(data.storeId); // 更新 storeId
+        setRestaurantId(data.restaurantId);
+      } catch (error) {
+        console.error(error.message);
+        alert("無法取得，請稍後再試");
+      }
+    };
+  
+    fetchStoreId();
+  }, []);
+  useEffect(() => {
+    const fetchStoreData = async () => {
+      if(!storeId){return}
+      try {
+        const response = await fetch(`http://localhost:8080/store/getStore?storeId=${storeId}`, {
+          method: "GET",
+          credentials: "include", // 攜帶 Cookie
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message);
+        }
+
+        const data = await response.json();
+        console.log("取得的店家資料:", data);
+
+        // 將資料填入表單
+        setEditStoreData({
+          name: data.restaurants.name,
+          country:data.restaurants.country,
+          district: data.restaurants.district,
+          address: data.restaurants.address,
+          phone: data.restaurants.phone
+        });
+
+        // setAvatar(data.icon); // 如果有頭像的欄位
+        setAvatar(data.icon.replace(/^"|"$/g, ''));
+      } catch (error) {
+        console.error("資料抓取失敗:", error.message);
+        alert("無法取得店家資料，請稍後再試");
+      }
+    };
+
+    fetchStoreData();
+  }, [storeId]);
+
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,20 +127,90 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
     }
   };
 
-  const handleSubmit = () => {
-    // 保證評論數量、珍藏數量和評分不丟失
+  const handleSubmit = async () => {
+    // // 保證評論數量、珍藏數量和評分不丟失
+    // const updatedData = {
+    //   ...editStoreData,
+    //   avatar,
+    //   reviewsCount: storeData.reviewsCount,  // 保持評論數量
+    //   favoritesCount: storeData.favoritesCount,  // 保持珍藏數量
+    //   averageRating: storeData.averageRating,  // 保持評分
+    // };
+  
+    // // 輸出修改前的資料和修改後的資料（方便調試）
+    // console.log('更新前的店家資訊:', storeData); 
+    // console.log('更新後的店家資訊:', updatedData);
     const updatedData = {
-      ...editStoreData,
-      avatar,
-      reviewsCount: storeData.reviewsCount,  // 保持評論數量
-      favoritesCount: storeData.favoritesCount,  // 保持珍藏數量
-      averageRating: storeData.averageRating,  // 保持評分
+      restaurantId: restaurantId, // 假設 storeId 是 restaurantId
+      name: editStoreData.name,
+      country: editStoreData.country,
+      district: editStoreData.district,
+      address: editStoreData.address,
+      phone: editStoreData.phone,
     };
   
-    // 輸出修改前的資料和修改後的資料（方便調試）
-    console.log('更新前的店家資訊:', storeData); 
-    console.log('更新後的店家資訊:', updatedData);
+    console.log('發送到後端的資料:', updatedData);
+
+    // 更改資料
+    try {
+      const response = await fetch('http://localhost:8080/restaurants/saveResraurantData', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // 確保攜帶 Cookie
+        body: JSON.stringify(updatedData),
+      });
   
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '更新失敗');
+      }
+  
+      const result = await response.json();
+
+      // 通知 Header 更新
+      const event = new Event("updateHeader");
+      window.dispatchEvent(event);
+
+      console.log('後端回傳的結果:', result);
+      alert('店家資訊已成功更新');
+    } catch (error) {
+      console.error('更新失敗:', error.message);
+      alert('更新失敗，請稍後再試');
+    }
+
+    //更改大頭貼
+    try {
+      const response = await fetch(`http://localhost:8080/store/icon/${storeId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(avatar),  // 傳送 BASE64 字串
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("更新成功", data);
+        alert('頭像更新成功');
+        
+      // 通知 Header 更新
+      const event = new Event("updateHeader");
+      window.dispatchEvent(event);
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+    } catch (error) {
+      console.error("錯誤:", error.message);
+      alert("更新失敗，請稍後再試");
+    }
+
+
+
+
     // 更新資料
     onUpdateStoreData(updatedData);
   
@@ -93,7 +219,7 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
   };
   
 
-  const handleConfirmPasswordChange = () => {
+  const handleConfirmPasswordChange = async () => { 
     console.log('更新前的店家資訊:', storeData); // 輸出修改前的資料
     if (newPassword && newPassword !== confirmPassword) {
       alert('新密碼和確認密碼不一致');
@@ -101,45 +227,45 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
     }
   
     // 保留原來的店家資訊，並只更新密碼
-    const updatedData = {
-      ...editStoreData,
-      avatar,
-      newPassword,
-      reviewsCount: storeData.reviewsCount,  // 保持評論數量
-      favoritesCount: storeData.favoritesCount,  // 保持珍藏數量
-      averageRating: storeData.averageRating,  // 保持評分
-    };
-    console.log('更新後的店家資訊:', updatedData); // 輸出更新後的資料
+    // const updatedData = {
+    //   ...editStoreData,
+    //   avatar,
+    //   newPassword,
+    //   reviewsCount: storeData.reviewsCount,  // 保持評論數量
+    //   favoritesCount: storeData.favoritesCount,  // 保持珍藏數量
+    //   averageRating: storeData.averageRating,  // 保持評分
+    // };
+    // console.log('更新後的店家資訊:', updatedData); // 輸出更新後的資料
   
-    // const requestData = {
-    //   password: newPassword
-    //   };
-    // try {
-    //   const response = await fetch('http://localhost:8080/store/updateStore', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     credentials: 'include', // 確保攜帶 Cookie
-    //     body: JSON.stringify(requestData),
-    //   });
-    //   console.log('發送的請求資料：', requestData);
+    const requestData = {
+      password: newPassword
+      };
+    try {
+      const response = await fetch('http://localhost:8080/store/updateStore', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+          },
+        credentials: 'include', // 確保攜帶 Cookie
+        body: JSON.stringify(requestData),
+      });
+      console.log('發送的請求資料：', requestData);
       
-    //   if (!response.ok) {
-    //     const errorData = await response.json();
-    //     throw new Error(errorData.message );
-    //   }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message );
+      }
   
-    //     const result = await response.json();
-    //     console.log(result)
-    //     alert("ok");
-    //   } catch (error) {
-    //     console.error(error.message);
-    //     alert(error.message);
-    //   }
+        const result = await response.json();
+        console.log(result)
+        alert("ok");
+      } catch (error) {
+        console.error(error.message);
+        alert(error.message);
+      }
 
 
-    onUpdateStoreData(updatedData);
+    onUpdateStoreData(requestData);
     setIsPasswordUpdated(true);
     setIsPasswordChange(false);
     alert('密碼已成功更新');
@@ -216,7 +342,7 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
 
       <Divider sx={{ my: 3 }} />
 
-      {/* 營業時間更新區塊 */}
+      {/* 營業時間更新區塊
       <Typography variant="h6" sx={{ mb: 2 }}>營業時間</Typography>
       {['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'].map((day, index) => (
         <Grid container spacing={2} key={index} alignItems="center" sx={{ mb: 2 }}>
@@ -265,7 +391,7 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
         </Grid>
       ))}
 
-      <Divider sx={{ my: 3 }} />
+      <Divider sx={{ my: 3 }} /> */}
 
       {/* 密碼更新區塊 */}
       <Grid item xs={12}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -10,6 +10,7 @@ import logo from '../../assets/richfoodCoverV1.png';
 const Header = () => {
   const navigate = useNavigate();
   const { user, logout } = useUser();  // 使用 useUser hook，從 context 中獲取 user 資料
+  const [userData, setUserData] = useState(null);
 
   // 用來處理登入導向
   const handleLoginRedirect = () => {
@@ -63,7 +64,42 @@ const Header = () => {
     
   };
 
+  //店家更新後刷新
+  const fetchUserData = async () => {
+    console.log("刷新")
+    try {
+      const response = await fetch("http://localhost:8080/store/selectStore", {
+        method: "GET",
+        credentials: "include",
+      });
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("重新取得的用戶資料:", userData);
+        setUserData(userData);  // 設定本地的 userData
+      }
+    } catch (error) {
+      console.error("取得用戶資料失敗:", error);
+    }
+  };
+
+  useEffect(() => {
+    // 監聽更新事件
+    const handleUpdateHeader = () => {
+      fetchUserData(); // 重新取得資料
+    };
+
+    window.addEventListener("updateHeader", handleUpdateHeader);
+
+    return () => {
+      // 移除事件監聽
+      window.removeEventListener("updateHeader", handleUpdateHeader);
+    };
+  }, []);
+
   const variant = "btnPrimary";
+
+  // 使用userData作為主資料來源，若無則使用user
+  const currentUser = userData || user;
 
   return (
     <div className="header">
@@ -80,10 +116,10 @@ const Header = () => {
           {user ? (
             <div className="profile-container">
               <Button className="member" variant="contained" onClick={handleProfileRedirect}>
-                <Avatar alt={user.name} 
-                src={user.userType === "member" ? user.avatar : JSON.parse(user.icon)} 
+                <Avatar alt={currentUser.name} 
+                src={currentUser.userType === "member" ? currentUser.avatar : JSON.parse(currentUser.icon)} 
                 sx={{ width: 24, height: 24, mr: 1 }} />
-                {user.userType === "member" ? `${user.name}` : `${user.restaurants.name}`} {/* 根據身份顯示 */}
+                {currentUser.userType === "member" ? `${currentUser.name}` : `${currentUser.restaurants.name}`} {/* 根據身份顯示 */}
     
               </Button>
               <Button className="member" variant="contained" onClick={handleLogout}>登出</Button>
