@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import './SearchSh.css'; // 引入樣式檔案
+import "./SearchSh.css"; // 引入樣式檔案
 
 function SearchSh() {
   const [selectedCuisines, setSelectedCuisines] = useState([null]);
   const [selectedRegions, setSelectedRegions] = useState([null]);
+  const [inputValueCuisine, setInputValueCuisine] = useState("");
+  const [inputValueRegion, setInputValueRegion] = useState("");
 
   // 菜系選項
   const cuisines = [
@@ -19,71 +21,89 @@ function SearchSh() {
     { value: "taipei", label: "台北" },
     { value: "taichung", label: "台中" },
     { value: "kaohsiung", label: "高雄" },
-    { value: "miaoli", label: "苗栗" },  
-    { value: "zhanghua", label: "彰化" },  
+    { value: "miaoli", label: "苗栗" },
+    { value: "zhanghua", label: "彰化" },
     { value: "yilan", label: "宜蘭" },
   ];
-  const MyComponent = () => {
-    const [checkedItem, setCheckedItem] = useState(null); // 用來追蹤勾選的項目
-    const [selectedCuisines, setSelectedCuisines] = useState(null); // 用來追蹤Select的選擇
-  
-    // Checkbox 勾選變更處理
-    const handleCheckboxChange = (event) => {
-      const { checked, name } = event.target;
-  
-      // 更新 checkedItem
-      if (checked && name === '火鍋') {
-        setCheckedItem(name);
-        setSelectedCuisines({ value: 'hotpot', label: '火鍋' }); // 當勾選火鍋時，選擇火鍋
-      } else {
-        setCheckedItem(null);
-        setSelectedCuisines(null); // 取消勾選時清空選擇
-      }
-    };
-  
-    // Select 改變時處理
-    const handleCuisineChange = (selectedOption) => {
-      setSelectedCuisines(selectedOption);
-    };
-  }
-  // // 處理菜系選擇
-  // const handleCuisineChange = (selectedOptions) => {
-  //   setSelectedCuisines(selectedOptions || []);
-  //   console.log("Selected Cuisine:", selectedOptions ? selectedOptions.label : null);
-  // };
+
+  // 模擬搜尋資料庫，根據使用者輸入的關鍵字來篩選菜系
+  const filterCuisines = (inputValue) => {
+    return cuisines.filter((cuisine) =>
+      cuisine.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
+
+  // 模擬搜尋資料庫，根據使用者輸入的關鍵字來篩選地區
+  const filterRegions = (inputValue) => {
+    return regions.filter((region) =>
+      region.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
+
+  // 處理菜系選擇
+  const handleCuisineChange = (selectedOptions) => {
+    // 保證只有選擇一個選項
+    setSelectedCuisines(selectedOptions ? [selectedOptions] : []);
+    search(selectedOptions ? [selectedOptions] : [], selectedRegions);
+  };
 
   // 處理地區選擇
   const handleRegionChange = (selectedOptions) => {
-    setSelectedRegions(selectedOptions || []);
-    console.log("Selected Region:", selectedOptions ? selectedOptions.label : null);
+    // 保證只有選擇一個選項
+    setSelectedRegions(selectedOptions ? [selectedOptions] : []);
+    search(selectedCuisines, selectedOptions ? [selectedOptions] : []);
   };
 
-  // 发送数据到API
-const sendDataToAPI = async () => {
-  const data = {
-    cuisine: selectedCuisines?.label || "",  // 使用 optional chaining 简化判断
-    region: selectedRegions?.label || "",    // 使用 optional chaining 简化判断
+  // 處理手動輸入的菜系
+  const handleCuisineInputChange = (newValue) => {
+    setInputValueCuisine(newValue); // 更新輸入的值
   };
 
-  try {
-    const response = await fetch("https://your-api-endpoint.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });  
+  // 處理手動輸入的地區
+  const handleRegionInputChange = (newValue) => {
+    setInputValueRegion(newValue); // 更新輸入的值
+  };
+  // 處理 Enter 鍵觸發搜尋
+  const handleKeyDown = (e, isCuisine) => {
+    if (e.key === "Enter") {
+      if (isCuisine) {
+        // 處理菜系搜尋
+        search(
+          [{ label: inputValueCuisine, value: inputValueCuisine }],
+          selectedRegions
+        );
+      } else {
+        // 處理地區搜尋
+        search(selectedCuisines, [
+          { label: inputValueRegion, value: inputValueRegion },
+        ]);
+      }
+    }
+  };
 
-    const result = await response.json();
-    console.log("API Response:", result);
-  } catch (error) {
-    console.error("Error sending data:", error);
-  }
-};
+  // 搜尋函數，根據菜系和地區來搜尋
+  const search = (cuisines, regions) => {
+    // 確保輸入的 cuisines 和 regions 是有效的數組
+    const selectedCuisineValues = Array.isArray(cuisines)
+      ? cuisines.map((cuisine) => cuisine.value)
+      : [];
+    const selectedRegionValues = Array.isArray(regions)
+      ? regions.map((region) => region.value)
+      : [];
+
+    console.log("搜尋菜系:", selectedCuisineValues);
+    console.log("搜尋地區:", selectedRegionValues);
+
+    // 這裡可以連接後端，發送請求並顯示結果
+    // 假設我們有一個 API 查詢的函數
+    // fetchData(selectedCuisineValues, selectedRegionValues);
+  };
 
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isFocused ? "#f0f0f0" : "transparent", // 當懸停時顯示淺灰色背景
-      color: state.isFocused ? "#000" : "#333", // 當懸停時字體顏色為黑色
+      backgroundColor: state.isFocused ? "#f0f0f0" : "transparent",
+      color: state.isFocused ? "#000" : "#333",
       padding: 10,
     }),
     control: (provided) => ({
@@ -92,7 +112,7 @@ const sendDataToAPI = async () => {
       padding: "5px",
       width: "300px",
     }),
-    singleValue: (provided) => ({
+    multiValueRemove: (provided) => ({
       ...provided,
       backgroundColor: "transparent",
       border: "none",
@@ -100,41 +120,99 @@ const sendDataToAPI = async () => {
       cursor: "pointer",
     }),
   };
+  // 发送数据到API
+  const sendDataToAPI = async () => {
+    const data = {
+      cuisine: selectedCuisines?.label || "", // 使用 optional chaining 简化判断
+      region: selectedRegions?.label || "", // 使用 optional chaining 简化判断
+    };
+
+    try {
+      const response = await fetch("https://your-api-endpoint.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      console.log("API Response:", result);
+    } catch (error) {
+      console.error("Error sending data:", error);
+    }
+  };
 
   return (
+    <div className="select-container">
+      {/* React-Select 菜系選擇 */}
+      <div>
+        <Select
+          className="cta-button"
+          isMulti={false} // 禁止多選，只能選一個
+          options={filterCuisines(inputValueCuisine)}
+          value={selectedCuisines}
+          onChange={handleCuisineChange}
+          onInputChange={handleCuisineInputChange} // 當用戶輸入時觸發
+          onKeyDown={(e) => handleKeyDown(e, true)} // 監聽 Enter 鍵
+          placeholder="搜尋餐廳 或 菜系"
+          isSearchable
+          closeMenuOnSelect={false}
+          components={{
+            MultiValueRemove: ({ data }) => (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedCuisines([]); // 清空菜系選擇
+                }}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "#747677",
+                  cursor: "pointer",
+                }}
+              >
+                &times;
+              </button>
+            ),
+          }}
+          allowCreate
+          styles={customStyles}
+        />
 
-        <div className="select-container">
-          {/* React-Select 菜系選擇 */}
-          <div>
-          <Select className="test"
-        options={cuisines}
-        value={selectedCuisines}  // 单选时，value 只有一个选项
-        onChange={handleCuisineChange}
-        placeholder="搜尋餐廳 或 菜系"
-        isSearchable // 允许搜索
-        closeMenuOnSelect={true} // 选择后关闭菜单
-        styles={customStyles} // 自定义样式
-        getOptionLabel={(e) => (
-          <div className={e.className}>
-            {e.label}
-          </div>
-        )}
-        getOptionValue={(e) => e.value}
-      />
+        {/* React-Select 地区选择（单选） */}
+        <Select
+          isMulti={false} // 禁止多選，只能選一個
+          options={filterRegions(inputValueRegion)}
+          value={selectedRegions}
+          onChange={handleRegionChange}
+          onInputChange={handleRegionInputChange} // 當用戶輸入時觸發
+          onKeyDown={(e) => handleKeyDown(e, false)} // 監聽 Enter 鍵
+          placeholder="搜尋地區 或 地址"
+          isSearchable
+          closeMenuOnSelect={false}
+          components={{
+            MultiValueRemove: ({ data }) => (
+              <button
+                className="cta-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedRegions([]); // 清空地區選擇
+                }}
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: "#747677",
+                  cursor: "pointer",
+                }}
+              >
+                &times;
+              </button>
+            ),
+          }}
+          allowCreate
+          styles={customStyles}
+        />
       </div>
-      
-
-      {/* React-Select 地区选择（单选） */}
-      <Select
-        options={regions}
-        value={selectedRegions} // 单选时，value 只有一个选项
-        onChange={handleRegionChange}
-        placeholder="搜尋地區 或 地址"
-        isSearchable // 允许搜索
-        closeMenuOnSelect={true} // 选择后关闭菜单
-        styles={customStyles} // 自定义样式
-      />
-        </div>
+    </div>
   );
 }
 

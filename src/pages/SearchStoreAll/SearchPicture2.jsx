@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import Select from "react-select";
+import Select2 from "@mui/material/Select";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -13,6 +14,9 @@ import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Star from "@mui/icons-material/Star";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
 import "./SP2.css";
 
 const SearchPicture2 = () => {
@@ -23,6 +27,10 @@ const SearchPicture2 = () => {
   const [checkedRegion, setCheckedRegion] = useState(null); // 用來追蹤勾選的地區
   const [selectedCuisines, setSelectedCuisines] = useState(null); // 用來追蹤菜系的Select選擇
   const [selectedRegions, setSelectedRegions] = useState(); // 用來追蹤地區的Select選擇 state?.selectedRegions || ''
+  const [inputValueCuisine, setInputValueCuisine] = useState("");
+  const [inputValueRegion, setInputValueRegion] = useState("");
+  const [choice, setChoice] = React.useState("");
+
   // const [page, setPage] = useState(1); // 記錄當前頁數
   // const [totalPages, setTotalPages] = useState(1); // 記錄總頁數
   const { itemData1 } = state || {}; // 確保 itemData1 正確接收到
@@ -93,9 +101,14 @@ const SearchPicture2 = () => {
 
     // fetchData(); // 初始加载，获取所有餐厅
   }, []);
+  //{-------------------------------------------------------------------------------------價格區間-------------}
+  const handleChange = (event) => {
+    setChoice(event.target.value);
+  };
 
-  //{---------餐廳----------}
+  //{-------------------------------------------------------------------------------------餐廳----------}
   // 菜系選項
+
   const cuisines = [
     { value: "hotpot", label: "火鍋" },
     { value: "japanese", label: "日式料理" },
@@ -135,6 +148,13 @@ const SearchPicture2 = () => {
     }
   };
 
+  // 處理菜系選擇
+  const handleCuisineChange = (selectedOptions) => {
+    // 保證只有選擇一個選項
+    setSelectedCuisines(selectedOptions ? [selectedOptions] : []);
+    search(selectedOptions ? [selectedOptions] : [], selectedRegions);
+  };
+
   // Select 改變菜系時處理
   const handleCuisineSelectChange = (selectedOption) => {
     console.log(
@@ -146,7 +166,7 @@ const SearchPicture2 = () => {
     setCheckedCuisine(selectedOption ? selectedOption.label : null);
     fetchData(selectedRegions, selectedOption ? selectedOption.label : null);
   };
-  //{---------地區----------}
+  //{----------------------------------------------------------------------------------地區----------}
   const regions = [
     { value: "taipei", label: "台北" },
     { value: "taoyuan", label: "桃園" },
@@ -181,6 +201,13 @@ const SearchPicture2 = () => {
       console.log(`取消勾選的地區: ${name}`);
       fetchData(null, checkedCuisine);
     }
+  };
+
+  // 模擬搜尋資料庫，根據使用者輸入的關鍵字來篩選地區
+  const filterRegions = (inputValue) => {
+    return regions.filter((region) =>
+      region.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
   };
 
   // Select 改變地區時處理
@@ -220,6 +247,54 @@ const SearchPicture2 = () => {
       cursor: "pointer",
     }),
   };
+
+  // 處理 Enter 鍵觸發搜尋
+  const handleKeyDown = (e, isCuisine) => {
+    if (e.key === "Enter") {
+      if (isCuisine) {
+        // 處理菜系搜尋
+        search(
+          [{ label: inputValueCuisine, value: inputValueCuisine }],
+          selectedRegions
+        );
+      } else {
+        // 處理地區搜尋
+        search(selectedCuisines, [
+          { label: inputValueRegion, value: inputValueRegion },
+        ]);
+      }
+    }
+  };
+
+  // 搜尋函數，根據菜系和地區來搜尋
+  const search = async (cuisines, regions) => {
+    // 確保輸入的 cuisines 和 regions 是有效的數組
+    const selectedCuisineValues = Array.isArray(cuisines)
+      ? cuisines.map((cuisine) => cuisine.value)
+      : [];
+    const selectedRegionValues = Array.isArray(regions)
+      ? regions.map((region) => region.value)
+      : [];
+
+    console.log("搜尋菜系:", selectedCuisineValues);
+    console.log("搜尋地區:", selectedRegionValues);
+    try {
+      const response = await fetch(
+        `/api/search?cuisines=${selectedCuisineValues.join(
+          ","
+        )}&regions=${selectedRegionValues.join(",")}`
+      );
+      const data = await response.json();
+      console.log("返回的餐廳數據:", data);
+    } catch (error) {
+      console.error("搜尋錯誤:", error);
+    }
+    // 這裡可以連接後端，發送請求並顯示結果
+    // 假設我們有一個 API 查詢的函數
+    // fetchData(selectedCuisineValues, selectedRegionValues);
+  };
+
+  //預設餐廳圖片樣式
   // const restaurantId = Array(10).fill({
   //       title: 'Lizard',
   //       description: 'Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica.',
@@ -250,7 +325,61 @@ const SearchPicture2 = () => {
           closeMenuOnSelect={true}
         />
       </div>
+      {/* --------------------------------------------------------------價格選項 */}
+      {/* 平均價格區間 */}
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <FormControl
+          sx={{
+            m: 1,
+            width: "120px",
+            transform: "translateX(100px)",
+            marginTop: "10px",
+          }}
+          size="small"
+        >
+          <InputLabel id="money-select-label">$平均消費</InputLabel>
+          <Select2
+            labelId="money-select-label"
+            id="money-select"
+            value={choice}
+            label="Choice"
+            onChange={handleChange}
+            displayEmpty
+          >
+            <MenuItem value={0}>不選擇</MenuItem>
+            <MenuItem value={100}>150以內</MenuItem>
+            <MenuItem value={150}>150~600</MenuItem>
+            <MenuItem value={600}>600~1200</MenuItem>
+            <MenuItem value={1200}>1200以上</MenuItem>
+          </Select2>
+        </FormControl>
 
+        {/* 人氣選擇 */}
+        <FormControl
+          sx={{
+            m: 1,
+            width: "120px",
+            transform: "translateX(100px)",
+            marginTop: "10px",
+          }}
+          size="small"
+        >
+          <InputLabel id="popular-select-label">人氣選擇</InputLabel>
+          <Select2
+            labelId="popular-select-label"
+            id="popular-select"
+            value={choice}
+            label="Choice"
+            onChange={handleChange}
+            displayEmpty
+          >
+            <MenuItem value={777}>評分最高</MenuItem>
+            <MenuItem value={888}>最新餐廳</MenuItem>
+            <MenuItem value={999}>最高人氣</MenuItem>
+          </Select2>
+        </FormControl>
+      </Box>
+      {/* ---------------------------------------------菜系、地區Checkbox  */}
       {/* 包裹菜系選擇的 Checkbox  */}
       <div className="my-Checkbox">
         <h2
@@ -325,7 +454,6 @@ const SearchPicture2 = () => {
           ))}
         </div>
       </div>
-
       {/* Card section on the right */}
       <Box
         className="CardBox"
