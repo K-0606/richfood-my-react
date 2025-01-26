@@ -60,7 +60,10 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
         });
 
         // setAvatar(data.icon); // 如果有頭像的欄位
-        setAvatar(data.icon.replace(/^"|"$/g, ''));
+        if(data.icon!=null){
+          setAvatar(data.icon.replace(/^"|"$/g, ''));
+        }
+        
       } catch (error) {
         console.error("資料抓取失敗:", error.message);
         alert("無法取得店家資料，請稍後再試");
