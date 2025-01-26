@@ -80,9 +80,11 @@ const Header = () => {
           {user ? (
             <div className="profile-container">
               <Button className="member" variant="contained" onClick={handleProfileRedirect}>
-                <Avatar alt={user.name} src={user.avatar} sx={{ width: 24, height: 24, mr: 1 }} />
+                <Avatar alt={user.name} 
+                src={user.userType === "member" ? user.avatar : JSON.parse(user.icon)} 
+                sx={{ width: 24, height: 24, mr: 1 }} />
                 {user.userType === "member" ? `${user.name}` : `${user.restaurants.name}`} {/* 根據身份顯示 */}
-                {/* {user.name} */}
+    
               </Button>
               <Button className="member" variant="contained" onClick={handleLogout}>登出</Button>
             </div>

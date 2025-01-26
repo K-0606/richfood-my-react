@@ -93,19 +93,47 @@ const StoreUpdateInfo = ({ onUpdateStoreData }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAvatar(reader.result); // 更新預覽圖
+        const base64Data = reader.result;
+        setAvatar(base64Data);
+        // setAvatar(reader.result); // 更新預覽圖
       };
       reader.readAsDataURL(file);
     }
   };
 
   // 提交更新
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // 更新資料
     const updatedData = {
       ...editStoreData,
       avatar, // 更新頭像
     };
+
+    try {
+      const response = await fetch(`http://localhost:8080/store/icon/${storeId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(avatar),  // 傳送 BASE64 字串
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("更新成功", data);
+        alert('頭像更新成功');
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message);
+      }
+    } catch (error) {
+      console.error("錯誤:", error.message);
+      alert("更新失敗，請稍後再試");
+    }
+
+
+
 
     // 模擬回傳更新的資料
     console.log("更新的店家資料: ", updatedData);
