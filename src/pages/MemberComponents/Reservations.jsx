@@ -1,23 +1,58 @@
 // src/components/Reservations.jsx
-import React from "react";
+import React, { useState, useEffect }  from "react";
 import { Box, Typography, Grid, Paper } from "@mui/material";
 import { Link } from "react-router-dom"; // 引入 Link 用來導向餐廳頁面
 
 const Reservations = () => {
-  const reservations = [
-    {
-      id: 1,
-      restaurant: "餐廳 A",
-      date: "2025-01-15 18:00",
-      address: "台北市信義區松高路"
-    },
-    {
-      id: 2,
-      restaurant: "餐廳 B",
-      date: "2025-02-20 19:30",
-      address: "台北市大安區忠孝東路"
-    },
-  ];
+  // const reservations = [
+  //   {
+  //     id: 1,
+  //     restaurant: "餐廳 A",
+  //     date: "2025-01-15 18:00",
+  //     address: "台北市信義區松高路"
+  //   },
+  //   {
+  //     id: 2,
+  //     restaurant: "餐廳 B",
+  //     date: "2025-02-20 19:30",
+  //     address: "台北市大安區忠孝東路"
+  //   },
+  // ];
+  const [reservations, setReservations] = useState([]);
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        const url ='http://localhost:8080/reservation/selectReservationNotCancelAsc'
+  
+        const response = await fetch(url, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+  
+        const formattedData = data.map((item) => ({
+          id: item.reservationId,
+          restaurant:item.store.restaurants.name,
+          date:item.reservationDate+' '+item.reservationTime,
+          address:item.store.restaurants.country+
+                  item.store.restaurants.district+
+                  item.store.restaurants.address
+
+        }));
+  
+        console.log(data);
+        setReservations(formattedData);
+      } catch (error) {
+        console.error('Error fetching reservations:', error);
+      }
+    };
+  
+    fetchReservations();
+  }, []);
+
 
   return (
     <Box sx={{ padding: 3 }}>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Button, Grid, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/system';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation} from 'react-router-dom';
+
 
 // Styled component，不將 isDisabled 傳遞給 DOM 元素
 const CardWrapper = styled(Card)(({ theme, disabled }) => ({
@@ -25,33 +26,70 @@ const BookPage = () => {
   const [maxSeats, setMaxSeats] = useState(1); // 最大可選座位數
   const [showSnackbar, setShowSnackbar] = useState(false); // 顯示提示訊息
   const navigate = useNavigate();
+  const location = useLocation();
+  const { storeId } = location.state || {}; 
 
+  useEffect(()=>{
+    console.log(storeId)
+  })
   useEffect(() => {
     // 生成今天和接下來五天的日期
     const getNextDays = () => {
       const days = [];
       const today = new Date();
-
+  
       for (let i = 0; i < 6; i++) {
         const date = new Date(today);
         date.setDate(today.getDate() + i); // 往後推i天
-        const formattedDate = date.toLocaleDateString('zh-TW'); // 格式為 yyyy/mm/dd
+        const formattedDate = date.toISOString().split('T')[0]; // 格式為 yyyy/mm/dd
         const dayOfWeek = date.toLocaleString('default', { weekday: 'long' }); // 星期幾
-
+  
         days.push({
           date: formattedDate,
           day: dayOfWeek,
-          morningSeats: Math.floor(Math.random() * 10), // 隨機生成座位數量
-          noonSeats: Math.floor(Math.random() * 10),
-          eveningSeats: Math.floor(Math.random() * 10),
+          morningSeats: 0, // 隨機生成座位數量
+          noonSeats: 0,
+          eveningSeats: 0,
         });
       }
-
+  
       return days;
     };
-
-    setData(getNextDays());
-  }, []);
+  
+    // 確保只有在 storeId 存在時才執行資料抓取
+    if (storeId) {
+      const fetchData = async () => {
+        const daysData = getNextDays();
+  
+        try {
+          const response = await fetch(`http://localhost:8080/restaurantCapacity/getMaxCapacity?storeId=${storeId}`);
+          const result = await response.json();
+          console.log(result)
+  
+          // 根據後端回應填充座位數
+          result.forEach((item) => {
+            const dayIndex = daysData.findIndex(day => day.date === item.date); // 查對應的日期
+            if (dayIndex !== -1) {
+              // 根據時間段設定座位數
+              if (item.time === '早上') {
+                daysData[dayIndex].morningSeats = item.maxCapacity;
+              } else if (item.time === '中午') {
+                daysData[dayIndex].noonSeats = item.maxCapacity;
+              } else if (item.time === '晚上') {
+                daysData[dayIndex].eveningSeats = item.maxCapacity;
+              }
+            }
+          });
+  
+          setData(daysData); // 更新資料
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+  
+      fetchData(); // 觸發資料抓取
+    }
+  }, [storeId]); // 每當 storeId 改變時觸發
 
   const getButtonColor = (seats) => {
     if (seats === 0) return 'grey'; // 沒有座位可預訂
@@ -69,19 +107,46 @@ const BookPage = () => {
     setOpenDialog(true); // 顯示對話框
   };
 
-  const handleConfirmBooking = () => {
+  const handleConfirmBooking = async () => {
     // 確認人數不能超過最大剩餘座位數
     if (selectedSeats > maxSeats) {
       setShowSnackbar(true); // 顯示錯誤提示
       return;
     }
 
-    // 在這裡可以將訂位資訊存儲到後端，現在先打印到 console
-    console.log(`訂位資訊：
-      餐廳: 測試餐廳
-      日期: ${selectedDate}
-      時間: ${selectedTime}
-      人數: ${selectedSeats}`);
+    const reservationData={
+      storeId: storeId, // 餐廳 ID
+      reservationDate: selectedDate, // 預訂日期
+      reservationTime: selectedTime, // 預訂時間段（早上/中午/晚上）
+      numPeople: selectedSeats, // 預訂人數
+    }
+
+    try{
+      const response = await fetch('http://localhost:8080/reservation/addseat', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservationData), // 將資料轉換成 JSON 格式
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Reservation successful:', result);
+  
+        // 顯示成功提示或執行其他操作
+        alert('預訂成功！');
+        setOpenDialog(false); // 關閉對話框
+        navigate('/'); // 導回首頁
+      } else {
+        console.error('Reservation failed:', response.statusText);
+        alert('預訂失敗，請稍後再試！');
+      }
+    }catch(error){
+
+    }
+
 
     // 關閉對話框並導回首頁
     setOpenDialog(false);

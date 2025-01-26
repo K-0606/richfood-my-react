@@ -34,7 +34,7 @@ const Header = () => {
   const handleProfileRedirect = () => {
     console.log(user?.userType);  // 這裡改為 userType
     // 確保 user 資料已正確載入並檢查 userType
-    if (user?.userType === 'store') {
+    if (user?.userType != 'member') {
       navigate('/StoreLogin');  // 店家登入
     } else if (user?.userType === 'member') {
       navigate('/MemberLogin');  // 會員登入
@@ -48,6 +48,19 @@ const Header = () => {
   const handleLogout = () => {
     logout();  // 使用 context 的 logout 方法
     navigate('/');  // 登出後跳轉到首頁
+    if (user?.userType != 'member') {
+      fetch("http://localhost:8080/store/storeLogOut", {
+        method: "GET",
+        credentials: 'include'})
+
+      console.log('店家登出')
+    } else {
+      fetch("http://localhost:8080/User/logout", {
+        method: "POST",
+        credentials: 'include'})
+      console.log('會員登出')
+    }
+    
   };
 
   const variant = "btnPrimary";
@@ -67,8 +80,11 @@ const Header = () => {
           {user ? (
             <div className="profile-container">
               <Button className="member" variant="contained" onClick={handleProfileRedirect}>
-                <Avatar alt={user.name} src={user.avatar} sx={{ width: 24, height: 24, mr: 1 }} />
-                {user.name}
+                <Avatar alt={user.name} 
+                src={user.userType === "member" ? user.avatar : JSON.parse(user.icon)} 
+                sx={{ width: 24, height: 24, mr: 1 }} />
+                {user.userType === "member" ? `${user.name}` : `${user.restaurants.name}`} {/* 根據身份顯示 */}
+    
               </Button>
               <Button className="member" variant="contained" onClick={handleLogout}>登出</Button>
             </div>

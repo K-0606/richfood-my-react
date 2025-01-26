@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import { Box, Button, Grid, TextField, Typography, Avatar, Divider } from '@mui/material';
 
 const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
@@ -13,7 +13,7 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [avatar, setAvatar] = useState(storeData.avatar);
+  const [avatar, setAvatar] = useState('');
   const [isPasswordChange, setIsPasswordChange] = useState(false); // 控制顯示新密碼欄位
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false); // 密碼是否更新過
 
@@ -63,20 +63,19 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAvatar(reader.result); // 更新預覽圖
+        const base64Data = reader.result;
+        setAvatar(base64Data);
+        // setAvatar(reader.result); // 更新預覽圖
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // 保證評論數量、珍藏數量和評分不丟失
     const updatedData = {
       ...editStoreData,
-      avatar,
-      reviewsCount: storeData.reviewsCount,  // 保持評論數量
-      favoritesCount: storeData.favoritesCount,  // 保持珍藏數量
-      averageRating: storeData.averageRating,  // 保持評分
+      avatar, // 更新頭像
     };
   
     // 輸出修改前的資料和修改後的資料（方便調試）
@@ -100,15 +99,40 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
     // 保留原來的店家資訊，並只更新密碼
     const updatedData = {
       ...editStoreData,
-      avatar,
-      newPassword,
-      reviewsCount: storeData.reviewsCount,  // 保持評論數量
-      favoritesCount: storeData.favoritesCount,  // 保持珍藏數量
-      averageRating: storeData.averageRating,  // 保持評分
+      avatar, // 頭像保持不變
+      newPassword, // 新密碼儲存
     };
   
     console.log('更新後的店家資訊:', updatedData); // 輸出更新後的資料
   
+    // const requestData = {
+    //   password: newPassword
+    //   };
+    // try {
+    //   const response = await fetch('http://localhost:8080/store/updateStore', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //     credentials: 'include', // 確保攜帶 Cookie
+    //     body: JSON.stringify(requestData),
+    //   });
+    //   console.log('發送的請求資料：', requestData);
+      
+    //   if (!response.ok) {
+    //     const errorData = await response.json();
+    //     throw new Error(errorData.message );
+    //   }
+  
+    //     const result = await response.json();
+    //     console.log(result)
+    //     alert("ok");
+    //   } catch (error) {
+    //     console.error(error.message);
+    //     alert(error.message);
+    //   }
+
+
     onUpdateStoreData(updatedData);
     setIsPasswordUpdated(true);
     setIsPasswordChange(false);
