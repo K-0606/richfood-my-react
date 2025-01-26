@@ -33,36 +33,49 @@ export default function HomePicture1() {
           '@media (max-width: 768px)': { cols: 1 },
         }} cols={3} gap={10}>
         {itemData1.map((item) => (
-          <ImageListItem key={item.img} sx={{ border: 'none' }} style={{ maxWidth: '248px', height: 'auto' }}
-          onClick={() => handleCardClick(item.value)} // 点击事件
-          >
-            <img
-              srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-              src={`${item.img}?w=248&fit=crop&auto=format`}
-              alt={item.title}
-              loading="lazy"
-              style={{
-                display: 'block',
-                width: '200px',
-                height: '100px',
-                objectFit: 'cover',
-                borderRadius: '5%',
-              }} />
-            <ImageListItemBar
-              title={item.title}
-              position="below"
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: '24px',
-                fontWeight: 'bold',
-                width: '100%',
-                textAlign: 'center',
-                padding: '10px 0',
-              }}
-            />
-          </ImageListItem>
+          <ImageListItem
+          key={item.img}
+          sx={{
+            border: 'none',
+            maxWidth: '248px',
+            height: 'auto',
+            '&:hover': {
+              transform: 'scale(1.1)', // 當鼠標懸停時，輕微放大
+              boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.3)', // 增加陰影效果
+              cursor: 'pointer', // 改變光標形狀，提示用戶可以點擊
+            },
+            transition: 'transform 0.3s ease, box-shadow 0.3s ease', // 增加平滑過渡效果
+          }}
+          onClick={() => handleCardClick(item.value)}
+        >
+          <img
+            srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
+            src={`${item.img}?w=248&fit=crop&auto=format`}
+            alt={item.title}
+            loading="lazy"
+            style={{
+              display: 'block',
+              width: '200px', // 設置統一寬度
+              height: '200px', // 設置統一高度
+              objectFit: 'cover', // 保持比例，裁剪多餘的部分
+              borderRadius: '5%',
+            }}
+          />
+          <ImageListItemBar
+            title={item.title}
+            position="below"
+            sx={{
+              display: 'flex',
+              justifyContent: 'center', // 水平居中
+              alignItems: 'center', // 垂直居中
+              fontSize: '24px', // 設置字體大小
+              fontWeight: 'bold', // 可選，設置字體加粗
+              width: '100%', // 使區塊佔滿整個寬度
+              textAlign: 'center', // 確保文字居中對齊
+              padding: '10px 0', // 可以調整內邊距來達到更好的視覺效果
+            }}
+          />
+        </ImageListItem>
         ))}
       </ImageList>
     </>
