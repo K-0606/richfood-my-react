@@ -48,6 +48,19 @@ const Header = () => {
   const handleLogout = () => {
     logout();  // 使用 context 的 logout 方法
     navigate('/');  // 登出後跳轉到首頁
+    if (user?.userType != 'member') {
+      fetch("http://localhost:8080/store/storeLogOut", {
+        method: "GET",
+        credentials: 'include'})
+
+      console.log('店家登出')
+    } else {
+      fetch("http://localhost:8080/User/logout", {
+        method: "POST",
+        credentials: 'include'})
+      console.log('會員登出')
+    }
+    
   };
 
   const variant = "btnPrimary";
