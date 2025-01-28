@@ -4,41 +4,42 @@ import { useNavigate } from "react-router-dom";
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
-  const [account, setAccount] = useState("");
+  const [email, setEmail] = useState(""); // 使用 email，因为后端需要 email 参数
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
 
-  // 假設有一個模擬的用戶資料列表
-  // 模擬的用戶資料
-const users = [
-    { email: "brad@example.com", name: "Brad", account: "brad", password: "oldPassword" },
-    { email: "kevin@example.com", name: "Kevin", account: "kevin", password: "oldPassword" },
-    { email: "john@example.com", name: "John", account: "john", password: "oldPassword" },
-  ];
-  
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!account) {
-      setError("請輸入帳號");
+    if (!email) {
+      setError("請輸入電子郵件");
       return;
     }
 
-    // 模擬檢查 email 是否存在
-    const user = users.find((user) => user.email === account);
+    try {
+      // 向後端發送請求
+      const response = await fetch("http://localhost:8080/User/forgotPassword", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }), // 傳送 email 作為請求主體
+      });
 
-    if (user) {
-      // 模擬發送重設密碼郵件
-      setTimeout(() => {
-        setSuccessMessage("重設密碼的連結已發送至您的電子郵件！");
-        setError(null);
-        
-        // 這裡可以模擬等待幾秒鐘後跳轉回登入頁面
-        setTimeout(() => navigate("/login"), 3000);
-      }, 1000);
-    } else {
-      setError("找不到該 email，請確認後再試");
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error:", errorData.message);
+        throw new Error(errorData.message || "發送失敗");
+      }
+
+      // 請求成功，顯示成功訊息
+      const data = await response.json();
+      setSuccessMessage(data.message);
+      setError(null);
+
+      // 3 秒後跳轉到登入頁面
+      setTimeout(() => navigate("/login"), 3000);
+    } catch (err) {
+      setError(err.message);
+      setSuccessMessage("");
     }
   };
 
@@ -54,12 +55,12 @@ const users = [
 
         <form onSubmit={handleSubmit} sx={{ mt: 2 }}>
           <TextField
-            label="帳號或電子郵件"
-            type="text"
+            label="電子郵件"
+            type="email"
             fullWidth
             required
-            value={account}
-            onChange={(e) => setAccount(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             sx={{ mb: 2 }}
           />
           <Button type="submit" fullWidth variant="contained" color="primary">

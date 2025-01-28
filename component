@@ -1,0 +1,82 @@
+[1mdiff --git a/src/pages/MemberComponents/Collections.jsx b/src/pages/MemberComponents/Collections.jsx[m
+[1mindex 18eeaed..800e21c 100644[m
+[1m--- a/src/pages/MemberComponents/Collections.jsx[m
+[1m+++ b/src/pages/MemberComponents/Collections.jsx[m
+[36m@@ -1,8 +1,17 @@[m
+[31m-import React from 'react';[m
+[31m-import { Box, Typography, Card, CardContent, CardMedia, Grid } from '@mui/material';[m
+[32m+[m[32mimport React, { useState } from 'react';[m
+[32m+[m[32mimport { Box, Typography, Card, CardContent, CardMedia, Grid, Button } from '@mui/material';[m
+ import { Link } from 'react-router-dom';[m
+ [m
+ const Collections = ({ collections }) => {[m
+[32m+[m[32m  const [expandedIndexes, setExpandedIndexes] = useState({}); // 儲存展開/收起狀態[m
+[32m+[m
+[32m+[m[32m  const toggleExpand = (index) => {[m
+[32m+[m[32m    setExpandedIndexes((prevState) => ({[m
+[32m+[m[32m      ...prevState,[m
+[32m+[m[32m      [index]: !prevState[index],[m
+[32m+[m[32m    }));[m
+[32m+[m[32m  };[m
+[32m+[m
+   return ([m
+     <Box sx={{ padding: 3 }}>[m
+       <Typography variant="h4" gutterBottom>[m
+[36m@@ -10,7 +19,7 @@[m [mconst Collections = ({ collections }) => {[m
+       </Typography>[m
+       <Grid container spacing={3}>[m
+         {collections && collections.length > 0 ? ([m
+[31m-          collections.map((item) => ([m
+[32m+[m[32m          collections.map((item, index) => ([m
+             <Grid item xs={12} sm={6} md={4} key={item.restaurantId}>[m
+               <Card>[m
+                 {/* 餐廳圖片 */}[m
+[36m@@ -32,13 +41,32 @@[m [mconst Collections = ({ collections }) => {[m
+                   <Typography variant="body2" color="text.secondary">[m
+                     <strong>營業時間：</strong>[m
+                   </Typography>[m
+[31m-                  <div>[m
+[31m-                    {item.businessHours.map((hours, index) => ([m
+[31m-                      <div key={index}>[m
+[31m-                        {hours.dayOfWeek}: {hours.startTime} - {hours.endTime}[m
+[31m-                      </div>[m
+[31m-                    ))}[m
+[31m-                  </div>[m
+[32m+[m[32m                  {expandedIndexes[index] ? ([m
+[32m+[m[32m                    <div>[m
+[32m+[m[32m                      {item.businessHours.map((hours, idx) => ([m
+[32m+[m[32m                        <div key={idx}>[m
+[32m+[m[32m                          {hours.dayOfWeek}: {hours.startTime} - {hours.endTime}[m
+[32m+[m[32m                        </div>[m
+[32m+[m[32m                      ))}[m
+[32m+[m[32m                      <Button[m
+[32m+[m[32m                        size="small"[m
+[32m+[m[32m                        variant="text"[m
+[32m+[m[32m                        onClick={() => toggleExpand(index)}[m
+[32m+[m[32m                        sx={{ marginTop: 1 }}[m
+[32m+[m[32m                      >[m
+[32m+[m[32m                        收起[m
+[32m+[m[32m                      </Button>[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                  ) : ([m
+[32m+[m[32m                    <Button[m
+[32m+[m[32m                      size="small"[m
+[32m+[m[32m                      variant="text"[m
+[32m+[m[32m                      onClick={() => toggleExpand(index)}[m
+[32m+[m[32m                      sx={{ marginTop: 1 }}[m
+[32m+[m[32m                    >[m
+[32m+[m[32m                      展開營業時間[m
+[32m+[m[32m                    </Button>[m
+[32m+[m[32m                  )}[m
+ [m
+                   {/* 地址 */}[m
+                   <Typography variant="body2" color="text.secondary" sx={{ marginTop: 1 }}>[m
+[36m@@ -49,7 +77,7 @@[m [mconst Collections = ({ collections }) => {[m
+             </Grid>[m
+           ))[m
+         ) : ([m
+[31m-          <Typography></Typography>[m
+[32m+[m[32m          <Typography>目前沒有珍藏的餐廳。</Typography>[m
+         )}[m
+       </Grid>[m
+     </Box>[m
