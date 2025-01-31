@@ -110,6 +110,8 @@ export default function BStorePage1() {
   const restaurantId = state.restaurant.restaurantId;
   const [storeId, setStoreId] = useState("");
   const [refreshReviews, setRefreshReviews] = useState(false); // 刷新評論標記
+  const [browsingHistory, setBrowsingHistory] = useState([]);
+
 
   // const { restaurantId } = state  || {}; // 確保 itemData1 正確接收到
   console.log("接收到的 state:", restaurantId);
@@ -141,8 +143,57 @@ export default function BStorePage1() {
   };
 
   useEffect(() => {
-    fetchData(restaurantId);
+    const fetchData = async (restaurantId) => {
+      const url = `http://localhost:8080/restaurants/${restaurantId}`;
+  
+      try {
+        const response = await fetch(url, { method: "GET" });
+        const data = await response.json();
+        setRestaurant(data);
+        setStoreId(data.storeId);
+        window.storeId = data.storeId;
+        
+        // 送出瀏覽紀錄
+        await fetch("http://localhost:8080/History/record", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: "include", // 攜帶 Cookie 以維持登入狀態
+          body: new URLSearchParams({ restaurantId: restaurantId }),
+        });
+  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    if (restaurantId) {
+      fetchData(restaurantId);
+    }
   }, [restaurantId]);
+  
+  useEffect(() => {
+    const fetchBrowsingHistory = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/History/list", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log("瀏覽紀錄 API 返回的數據:", data); // 檢查返回數據
+          setBrowsingHistory(data);
+        } else {
+          console.error("瀏覽紀錄 API 返回錯誤:", response.status);
+        }
+      } catch (error) {
+        console.error("獲取瀏覽紀錄失敗:", error);
+      }
+    };
+    fetchBrowsingHistory();
+  }, []);
+
 
   const handleOpenDialog = () => {
     if (isLoggedIn) {
@@ -240,7 +291,7 @@ export default function BStorePage1() {
 
       {/* 評論區 */}
       <ReviewSection
-        restaurantId={restaurantId}
+        restaurantId={restaurantId || Restaurant.restaurantId}
         refreshTrigger={refreshReviews} // 傳遞標記
       />
 
