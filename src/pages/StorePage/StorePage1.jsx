@@ -169,6 +169,7 @@ export default function BStorePage1() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include", // 攜帶 Cookie
           body: JSON.stringify({
             rating,
             content: comment,
