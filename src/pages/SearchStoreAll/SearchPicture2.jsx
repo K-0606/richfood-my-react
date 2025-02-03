@@ -22,7 +22,7 @@ import "./SP2.css";
 const SearchPicture2 = () => {
   const { state } = useLocation(); // 获取传递过来的 state 数据
   const [restaurantId, setRestaurant] = useState([]);
-  const [page, setPage] = useState([]);
+  const [pageData, setPage] = useState([]);
   const [checkedCuisine, setCheckedCuisine] = useState(null); // 用來追蹤勾選的菜系
   const [checkedRegion, setCheckedRegion] = useState(null); // 用來追蹤勾選的地區
   const [selectedCuisines, setSelectedCuisines] = useState(null); // 用來追蹤菜系的Select選擇
@@ -31,8 +31,6 @@ const SearchPicture2 = () => {
   const [inputValueRegion, setInputValueRegion] = useState("");
   const [choice, setChoice] = React.useState("");
 
-  // const [page, setPage] = useState(1); // 記錄當前頁數
-  // const [totalPages, setTotalPages] = useState(1); // 記錄總頁數
   const { itemData1 } = state || {}; // 確保 itemData1 正確接收到
   const { itemData2 } = state || {}; // 確保 itemData1 正確接收到
   console.log("接收到的 state:", state);
@@ -77,7 +75,13 @@ const SearchPicture2 = () => {
       const data = await response.json();
       setRestaurant(data.content);
       console.log(data.content);
-      setPage(data.page);
+      // setPage(data.page);
+      // 根據 API 返回的分頁資料設置當前頁和總頁數
+      setPage({
+        currentPage: data.page?.currentPage || 1, // 防止錯誤，如果 page 不存在則設為 1
+        totalPages: data.page?.totalPages || 1, // 防止錯誤，如果 totalPages 不存在則設為 1
+      });
+      console.log(data.page);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -100,6 +104,11 @@ const SearchPicture2 = () => {
     fetchData(itemData1, checkedCuisine);
 
     // fetchData(); // 初始加载，获取所有餐厅
+
+    const handlePageChange = (event, value) => {
+      setPage((prevPage) => ({ ...prevPage, currentPage: value }));
+      fetchData(value); // 更新頁數時重新抓取資料
+    };
   }, []);
   //{-------------------------------------------------------------------------------------價格區間-------------}
   const handleChange = (event) => {
@@ -537,10 +546,9 @@ const SearchPicture2 = () => {
         }}
       >
         <Pagination
-          count={page.totalPages}
-          // count={totalPages} // 动态设置页数
-          // page={page} // 当前页数
-          // onChange={handleChange} // 页数变化时更新当前页
+          count={pageData.totalPages} // 總頁數
+          page={pageData.currentPage} // 當前頁數
+          onChange={handlePageChange} // 頁數變化處理函數
         />
       </Stack>
     </div>
