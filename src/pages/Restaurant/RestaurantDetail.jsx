@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { mockRestaurants } from "../MySearch/mockData"; // 模擬資料
+import { useRestaurants } from "../MySearch/mockData"; // 模擬資料
 import RestaurantInfo from "./RestaurantInfo";
 import RestaurantImageCarousel from "./RestaurantImageCarousel";
 import Header from "../../components/layout/Header";
@@ -13,18 +13,28 @@ import ReviewSection from "../StorePage/ReviewSection";
 const RestaurantDetail = () => {
   const { id } = useParams(); // 從URL中獲取餐廳的ID
   const [restaurant, setRestaurant] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // 假設這裡用mockData來模擬資料，如果是後端資料庫則發送API請求
   useEffect(() => {
-    const fetchRestaurant = () => {
-      const selectedRestaurant = mockRestaurants.find(
-        (restaurant) => restaurant.id === parseInt(id)
-      );
-      setRestaurant(selectedRestaurant);
+    const fetchRestaurant = async () => {
+      setLoading(true); // 開始載入
+      try {
+        const response = await fetch(`http://localhost:8080/restaurants/${id}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setRestaurant(data);  // 將獲取到的餐廳資料設置到狀態中
+      } catch (err) {
+        setError(err.message);  // 錯誤處理
+      } finally {
+        setLoading(false); // 載入完成
+      }
     };
 
     fetchRestaurant();
-  }, [id]);
+  }, [id]);  // 依賴 id，當 id 變化時重新發送請求
 
   if (!restaurant) return <div>Loading...</div>;
 

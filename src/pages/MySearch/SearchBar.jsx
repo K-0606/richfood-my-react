@@ -22,190 +22,66 @@ const getPriceLabel = (range) => {
 const SearchBar = ({ onSearchChange, searchParams }) => {
   const [safeSearchParams, setSafeSearchParams] = useState({
     type: searchParams?.type || [],
-    region: searchParams?.region || [],
+    region: searchParams?.region || '',
     price: searchParams?.price || [],
     popular: searchParams?.popular || false,
   });
 
-  const handlePopularChange = () => {
-    onSearchChange('popular', !safeSearchParams.popular);
-  };
-
-  const handlePriceChange = (event) => {
-    const { value, checked } = event.target;
-  
-    // 如果選擇了這個範圍，且該範圍已經選擇過，則取消選擇
-    if (!checked) {
-      onSearchChange('price', []);  // 取消選擇，將價格範圍清空
-      return;
-    }
-  
-    // 如果是選擇新範圍，只能選一個，清除原來的範圍並設置新的範圍
-    onSearchChange('price', [value]);
-  };
-  
-
-  const handleTypeChange = (event) => {
-    const { value } = event.target;
-    let newType = [...safeSearchParams.type];
-
-    if (newType.includes(value)) {
-      newType = [];  // 如果已經選擇過，取消選擇並顯示所有餐廳
-    } else {
-      newType = [value];  // 只選擇這一個類型
-    }
-
-    onSearchChange('type', newType);  // 更新過濾條件
-  };
-
-  const handleRegionChange = (event) => {
-    const { value } = event.target;
-    let newRegion = value;
-
-    if (safeSearchParams.region === value) {
-      newRegion = '';  // 如果已經選擇過，則取消選擇並顯示所有餐廳
-    }
-
-    onSearchChange('region', newRegion);  // 更新過濾條件
-  };
-
-  // 更新過濾條件時，`safeSearchParams` 會反映並同步到 `SearchBar`
   useEffect(() => {
-    setSafeSearchParams({
-      ...safeSearchParams,
-      type: searchParams.type || [],
-      region: searchParams.region || [],
-      price: searchParams.price || [],
-      popular: searchParams.popular || false,
-    });
+    setSafeSearchParams(searchParams);
   }, [searchParams]);
 
+  const handleFilterChange = (key, value) => {
+    onSearchChange(key, value);
+  };
+
   return (
-    <div style={styles.searchBarContainer}>
-      {/* 餐廳類型選擇區塊 */}
-      <div style={styles.filterGroup}>
-        <h4 style={styles.filterTitle}>餐廳類型</h4>
-        <div style={styles.optionsContainer}>
-          {restaurantTypes.map((type) => (
-            <label key={type} style={styles.optionLabel}>
-              <input
-                type="checkbox"
-                value={type}
-                checked={safeSearchParams.type.includes(type)}
-                onChange={handleTypeChange}
-                style={styles.checkbox}
-              />
-              {type}
-            </label>
-          ))}
-        </div>
+    <div>
+      <div>
+        <input
+          type="text"
+          placeholder="輸入地區"
+          value={safeSearchParams.region}
+          onChange={(e) => handleFilterChange('region', e.target.value)}
+        />
       </div>
-
-      {/* 地區選擇區塊 */}
-      <div style={styles.filterGroup}>
-        <h4 style={styles.filterTitle}>地區選擇</h4>
-        <div style={styles.optionsContainer}>
-          {regions.map((region) => (
-            <label key={region} style={styles.optionLabel}>
-              <input
-                type="checkbox"
-                value={region}
-                checked={safeSearchParams.region === region}
-                onChange={handleRegionChange}
-                style={styles.checkbox}
-              />
-              {region}
-            </label>
-          ))}
-        </div>
+      <div>
+        <label>餐廳類型：</label>
+        <select
+          multiple
+          value={safeSearchParams.type}
+          onChange={(e) => handleFilterChange('type', Array.from(e.target.selectedOptions, option => option.value))}
+        >
+          <option value="日式">日式</option>
+          <option value="台式">台式</option>
+          <option value="義式">義式</option>
+        </select>
       </div>
-
-      {/* 價格篩選區塊 */}
-      <div style={styles.filterGroup}>
-        <h4 style={styles.filterTitle}>依據價格篩選</h4>
-        <div style={styles.optionsContainer}>
-          {['below100', '100to300', '300to500', '500to1000', '1000to2000', 'above2000'].map(range => (
-            <label key={range} style={styles.optionLabel}>
-              <input
-                type="checkbox"
-                value={range}
-                checked={safeSearchParams.price.includes(range)}
-                onChange={handlePriceChange}
-                style={styles.checkbox}
-              />
-              {getPriceLabel(range)}
-            </label>
-          ))}
-        </div>
+      <div>
+        <label>價格範圍：</label>
+        <select
+          multiple
+          value={safeSearchParams.price}
+          onChange={(e) => handleFilterChange('price', Array.from(e.target.selectedOptions, option => option.value))}
+        >
+          <option value="below100">100$以下</option>
+          <option value="100to300">100$~300$</option>
+          <option value="300to500">300$~500$</option>
+          <option value="500to1000">500$~1000$</option>
+          <option value="1000to2000">1000$~2000$</option>
+          <option value="above2000">2000$以上</option>
+        </select>
       </div>
-
-      {/* 最受歡迎餐廳選擇 */}
-      <div style={styles.filterGroup}>
-        <label style={styles.optionLabel}>
-          <input
-            type="checkbox"
-            checked={safeSearchParams.popular}
-            onChange={handlePopularChange}
-            style={styles.checkbox}
-          />
-          顯示最受歡迎餐廳（4顆星以上）
-        </label>
+      <div>
+        <label>熱門：</label>
+        <input
+          type="checkbox"
+          checked={safeSearchParams.popular}
+          onChange={(e) => handleFilterChange('popular', e.target.checked)}
+        />
       </div>
     </div>
   );
 };
-
-const styles = {
-  searchBarContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginBottom: '20px',
-    padding: '20px',
-    borderRadius: '8px',
-    backgroundColor: '#fff',
-    boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-  },
-  filterGroup: {
-    marginBottom: '20px',
-  },
-  filterTitle: {
-    fontSize: '1.1em',
-    marginBottom: '10px',
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  optionsContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '15px',
-  },
-  optionLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '1em',
-    color: '#555',
-    margin: '5px 0',
-    width: '120px',
-    textAlign: 'center',
-    padding: '8px 0',
-    borderRadius: '5px',
-    transition: 'background-color 0.3s ease',
-  },
-  checkbox: {
-    marginRight: '10px',
-  },
-};
-
-const restaurantTypes = [
-  '火鍋', '小吃', '酒吧', '甜點', '燒肉', '居酒屋', '早午餐',
-  '約會餐廳', '日式料理', '義式料理', '墨西哥餐', '中式料理'
-];
-
-const regions = [
-  '台北市', '新北市', '桃園市', '台中市', '台南市', '高雄市', '基隆市',
-  '新竹市', '彰化縣', '南投縣', '嘉義市', '宜蘭縣', '花蓮縣', '台東縣',
-  '屏東縣', '澎湖縣', '金門縣', '連江縣'
-];
 
 export default SearchBar;
