@@ -31,17 +31,32 @@ const Header = () => {
 
   // 登出
   const handleLogout = () => {
-    logout();
-    navigate("/");
-    const endpoint =
-      user?.userType === "member"
-        ? "http://localhost:8080/User/logout"
-        : "http://localhost:8080/store/storeLogOut";
+    setUserData(null);
+    
+    // 直接執行兩個登出請求
+    const memberLogoutEndpoint = "http://localhost:8080/User/logout";
+    const storeLogoutEndpoint = "http://localhost:8080/store/storeLogOut";
+  
+    // 執行會員登出
+    fetch(memberLogoutEndpoint, { method: "POST", credentials: "include" })
+      .then(() => {
+        console.log("會員登出成功");
+      })
+      .catch((err) => console.error("會員登出失敗", err));
+  
+    // 執行店家登出
+    fetch(storeLogoutEndpoint, { method: "POST", credentials: "include" })
+      .then(() => {
+        console.log("店家登出成功");
+        logout(); // 清空 user 資料
+        navigate("/"); // 導向首頁
+      })
+      .catch((err) => console.error("店家登出失敗", err));
 
-    fetch(endpoint, { method: "POST", credentials: "include" })
-      .then(() => console.log("登出成功"))
-      .catch((err) => console.error("登出失敗", err));
+      logout(); // 清空 user 資料
+      navigate("/"); // 導向首頁
   };
+  
 
   const fetchMemberData = async () => {
     console.log("刷新會員");
@@ -194,11 +209,10 @@ const Header = () => {
               >
                 <Avatar
                   alt={
-                    // user.userType === "member" ? user.name : user.restaurants.name
                     currentUser?.name || "用户"
                     }
                   src={
-                    user.userType === "member" ? user.icon : JSON.parse(currentUser.icon)
+                    user.userType === "member" ? currentUser.icon : JSON.parse(currentUser.icon)
                   }
                   sx={{ width: 24, height: 24, mr: 1 }}
                 />
