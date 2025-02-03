@@ -12,11 +12,13 @@ const Header = () => {
   const { user, logout } = useUser(); // 从 context 中获取 user 数据
   const [userData, setUserData] = useState(null);
 
+
   // 跳转逻辑
   const handleLoginRedirect = () => navigate("/login");
   const handleHomeRedirect = () => navigate("/");
   const handleStoreRedirect = () => navigate("/SearchStore");
   const handlePopularRedirect = () => navigate(`/search?popular=true`);
+
   const handleProfileRedirect = () => {
     if (user?.userType === "member") {
       navigate("/MemberLogin");
