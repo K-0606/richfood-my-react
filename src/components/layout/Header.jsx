@@ -22,9 +22,9 @@ const Header = () => {
     navigate("/");
   };
 
-  // 用來處理搜尋店家導向
+  // 用來處理搜尋店家導向(原搜尋頁)
   const handleStoreRedirect = () => {
-    navigate("/SearchStore");
+    navigate("/search?popular");
   };
 
   // 用來處理熱門餐廳導向
