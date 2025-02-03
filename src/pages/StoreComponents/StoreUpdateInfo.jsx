@@ -305,6 +305,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
             name="name"
             onChange={handleChange}
             sx={{ backgroundColor: 'white' }}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
 
@@ -317,6 +320,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
             value={editStoreData.country}
             name="country"
             onChange={handleChange}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
 
@@ -328,6 +334,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
             value={editStoreData.district}
             name="district"
             onChange={handleChange}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
 
@@ -339,6 +348,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
             value={editStoreData.address}
             name="address"
             onChange={handleChange}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
       </Grid>
