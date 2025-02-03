@@ -299,6 +299,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
               shrink: editStoreData.address !=="",
             }}
             sx={{ backgroundColor: 'white' }}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
 

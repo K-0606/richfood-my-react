@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Box, IconButton, Button, Typography, Card, CardContent, CardMedia } from '@mui/material';
-import { ArrowUpward, Close } from '@mui/icons-material';
-import MyRecommend from '../../pages/MyRecommend'; // 引入你的 MyRecommend 組件
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  IconButton,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
+import { ArrowUpward, Close } from "@mui/icons-material";
+import MyRecommend from "../../pages/MyRecommend"; // 引入你的 MyRecommend 組件
 
 const FloatingButtons = () => {
   const [showRecommendation, setShowRecommendation] = useState(false); // 控制推薦顯示
@@ -9,7 +17,7 @@ const FloatingButtons = () => {
 
   // 回到最上方的功能
   const handleBackToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // 關閉餐廳字卡
@@ -25,14 +33,14 @@ const FloatingButtons = () => {
   }, []);
 
   return (
-    <Box sx={{ position: 'fixed', left: 20, bottom: 20, zIndex: 999 }}>
+    <Box sx={{ position: "fixed", left: 20, bottom: 20, zIndex: 999 }}>
       {/* 回到最上方的按鈕 */}
       <IconButton
         onClick={handleBackToTop}
         sx={{
-          backgroundColor: 'primary.main',
-          color: 'white',
-          borderRadius: '50%',
+          backgroundColor: "primary.main",
+          color: "white",
+          borderRadius: "50%",
           marginBottom: 2,
           boxShadow: 3,
         }}
@@ -42,38 +50,47 @@ const FloatingButtons = () => {
 
       {/* 顯示推薦餐廳的卡片 */}
       {showRecommendation && recommendedRestaurant && (
-        
-        <Card sx={{
-          position: 'absolute',
-          bottom: '110px',
-          left: 0,
-          right: 0,
-          margin: 'auto',
-          width: '350px',  // 增加卡片的寬度
-        //   maxWidth: '100%',  // 保證寬度不會超過螢幕大小
-          borderRadius: 2,  // 加上圓角
-          boxShadow: 3,  // 增加陰影效果
-        }}>
+        <Card
+          sx={{
+            position: "absolute",
+            bottom: "110px",
+            left: 0,
+            right: 0,
+            margin: "auto",
+            width: "350px", // 增加卡片的寬度
+            //   maxWidth: '100%',  // 保證寬度不會超過螢幕大小
+            borderRadius: 2, // 加上圓角
+            boxShadow: 3, // 增加陰影效果
+          }}
+        >
           {/* 圖片部分 */}
-          
+
           <CardMedia
             component="img"
             image={recommendedRestaurant[0].image}
             alt={recommendedRestaurant[0].name}
             sx={{
-              height: '250px',  // 增加圖片的高度
-              width: '100%',  // 讓圖片填滿寬度
-              objectFit: 'contain',  // 使圖片保持完整比例
-              borderTopLeftRadius: '8px',  // 圓角效果
-              borderTopRightRadius: '8px',  // 圓角效果
+              height: "250px", // 增加圖片的高度
+              width: "100%", // 讓圖片填滿寬度
+              objectFit: "contain", // 使圖片保持完整比例
+              borderTopLeftRadius: "8px", // 圓角效果
+              borderTopRightRadius: "8px", // 圓角效果
             }}
           />
-          
-          <CardContent sx={{ padding: '16px' }}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+
+          <CardContent sx={{ padding: "16px" }}>
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+              }}
+            >
               {recommendedRestaurant[0].name}
             </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {recommendedRestaurant[0].address}
             </Typography>
           </CardContent>
@@ -81,15 +98,15 @@ const FloatingButtons = () => {
           <IconButton
             onClick={handleCloseCard}
             sx={{
-              position: 'absolute',
-              top: '8px',
-              right: '8px',
-              backgroundColor: 'rgba(255, 255, 255, 0.7)',
-              borderRadius: '50%',
-              color: 'gray',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                color: 'black',
+              position: "absolute",
+              top: "8px",
+              right: "8px",
+              backgroundColor: "rgba(255, 255, 255, 0.7)",
+              borderRadius: "50%",
+              color: "gray",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                color: "black",
               },
             }}
           >
