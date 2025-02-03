@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import Star from "@mui/icons-material/Star";
+import ReviewSection from "./ReviewSection"; // 引入評論區組件
 
 // import { useNavigate } from 'react-router-dom';
 
@@ -108,6 +109,9 @@ export default function BStorePage1() {
   const [cards, setCards] = useState([]);
   const restaurantId = state.restaurant.restaurantId;
   const [storeId, setStoreId] = useState("");
+  const [refreshReviews, setRefreshReviews] = useState(false); // 刷新評論標記
+  const [browsingHistory, setBrowsingHistory] = useState([]);
+
 
   // const { restaurantId } = state  || {}; // 確保 itemData1 正確接收到
   console.log("接收到的 state:", restaurantId);
@@ -139,8 +143,57 @@ export default function BStorePage1() {
   };
 
   useEffect(() => {
-    fetchData(restaurantId);
+    const fetchData = async (restaurantId) => {
+      const url = `http://localhost:8080/restaurants/${restaurantId}`;
+  
+      try {
+        const response = await fetch(url, { method: "GET" });
+        const data = await response.json();
+        setRestaurant(data);
+        setStoreId(data.storeId);
+        window.storeId = data.storeId;
+        
+        // 送出瀏覽紀錄
+        await fetch("http://localhost:8080/History/record", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: "include", // 攜帶 Cookie 以維持登入狀態
+          body: new URLSearchParams({ restaurantId: restaurantId }),
+        });
+  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    if (restaurantId) {
+      fetchData(restaurantId);
+    }
   }, [restaurantId]);
+  
+  useEffect(() => {
+    const fetchBrowsingHistory = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/History/list", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log("瀏覽紀錄 API 返回的數據:", data); // 檢查返回數據
+          setBrowsingHistory(data);
+        } else {
+          console.error("瀏覽紀錄 API 返回錯誤:", response.status);
+        }
+      } catch (error) {
+        console.error("獲取瀏覽紀錄失敗:", error);
+      }
+    };
+    fetchBrowsingHistory();
+  }, []);
+
 
   const handleOpenDialog = () => {
     if (isLoggedIn) {
@@ -156,101 +209,91 @@ export default function BStorePage1() {
     setComment(""); // 重設評論
   };
 
-  const handleSubmitReview = () => {
-    // 此處可根據需要發送 API 請求來提交評論和評分
-    console.log("提交的評論:", comment);
-    console.log("提交的評分:", rating);
-    alert("評論已提交！");
-    handleCloseDialog();
+  
+ 
+  const handleSubmitReview = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/Reviews/restaurant/${restaurantId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // 攜帶 Cookie
+          body: JSON.stringify({
+            rating,
+            content: comment,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to submit review");
+      }
+      alert("評論提交成功！");
+      handleCloseDialog();
+      setRefreshReviews((prev) => !prev); // 更新標記，讓 ReviewSection 重新加載評論
+    } catch (error) {
+      console.error("Error submitting review:", error);
+      alert("提交評論失敗！");
+    }
   };
 
 
   return (
     <Box>
-      {/* ----------------Ａ區店家介紹-------------*/}
+      {/* 店家介紹 */}
       <Box
         sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          height: "200vh",
           marginTop: "20px",
         }}
-        style={{ height: "100vh" }}
       >
-        <Box
-          sx={{
-            width: "650px",
-            height: "600px",
-            marginRight: 5,
-          }}
-        >
-          <ImageCarousel Restaurant={restaurantId} />
+        <Box sx={{ width: "650px", marginRight: 5 }}>
+          <ImageCarousel Restaurant={Restaurant} />
         </Box>
-
-        {/* Stack 部分 */}
-        <Stack
-          spacing={2}
-          sx={{
-            width: "300px",
-            position: "relative",
-            marginTop: "-150px",
-          }}
-        >
+        <Stack spacing={2} sx={{ width: "300px" }}>
           <Typography variant="h1" sx={{ fontSize: "2.5rem" }}>
             {Restaurant.name}
           </Typography>
-          {/* 評分 */}
-          <Typography
-            variant="body2"
-            sx={{ color: "text.secondary", fontSize: "1rem" }}
-          >
-            <strong>評分:</strong> {restaurantId.rating}
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            <strong>評分:</strong> {Restaurant.rating || "暫無評分"}
           </Typography>
           <Box sx={{ display: "flex", gap: 1 }}>
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
                 sx={{
-                  color: i < restaurantId.rating ? "gold" : "gray",
+                  color: i < Restaurant.rating ? "gold" : "gray",
                   fontSize: "20px",
                 }}
               />
             ))}
           </Box>
-          <Typography variant="h2" sx={{ fontSize: "1rem" }}>
-            平均消費：{Restaurant.average}
-          </Typography>
-          <Typography variant="h2" sx={{ fontSize: "1rem" }}>
-            地址：{Restaurant.country}
-            {Restaurant.district}
-            {Restaurant.address}
-          </Typography>
-          <Typography variant="h2" sx={{ fontSize: "1rem" }}>
-            電話：{Restaurant.phone}
-          </Typography>
-          <Typography variant="h2" sx={{ fontSize: "1rem" }}>
-            營業時間：
-          </Typography>
-          <Item1 onClick={handleBookRedirect}>預約</Item1>
-          <Item1 onClick={handleOpenDialog}>評論</Item1> {/* 點擊評論彈出框 */}
+          <Typography>地址：{Restaurant.country}{Restaurant.district}{Restaurant.address}</Typography>
+          <Typography>電話：{Restaurant.phone}</Typography>
+          <Item1 onClick={() => navigate("book", { state: { storeId: Restaurant.storeId } })}>
+            預約
+          </Item1>
+          <Item1 onClick={handleOpenDialog}>評論</Item1>
         </Stack>
       </Box>
 
-      {/* ----------------Ｂ區地圖------------------- */}
-      <Box
-        sx={{
-          // display: "flex", // 使用 flex 布局
-          justifyContent: "space-between", // 两个 Box 之间的空隙
-          alignItems: "center", // 垂直居中
-          width: "100%", // 父容器宽度为100%
-        }}
-      >
+      {/* 地圖區域 */}
+      <Box>
         <MapComponent
           adressStorePage={`${Restaurant.country}${Restaurant.district}${Restaurant.address}`}
         />
       </Box>
+
+      {/* 評論區 */}
+      <ReviewSection
+        restaurantId={restaurantId || Restaurant.restaurantId}
+        refreshTrigger={refreshReviews} // 傳遞標記
+      />
 
       {/* 評論彈窗 */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
@@ -260,7 +303,6 @@ export default function BStorePage1() {
             name="rating"
             value={rating}
             onChange={(event, newValue) => setRating(newValue)}
-            max={5}
           />
           <TextField
             label="您的評論"
