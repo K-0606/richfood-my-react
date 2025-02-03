@@ -106,6 +106,7 @@ const Home = () => {
   // 处理更新会员数据
   const handleUpdateMemberData = (updatedData) => {
     const formData = new FormData();
+    console.log("收到的 updatedData:", updatedData); // 确认头像数据是否存在
     formData.append('userId', memberData.id);
     if (updatedData.name) formData.append('name', updatedData.name);
     if (updatedData.phone) formData.append('tel', updatedData.phone);
@@ -123,25 +124,38 @@ const Home = () => {
       .then((response) => {
         alert(response.data.message || '資料更新成功');
         setError(null);
+  
+        // 更新用户数据
         setMemberData((prevData) => ({
           ...prevData,
           ...updatedData,
-          avatarUrl: updatedData.iconFile
-            ? `http://localhost:8080${response.data.icon}?t=${Date.now()}` // 確保刷新圖片
-            : prevData.avatarUrl,
         }));
+  
+        // 如果有头像更新，设置新的头像 URL 并附加时间戳
+        if (updatedData.iconFile) {
+          const updatedAvatarUrl = `http://localhost:8080${response.data.icon}?t=${Date.now()}`;
+          setAvatarUrl(updatedAvatarUrl); // 单独更新头像 URL
+        }
+  
+        // 触发事件通知 Header 更新
+        const event = new Event('updateHeader');
+        console.log('触发 updateHeader 事件');
+        window.dispatchEvent(event);
       })
       .catch((err) => {
+        console.error('更新失败:', err.response || err.message);
         setError('更新失敗，請稍後再試');
       })
       .finally(() => {
         setLoading(false);
       });
   };
+  
+  
 
   return (
     <>
-      <Header />
+      <Header key={memberData?.id || memberData?.name} />
       <Box sx={{ padding: 3 }}>
         <Box display="flex" justifyContent="center" sx={{ marginBottom: 4 }}>
           <Button variant="outlined" onClick={() => setActiveContent('comments')}>
