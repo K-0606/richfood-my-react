@@ -15,7 +15,7 @@ import "slick-carousel/slick/slick-theme.css";
 export default function BoxSx() {
   const cards = Array(10).fill(null).map((_, index) => ({
     title: `卡片 ${index + 1}`,
-    description: `这是一条卡片的描述文字，内容可能较长，适合用来展示一些信息。`,
+    description: `123。`,
     image: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e', // 示例图片
   }));
 

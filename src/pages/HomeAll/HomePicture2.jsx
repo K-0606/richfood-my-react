@@ -8,8 +8,8 @@ export default function HomePicture2() {
   const navigate = useNavigate(); // 使用 navigate
 
   const handleCardClick = (value) => {
-    console.log('P1 console log:', { itemData2: value });
-    navigate('/SearchStore', { state: { itemData2: value } }); // 点击后跳转并传递 selectedCity
+    console.log('P2 console log:', { itemData2: value });
+    navigate(`/search?region=&type=${value}`); // 點擊後跳轉到 /search/:region，region帶入菜系名稱
   };
 
   return (
@@ -54,7 +54,7 @@ export default function HomePicture2() {
               },
               transition: 'transform 0.3s ease, box-shadow 0.3s ease', // 增加平滑過渡效果
             }}
-            onClick={() => handleCardClick(item.value)}
+            onClick={() => handleCardClick(item.value)} // 點擊圖片時觸發 handleCardClick
           >
             <img
               srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}

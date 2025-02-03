@@ -40,6 +40,8 @@ import HomePicture3E from './pages/HomeAllEnglish/HomePicture3E';
 import HomeHeroImageE from './pages/HomeAllEnglish/HomeHeroImageE';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import RestaurantDetail from './pages/Restaurant/RestaurantDetail';
+import MySearchField from './pages/MySearch/MySearchField';
 
 
 // 定義路由配置
@@ -56,9 +58,19 @@ const routes = [
   { path: '/StoreQRCodeScanner', element: <StoreQRCodeScanner /> },
   { path: '/contactUs', element: <ContactUsPage /> },
   { path: '/StorePage/book', element: <BookPage /> },
+  { path: '/book', element: <BookPage /> },
   { path: '/forgot-password', element: <ForgotPasswordPage /> },
   { path: '/reset-password', element: <ResetPasswordPage /> },
+  { path: '/restaurant/:id', element: <RestaurantDetail /> },
   
+
+  //餐廳搜尋 routes
+  // { path: "/search/:region?/:type?", element: <MySearchField /> },
+  // { path: "/search/:type", element: <MySearchField /> },
+  // { path: "/search/:region", element: <MySearchField /> },
+  
+  { path: "/search", element: <MySearchField /> },
+
   // Members-related routes
   { path: '/profile', element: <MemberProfile /> },
   { path: '/comments', element: <Comments /> },

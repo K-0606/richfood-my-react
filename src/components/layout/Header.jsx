@@ -29,7 +29,7 @@ const Header = () => {
 
   // 用來處理熱門餐廳導向
   const handlePopularRedirect = () => {
-    navigate('/popularpage');
+    navigate(`/search?popular=true`);
   };
 
   const handleProfileRedirect = () => {

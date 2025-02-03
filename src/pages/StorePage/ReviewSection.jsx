@@ -97,11 +97,15 @@ function ReviewSection() {
   return (
     <Box
       sx={{
-        display: "block",
-        width: "600px",
+        display: "inline-block",
+        width: "30%",
         position: "relative",
-        top: "-300px",
-        margin: "auto",
+        // top: "-300px",
+        marginLeft: "150px",
+        marginTop: "30px", 
+        // backgroundColor: "#f5f5f5",   // 背景顏色
+    borderRadius: "8px",           // 圓角
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // 陰影
       }}
       className="review-section"
     >
