@@ -9,101 +9,135 @@ import logo from "../../assets/richfoodCoverV1.png";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, logout } = useUser(); // 使用 useUser hook，從 context 中獲取 user 資料
+  const { user, logout } = useUser(); // 从 context 中获取 user 数据
   const [userData, setUserData] = useState(null);
 
-  // 用來處理登入導向
-  const handleLoginRedirect = () => {
-    navigate("/login");
-  };
 
-  // 用來處理首頁導向
-  const handleHomeRedirect = () => {
-    navigate("/");
-  };
-
-  // 用來處理搜尋店家導向
-  const handleStoreRedirect = () => {
-    navigate("/SearchStore");
-  };
-
-  // 用來處理熱門餐廳導向
-  const handlePopularRedirect = () => {
-    navigate(`/search?popular=true`);
-  };
-
-  // 用來處理關於我導向
-  // const  = () => {
-  //   navigate("/");
-  // };
+  // 跳转逻辑
+  const handleLoginRedirect = () => navigate("/login");
+  const handleHomeRedirect = () => navigate("/");
+  const handleStoreRedirect = () => navigate("/SearchStore");
+  const handlePopularRedirect = () => navigate(`/search?popular=true`);
 
   const handleProfileRedirect = () => {
-    console.log(user?.userType); // 這裡改為 userType
-    // 確保 user 資料已正確載入並檢查 userType
-    if (user?.userType != "member") {
-      navigate("/StoreLogin"); // 店家登入
-    } else if (user?.userType === "member") {
-      navigate("/MemberLogin"); // 會員登入
+    if (user?.userType === "member") {
+      navigate("/MemberLogin");
+    } else if (user?.userType !== "member") {
+      navigate("/StoreLogin");
     } else {
-      navigate("/login"); // 如果沒有正確的 user 類型，跳轉到一般的登入頁
+      navigate("/login");
     }
   };
 
-  // 用來處理登出
+  // 登出逻辑
   const handleLogout = () => {
-    logout(); // 使用 context 的 logout 方法
-    navigate("/"); // 登出後跳轉到首頁
-    if (user?.userType != "member") {
-      fetch("http://localhost:8080/store/storeLogOut", {
-        method: "GET",
-        credentials: "include",
-      });
+    logout();
+    navigate("/");
+    const endpoint =
+      user?.userType === "member"
+        ? "http://localhost:8080/User/logout"
+        : "http://localhost:8080/store/storeLogOut";
 
-      console.log("店家登出");
-    } else {
-      fetch("http://localhost:8080/User/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      console.log("會員登出");
-    }
+    fetch(endpoint, { method: "POST", credentials: "include" })
+      .then(() => console.log("登出成功"))
+      .catch((err) => console.error("登出失败", err));
   };
 
-  //店家更新後刷新
-  const fetchUserData = async () => {
-    console.log("刷新");
+  const fetchMemberData = async () => {
+    console.log("刷新会员数据");
     try {
-      const response = await fetch("http://localhost:8080/store/selectStore", {
-        method: "GET",
+      const response = await fetch("http://localhost:8080/User/getUserDetails", {
         credentials: "include",
       });
+
       if (response.ok) {
         const userData = await response.json();
-        console.log("重新取得的用戶資料:", userData);
-        setUserData(userData); // 設定本地的 userData
+        console.log("重新取得的会员资料:", userData);
+
+        // 拼接完整头像 URL 并避免缓存
+        if (userData.icon) {
+          userData.icon = `http://localhost:8080${userData.icon}?t=${Date.now()}`;
+        }
+
+        return userData;
+      } else {
+        console.error("获取会员数据失败");
       }
     } catch (error) {
-      console.error("取得用戶資料失敗:", error);
+      console.error("获取会员数据出错:", error);
     }
   };
 
+  const fetchStoreData = async () => {
+    console.log("刷新店家数据");
+    try {
+      const response = await fetch("http://localhost:8080/store/selectStore", {
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("重新取得的店家资料:", userData);
+
+        // 拼接完整头像 URL 并避免缓存
+        if (userData.icon) {
+          userData.icon = `http://localhost:8080${userData.icon}?t=${Date.now()}`;
+        }
+
+        return userData;
+      } else {
+        console.error("获取店家数据失败");
+      }
+    } catch (error) {
+      console.error("获取店家数据出错:", error);
+    }
+  };
+
+  const fetchUserData = async () => {
+    console.log("刷新用户数据");
+    try {
+      let userData;
+
+      if (user?.userType === "member") {
+        userData = await fetchMemberData();
+      } else if (user?.userType === "store") {
+        userData = await fetchStoreData();
+      }
+
+      if (userData) {
+        console.log("设置 userData:", userData);
+        // 生成头像 URL，避免重复添加时间戳
+        userData.iconUrl = userData.icon
+          ? `http://localhost:8080${userData.icon}?t=${Date.now()}`
+          : null;
+  
+        setUserData(userData); // 更新用户数据状态
+      }
+    } catch (error) {
+      console.error("刷新用户数据出错:", error);
+    }
+  };
+
+
+
+  // 监听更新事件
   useEffect(() => {
-    // 監聽更新事件
+
+    fetchUserData();
+
     const handleUpdateHeader = () => {
-      fetchUserData(); // 重新取得資料
+      console.log("接收到 updateHeader 事件");
+      fetchUserData();
     };
 
     window.addEventListener("updateHeader", handleUpdateHeader);
 
     return () => {
-      // 移除事件監聽
       window.removeEventListener("updateHeader", handleUpdateHeader);
     };
   }, []);
 
-  const variant = "btnPrimary";
-
-  // 使用userData作為主資料來源，若無則使用user
+  // 使用 userData 或全局 user 数据
   const currentUser = userData || user;
 
   return (
@@ -122,29 +156,17 @@ const Header = () => {
 
       <div className="right-container">
         <Stack spacing={2} direction="row">
-          <Button
-            className={`btn ${variant}`}
-            variant="allrestaurant"
-            onClick={handleStoreRedirect}
-          >
+          <Button variant="text" onClick={handleStoreRedirect}>
             所有餐廳
           </Button>
-          <Button
-            className={`btn ${variant}`}
-            variant="Hotrestaurant"
-            onClick={handlePopularRedirect}
-          >
+          <Button variant="text" onClick={handlePopularRedirect}>
             熱門餐廳
           </Button>
-          <Button
-            className={`btn ${variant}`}
-            variant="aboutme"
-            onClick={handlePopularRedirect}
-          >
+          <Button variant="text" onClick={handlePopularRedirect}>
             關於我
           </Button>
 
-          {user ? (
+          {currentUser ? (
             <div className="profile-container">
               <Button
                 className="member"
@@ -152,18 +174,15 @@ const Header = () => {
                 onClick={handleProfileRedirect}
               >
                 <Avatar
-                  alt={currentUser.name}
+                  alt={currentUser?.name || "用户"}
                   src={
-                    currentUser.userType === "member"
-                      ? currentUser.avatar
-                      : JSON.parse(currentUser.icon)
+                    currentUser?.icon || "" // 默认头像路径
                   }
                   sx={{ width: 24, height: 24, mr: 1 }}
                 />
-                {currentUser.userType === "member"
-                  ? `${currentUser.name}`
-                  : `${currentUser.restaurants.name}`}{" "}
-                {/* 根據身份顯示 */}
+                {currentUser?.userType === "member"
+                  ? currentUser?.name || "会员"
+                  : currentUser?.restaurants?.name || "店家"}
               </Button>
               <Button
                 className="member"
@@ -173,12 +192,9 @@ const Header = () => {
                 登出
               </Button>
             </div>
+
           ) : (
-            <Button
-              className="member"
-              variant="contained"
-              onClick={handleLoginRedirect}
-            >
+            <Button variant="contained" onClick={handleLoginRedirect}>
               會員/店家登入
             </Button>
           )}

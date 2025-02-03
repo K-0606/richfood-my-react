@@ -12,6 +12,17 @@ export const UserProvider = ({ children }) => {
     if (savedUser) {
       setUser(JSON.parse(savedUser));  // 如果有保存，載入 user 資料
     }
+    // else {
+    //   // 如果 localStorage 沒有資料，可以強制設置模擬用戶資料
+    //   const mockUser = {
+    //     id: 1,
+    //     name: '測試會員',
+    //     userType: 'member',
+    //     avatar: 'https://example.com/avatar.jpg',
+    //   };
+    //   setUser(mockUser);  // 直接設定模擬的 user 資料
+    //   localStorage.setItem('user', JSON.stringify(mockUser));  // 同步存入 localStorage
+    // }
   }, []);
 
   // 登入方法

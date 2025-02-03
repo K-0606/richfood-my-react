@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import { height, width } from "@mui/system";
+import React, { useState, useEffect } from "react";
 
 const getPriceLabel = (range) => {
   switch (range) {
-    case 'below100':
-      return '100$以下';
-    case '100to300':
-      return '100$~300$';
-    case '300to500':
-      return '300$~500$';
-    case '500to1000':
-      return '500$~1000$';
-    case '1000to2000':
-      return '1000$~2000$';
-    case 'above2000':
-      return '2000$以上';
+    case "below100":
+      return "100$以下";
+    case "100to300":
+      return "100$~300$";
+    case "300to500":
+      return "300$~500$";
+    case "500to1000":
+      return "500$~1000$";
+    case "1000to2000":
+      return "1000$~2000$";
+    case "above2000":
+      return "2000$以上";
     default:
-      return '';
+      return "";
   }
 };
 

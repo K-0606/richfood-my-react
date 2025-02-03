@@ -56,16 +56,14 @@ const MemberProfile = ({
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // 預覽圖片
+      // 预览新头像
       const objectUrl = URL.createObjectURL(file);
       setAvatarUrl(objectUrl);
-
-      // 發送到後端
+  
       const formData = new FormData();
-      formData.append('userId', memberData.id); // 傳遞用戶 ID
-      formData.append('iconFile', file); // 傳遞文件
-
-      // 向後端上傳頭像
+      formData.append('userId', memberData.id);
+      formData.append('iconFile', file);
+  
       axios
         .put(`${BASE_URL}/User/updateUser`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -73,16 +71,31 @@ const MemberProfile = ({
         })
         .then((response) => {
           alert('頭像更新成功！');
-          setAvatarUrl(`${BASE_URL}${response.data.icon}?t=${Date.now()}`); // 更新最新頭像
+  
+          // **1️⃣ 立即更新 `setAvatarUrl`，避免头像不变**
+          const updatedAvatar = `${BASE_URL}${response.data.icon}?t=${Date.now()}`;
+          setAvatarUrl(updatedAvatar);
+  
+          // **2️⃣ 触发 `updateHeader` 事件，通知 `Header` 组件刷新头像**
+          const event = new Event('updateHeader');
+          window.dispatchEvent(event);
+          
+          // **3️⃣ 确保 `setTimeout` 延迟小部分时间后刷新页面，防止缓存问题**
+          setTimeout(() => {
+            console.log('重新加載頁面以確保新頭像生效');
+            window.location.reload();
+          }, 300);
         })
         .catch((err) => {
+          console.error('頭像更新失敗:', err);
           alert('頭像更新失敗，請稍後再試');
         })
         .finally(() => {
-          URL.revokeObjectURL(objectUrl); // 清理對象 URL
+          URL.revokeObjectURL(objectUrl); // 清理预览图片对象
         });
     }
   };
+  
 
 
   return (
