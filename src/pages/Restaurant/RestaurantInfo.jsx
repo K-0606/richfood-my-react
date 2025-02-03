@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
+import { useUser } from "../../context/UserContext"; // 引入 useUser hook 來獲取登入狀態
 
 const RestaurantInfo = React.memo(({ restaurant }) => {
+  const { user } = useUser();  // 使用 useUser 來獲取當前的用戶資料
+  const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [rating, setRating] = useState(2); // 初始評分為2顆星
+  const [comment, setComment] = useState("");
+  const [isFavorited, setIsFavorited] = useState(false); // 控制愛心是否填滿
+
   const Item1 = styled(Paper)(({ theme }) => ({
     backgroundColor: "#fff",
     ...theme.typography.body2,
@@ -22,20 +30,13 @@ const RestaurantInfo = React.memo(({ restaurant }) => {
     },
   }));
 
-  const navigate = useNavigate();
-  const [openDialog, setOpenDialog] = useState(false);
-  const [rating, setRating] = useState(2); // 初始評分為2顆星
-  const [comment, setComment] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(true);  // 模擬登入狀態
-  const storeId = restaurant.storeId;
-
   const handleBookRedirect = () => {
     navigate("/book", { state: { storeId: restaurant.id } }); // 傳遞 restaurantId
   };
 
   const handleOpenDialog = () => {
-    if (isLoggedIn) {
-      setOpenDialog(true);
+    if (user) {
+      setOpenDialog(true);  // 如果已登入，打開評論彈窗
     } else {
       alert("請先登入！");
     }
@@ -55,9 +56,35 @@ const RestaurantInfo = React.memo(({ restaurant }) => {
     handleCloseDialog();
   };
 
+  const handleFavorite = () => {
+    if (user) {
+      setIsFavorited(!isFavorited); // 切換愛心的狀態
+      // 在此處可以加入 API 請求來將餐廳添加/移除到會員的收藏
+      console.log(isFavorited ? "取消收藏" : "收藏餐廳");
+    } else {
+      alert("請先登入！");
+    }
+  };
+
   return (
     <div style={styles.infoContainer}>
-      <h1 style={styles.restaurantName}>{restaurant.name}</h1>
+      <h1 style={styles.restaurantName}>
+        {restaurant.name}
+        <button
+          onClick={handleFavorite}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            marginLeft: "10px",
+            fontSize: "1.5rem",
+            color: isFavorited ? "red" : "#ccc",
+            transition: "color 0.3s ease",
+          }}
+        >
+          {isFavorited ? "❤️" : "🤍"} {/* 愛心按鈕 */}
+        </button>
+      </h1>
       <div style={styles.detailsContainer}>
         <div style={styles.detailItem}>
           <strong>類型: </strong>
