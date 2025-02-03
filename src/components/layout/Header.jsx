@@ -33,14 +33,14 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     navigate("/");
-    // const endpoint =
-    //   user?.userType === "member"
-    //     ? "http://localhost:8080/User/logout"
-    //     : "http://localhost:8080/store/storeLogOut";
+    const endpoint =
+      user?.userType === "member"
+        ? "http://localhost:8080/User/logout"
+        : "http://localhost:8080/store/storeLogOut";
 
-    // fetch(endpoint, { method: "POST", credentials: "include" })
-    //   .then(() => console.log("登出成功"))
-    //   .catch((err) => console.error("登出失敗", err));
+    fetch(endpoint, { method: "POST", credentials: "include" })
+      .then(() => console.log("登出成功"))
+      .catch((err) => console.error("登出失敗", err));
   };
 
   const fetchMemberData = async () => {
@@ -92,9 +92,7 @@ const Header = () => {
     console.log("刷新會員資料");
     try {
       let userData;
-      if(user?.userType){
 
-      
       if (user?.userType === "member") {
         userData = await fetchMemberData();
         if (userData) {
@@ -105,21 +103,27 @@ const Header = () => {
           setUserData(userData); // 更新用戶資訊資料
         }
 
-      } else  {
+      }else{
+        console.log("不存在")
         userData = await fetchStoreData();
       }
-    }
 
 
     } catch (error) {
       console.error("刷新會員資訊錯誤:", error);
     }
   };
+  useEffect(() => {
+    if (user) {
+      fetchUserData();
+    }
+  }, [user]); // 監聽 user 變化
+
 
   // 監聽會員更新事件
   useEffect(() => {
 
-    fetchUserData();
+    // fetchUserData();
 
     const handleUpdateHeader = () => {
       console.log("接收到 updateHeader 事件");
@@ -136,7 +140,7 @@ const Header = () => {
   //監聽Storeheader更新事件
   useEffect(() => {
 
-    fetchUserData();
+    // fetchUserData();
 
     const handleUpdateStoreHeader = () => {
       console.log("接收到 updateHeader 事件");
@@ -194,7 +198,7 @@ const Header = () => {
                     currentUser?.name || "用户"
                     }
                   src={
-                    user.userType === "member" ? user.avatar : JSON.parse(currentUser.icon)
+                    user.userType === "member" ? user.icon : JSON.parse(currentUser.icon)
                   }
                   sx={{ width: 24, height: 24, mr: 1 }}
                 />
