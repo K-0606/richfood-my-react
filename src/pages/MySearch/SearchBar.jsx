@@ -22,7 +22,7 @@ const getPriceLabel = (range) => {
 const SearchBar = ({ onSearchChange, searchParams }) => {
   const [safeSearchParams, setSafeSearchParams] = useState({
     type: searchParams?.type || [],
-    region: searchParams?.region || [],
+    region: searchParams?.region || '',
     price: searchParams?.price || [],
     popular: searchParams?.popular || false,
   });
@@ -47,12 +47,10 @@ const SearchBar = ({ onSearchChange, searchParams }) => {
 
   const handleTypeChange = (event) => {
     const { value } = event.target;
-    let newType = [...safeSearchParams.type];
+    let newType = value;
 
-    if (newType.includes(value)) {
-      newType = [];  // 如果已經選擇過，取消選擇並顯示所有餐廳
-    } else {
-      newType = [value];  // 只選擇這一個類型
+    if (safeSearchParams.type === value) {
+      newType = '';  // 如果已經選擇過，取消選擇並顯示所有餐廳
     }
 
     onSearchChange('type', newType);  // 更新過濾條件
@@ -69,12 +67,12 @@ const SearchBar = ({ onSearchChange, searchParams }) => {
     onSearchChange('region', newRegion);  // 更新過濾條件
   };
 
-  // 更新過濾條件時，`safeSearchParams` 會反映並同步到 `SearchBar`
+  // 更新過濾條件時，`safeSearchParams` 會反映並同步到 SearchBar
   useEffect(() => {
     setSafeSearchParams({
       ...safeSearchParams,
-      type: searchParams.type || [],
-      region: searchParams.region || [],
+      type: searchParams.type || '',
+      region: searchParams.region || '',
       price: searchParams.price || [],
       popular: searchParams.popular || false,
     });
@@ -91,7 +89,7 @@ const SearchBar = ({ onSearchChange, searchParams }) => {
               <input
                 type="checkbox"
                 value={type}
-                checked={safeSearchParams.type.includes(type)}
+                checked={safeSearchParams.type === type}
                 onChange={handleTypeChange}
                 style={styles.checkbox}
               />

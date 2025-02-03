@@ -9,24 +9,129 @@ import Rating from '@mui/material/Rating';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 //import StoreQRCodeScanner from './StoreComponents/StoreQRCodeScanner'; // 新增掃描器組件
+import { useUser } from "../context/UserContext"; 
 
 const StoreLoginPage = () => {
   const [activeTab, setActiveTab] = useState("comments");
   const [storeData, setStoreData] = useState({
-    name: "Test Store",
-    avatar: "https://example.com/avatar.png",
-    address: "1234 Test St",
-    businessHours: "9:00 AM - 9:00 PM",
-    phone: "(123) 456-7890",
-    reviewsCount: 100,
-    favoritesCount: 50,
-    averageRating: 4.5,
+    // name: "Test Store",
+    // avatar: "https://example.com/avatar.png",
+    // address: "1234 Test St",
+    // businessHours: "9:00 AM - 9:00 PM",
+    // phone: "(123) 456-7890",
+    // reviewsCount: 100,
+    // favoritesCount: 50,
+    // averageRating: 4.5,
   });
+  const { user } = useUser(); // 取得登入的店家資料
+  const storeId = user?.storeId; // 從 context 取得 storeId
+
 
   // 更新店家資料
   const handleUpdateStoreData = (updatedData) => {
     setStoreData(updatedData); // 更新店家資料
   };
+  useEffect(() => {
+    if (!storeId) return; // 確保 storeId 存在
+
+    const fetchStoreData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/store/getStore?storeId=${storeId}`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+
+        setStoreData({
+          name: data.restaurants.name || "Test Store",
+          avatar: data.icon.replace(/^"|"$/g, '') || "https://example.com/avatar.png",
+          // address:  "N/A",
+          // businessHours: "N/A",
+          // phone:  "N/A",
+          // reviewsCount:0,
+          // favoritesCount: 0,
+          averageRating: data.restaurants.score  ||  0,
+          restaurantID:data.restaurants.restaurantId
+        });
+      } catch (error) {
+        console.error("Error fetching store data:", error);
+      }
+    };
+
+    fetchStoreData();
+  }, [storeId]); // 當 storeId 變更時重新請求
+
+  useEffect(() => {
+    console.log("OK fetch",storeData.restaurantID)
+    if (!storeData.restaurantID) return; // 確保 restaurantID 存在
+  
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/Reviews/restaurant/${storeData.restaurantID}`, {
+          method: "GET",
+          credentials: "include",
+        });
+  
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+  
+        const reviewData = await response.json();
+
+        console.log(reviewData.length)
+        setStoreData((prevData) => ({
+          ...prevData,
+          reviewsCount: reviewData.length || 0, // 假設 reviews 是陣列，計算數量
+        }));
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+  
+    fetchReviews();
+  }, [storeData.restaurantID]);
+
+  useEffect(() => {
+    console.log("OK fetch",storeData.restaurantID)
+    if (!storeData.restaurantID) return; // 確保 restaurantID 存在
+  
+    const fetchFavorite = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/favorite/favoriteRestaurantCount/${storeData.restaurantID}`, {
+          method: "GET",
+          credentials: "include",
+        });
+  
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+  
+        const favoriteData = await response.json();
+
+        console.log(favoriteData)
+        setStoreData((prevData) => ({
+          ...prevData,
+          favoritesCount: favoriteData || 0, // 假設 reviews 是陣列，計算數量
+        }));
+      } catch (error) {
+        console.error("Error fetching favoriteData:", error);
+      }
+    };
+  
+    fetchFavorite();
+  }, [storeData.restaurantID]);
+
+
+
+
+
+
+
 
   return (
     <>

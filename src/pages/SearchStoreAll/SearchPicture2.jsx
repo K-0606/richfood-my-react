@@ -77,10 +77,10 @@ const SearchPicture2 = () => {
       console.log(data.content);
       // setPage(data.page);
       // 根據 API 返回的分頁資料設置當前頁和總頁數
-      setPage({
-        currentPage: data.page?.currentPage || 1, // 防止錯誤，如果 page 不存在則設為 1
-        totalPages: data.page?.totalPages || 1, // 防止錯誤，如果 totalPages 不存在則設為 1
-      });
+      // setPage({
+      //   currentPage: data.page?.currentPage || 1, // 防止錯誤，如果 page 不存在則設為 1
+      //   totalPages: data.page?.totalPages || 1, // 防止錯誤，如果 totalPages 不存在則設為 1
+      // });
       console.log(data.page);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -548,7 +548,7 @@ const SearchPicture2 = () => {
         <Pagination
           count={pageData.totalPages} // 總頁數
           page={pageData.currentPage} // 當前頁數
-          onChange={handlePageChange} // 頁數變化處理函數
+          // onChange={handlePageChange} // 頁數變化處理函數
         />
       </Stack>
     </div>
