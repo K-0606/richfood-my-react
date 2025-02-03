@@ -120,7 +120,7 @@ const Header = () => {
 
 
 
-  // 监听更新事件
+  // 監聽會員更新事件
   useEffect(() => {
 
     fetchUserData();
@@ -137,7 +137,26 @@ const Header = () => {
     };
   }, []);
 
-  // 使用 userData 或全局 user 数据
+  //監聽Storeheader更新事件
+  useEffect(() => {
+
+    fetchUserData();
+
+    const handleUpdateHeader = () => {
+      console.log("接收到 updateHeader 事件");
+      fetchUserData();
+    };
+
+    window.addEventListener("updateHeader", handleUpdateHeader);
+
+    return () => {
+      window.removeEventListener("updateHeader", handleUpdateHeader);
+    };
+  }, []);
+
+
+
+  // 使用 userData 或 user 
   const currentUser = userData || user;
 
   return (
