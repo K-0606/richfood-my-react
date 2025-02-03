@@ -33,14 +33,14 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     navigate("/");
-    const endpoint =
-      user?.userType === "member"
-        ? "http://localhost:8080/User/logout"
-        : "http://localhost:8080/store/storeLogOut";
+    // const endpoint =
+    //   user?.userType === "member"
+    //     ? "http://localhost:8080/User/logout"
+    //     : "http://localhost:8080/store/storeLogOut";
 
-    fetch(endpoint, { method: "POST", credentials: "include" })
-      .then(() => console.log("登出成功"))
-      .catch((err) => console.error("登出失敗", err));
+    // fetch(endpoint, { method: "POST", credentials: "include" })
+    //   .then(() => console.log("登出成功"))
+    //   .catch((err) => console.error("登出失敗", err));
   };
 
   const fetchMemberData = async () => {
@@ -92,7 +92,9 @@ const Header = () => {
     console.log("刷新會員資料");
     try {
       let userData;
+      if(user?.userType){
 
+      
       if (user?.userType === "member") {
         userData = await fetchMemberData();
         if (userData) {
@@ -106,6 +108,7 @@ const Header = () => {
       } else  {
         userData = await fetchStoreData();
       }
+    }
 
 
     } catch (error) {
