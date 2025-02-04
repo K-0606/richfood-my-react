@@ -15,6 +15,8 @@ import {
 import { useUser } from "../../context/UserContext"; // 引入 useUser hook 來獲取登入狀態
 import { ArrowDropDown } from "@mui/icons-material"; // 使用這個圖示作為顯示全部營業時間的按鈕
 
+import { useParams } from "react-router-dom"; // 引入 useParams
+
 const RestaurantInfo = React.memo(({ restaurant }) => {
   const { user } = useUser(); // 使用 useUser 來獲取當前的用戶資料
   const navigate = useNavigate();
@@ -23,6 +25,8 @@ const RestaurantInfo = React.memo(({ restaurant }) => {
   const [comment, setComment] = useState("");
   const [isFavorited, setIsFavorited] = useState(false); // 控制愛心是否填滿
   const [showAllHours, setShowAllHours] = useState(false); // 控制是否顯示全部營業時間
+
+  const { restaurantId } = useParams();
 
   // 獲取今天是星期幾
   const daysOfWeek = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
@@ -75,9 +79,12 @@ const RestaurantInfo = React.memo(({ restaurant }) => {
       boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // 添加陰影效果
     },
   }));
-
   const handleBookRedirect = () => {
-    navigate("/book", { state: { storeId: restaurant.id } }); // 傳遞 restaurantId
+
+    // 直接從 URL 中抓取最後的數字部分
+  const path = window.location.pathname;  // 獲取當前 URL 路徑
+  const restaurantId = path.split("/").pop();  // 分割並提取最後一部分
+    navigate("/book", { state: { restaurantId: restaurantId } }); // 傳遞 restaurantId
   };
 
   const handleOpenDialog = () => {

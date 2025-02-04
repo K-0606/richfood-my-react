@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Button, Grid, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/system';
-import { useNavigate, useLocation} from 'react-router-dom';
-
+import { useNavigate, useLocation } from 'react-router-dom';
 
 // Styled component，不將 isDisabled 傳遞給 DOM 元素
 const CardWrapper = styled(Card)(({ theme, disabled }) => ({
@@ -27,11 +26,21 @@ const BookPage = () => {
   const [showSnackbar, setShowSnackbar] = useState(false); // 顯示提示訊息
   const navigate = useNavigate();
   const location = useLocation();
-  const { storeId } = location.state || {}; 
+  const { restaurantId } = location.state || {}; // 原來的 restaurantId 取得方式
+  const [storeId, setStoreId] = useState(null);
 
-  useEffect(()=>{
-    console.log(storeId)
-  })
+  useEffect(() => {
+    if (restaurantId) {
+      fetch(`http://localhost:8080/restaurants/${restaurantId}`)
+        .then(response => response.json())
+        .then(data => {
+          setStoreId(data.storeId);
+        })
+        .catch(error => console.error("Error fetching storeId:", error));
+    }
+  }, [restaurantId]);
+
+
   useEffect(() => {
     // 生成今天和接下來五天的日期
     const getNextDays = () => {
@@ -55,41 +64,39 @@ const BookPage = () => {
   
       return days;
     };
+
+    const fetchData = async () => {
+      // const storeId = 1; // 固定storeId為1 // 已經在外部設定為固定值，不需要在這裡重新設置
+      const daysData = getNextDays();
   
-    // 確保只有在 storeId 存在時才執行資料抓取
-    if (storeId) {
-      const fetchData = async () => {
-        const daysData = getNextDays();
+      try {
+        const response = await fetch(`http://localhost:8080/restaurantCapacity/getMaxCapacity?storeId=${storeId}`);
+        const result = await response.json();
+        console.log(result);
   
-        try {
-          const response = await fetch(`http://localhost:8080/restaurantCapacity/getMaxCapacity?storeId=${storeId}`);
-          const result = await response.json();
-          console.log(result)
-  
-          // 根據後端回應填充座位數
-          result.forEach((item) => {
-            const dayIndex = daysData.findIndex(day => day.date === item.date); // 查對應的日期
-            if (dayIndex !== -1) {
-              // 根據時間段設定座位數
-              if (item.time === '早上') {
-                daysData[dayIndex].morningSeats = item.maxCapacity;
-              } else if (item.time === '中午') {
-                daysData[dayIndex].noonSeats = item.maxCapacity;
-              } else if (item.time === '晚上') {
-                daysData[dayIndex].eveningSeats = item.maxCapacity;
-              }
+        // 根據後端回應填充座位數
+        result.forEach((item) => {
+          const dayIndex = daysData.findIndex(day => day.date === item.date); // 查對應的日期
+          if (dayIndex !== -1) {
+            // 根據時間段設定座位數
+            if (item.time === '早上') {
+              daysData[dayIndex].morningSeats = item.maxCapacity;
+            } else if (item.time === '中午') {
+              daysData[dayIndex].noonSeats = item.maxCapacity;
+            } else if (item.time === '晚上') {
+              daysData[dayIndex].eveningSeats = item.maxCapacity;
             }
-          });
+          }
+        });
   
-          setData(daysData); // 更新資料
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
+        setData(daysData); // 更新資料
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
   
-      fetchData(); // 觸發資料抓取
-    }
-  }, [storeId]); // 每當 storeId 改變時觸發
+    fetchData(); // 觸發資料抓取
+  }, [storeId]); // 只有當 storeId 改變時觸發
 
   const getButtonColor = (seats) => {
     if (seats === 0) return 'grey'; // 沒有座位可預訂
@@ -114,14 +121,14 @@ const BookPage = () => {
       return;
     }
 
-    const reservationData={
-      storeId: storeId, // 餐廳 ID
+    const reservationData = {
+      storeId: storeId, // 固定storeId ID
       reservationDate: selectedDate, // 預訂日期
       reservationTime: selectedTime, // 預訂時間段（早上/中午/晚上）
       numPeople: selectedSeats, // 預訂人數
-    }
+    };
 
-    try{
+    try {
       const response = await fetch('http://localhost:8080/reservation/addseat', {
         method: 'POST',
         credentials: 'include',
@@ -130,11 +137,11 @@ const BookPage = () => {
         },
         body: JSON.stringify(reservationData), // 將資料轉換成 JSON 格式
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log('Reservation successful:', result);
-  
+
         // 顯示成功提示或執行其他操作
         alert('預訂成功！');
         setOpenDialog(false); // 關閉對話框
@@ -143,10 +150,9 @@ const BookPage = () => {
         console.error('Reservation failed:', response.statusText);
         alert('預訂失敗，請稍後再試！');
       }
-    }catch(error){
-
+    } catch (error) {
+      console.error('Error during reservation:', error);
     }
-
 
     // 關閉對話框並導回首頁
     setOpenDialog(false);
