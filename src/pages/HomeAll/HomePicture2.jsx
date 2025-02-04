@@ -3,14 +3,6 @@ import { useNavigate } from "react-router-dom";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
-import img10 from "./picture/火鍋.jpg";
-import img20 from "./picture/日本料理.jpg";
-import img30 from "./picture/義式料理.jpg";
-import img40 from "./picture/墨西哥料理.jpg";
-import img50 from "./picture/早午餐.jpg";
-import img60 from "./picture/小吃.jpg";
-import img70 from "./picture/餐酒館.jpg";
-import img80 from "./picture/酒吧.jpg";
 
 export default function HomePicture2() {
   const navigate = useNavigate(); // 使用 navigate
@@ -120,42 +112,42 @@ export default function HomePicture2() {
 
 const itemData2 = [
   {
-    img: img10,
+    img: "https://pixabay.com/get/g2fd1f3fc89d28b5c2a5c44cc0d1fa249f428b45ad8e7ee43a5bec8edb6f8ae73dff90b1f211af101a7d152f14331ae614a7763bbfc6b500feaf0fdafbac161f951ca8e07dcdb3121b3e9e2fcb5219c43_640.jpg",
     title: "火鍋",
     value: "火鍋",
   },
   {
-    img: img20,
+    img: "https://pixabay.com/get/g1f11c7c945c377e8edaa6028ee9f7f62b8cc54e4ba4d9b494ec167d9040f50878f93d190e13e7d6604433571bd06ec2dca759dc00bd511c1b22bd2998213c0a5ffd0959a43539a325dacd4fd4e4ea985_640.jpg",
     title: "日式料理",
     value: "日式料理",
   },
   {
-    img: img30,
+    img: "https://pixabay.com/get/gb54f3aa05a1dc22ebdfde018aad4c693336f72d128c85bfe90946f17bb66d255cf96786811499d028f86583f07ca6822aceb020d3dc748901bccbd4d22cae0c5d78f418e855e3ed27993f0f23e8faad4_640.jpg",
     title: "義式料理",
     value: "義式料理",
   },
   {
-    img: img40,
+    img: "https://pixabay.com/get/g755ced894fa2149af35f46a69bf6ec599e4aa9fe5c37da68dd4f313a737be968956d26cbe0c967dd13a039903c7a4d810df47c78eeee0947f3dba63fe2e27115317df8428a0cdb1ee5302a784f920706_640.jpg",
     title: "墨西哥餐",
     value: "墨西哥餐",
   },
   {
-    img: img50,
+    img: "https://pixabay.com/get/g6f1a3e11f4bd43446767dd471bc159012e4f0003acf15aee4645c123f0c3907ce25ce2233a1412ac17c5a501e07aa4a3d19effcd2fb56a5ee19e59e4a134c31743ced7f1715b03227d19659064d31fea_640.jpg",
     title: "早午餐",
     value: "早午餐",
   },
   {
-    img: img60,
+    img: "https://pixabay.com/get/ge50450fa0019f2b1e95356d4396a6a6f12f97e32aec01bc05382d19e1453bd2b5e029c23a5b81e2f5515a04750076630ee80f74cafa1f292ad3ef22cc1e6d8099411bfe5a31a815e75bc1b02f77ff867_640.jpg",
     title: "小吃",
     value: "小吃",
   },
   {
-    img: img70,
+    img: "https://pixabay.com/get/gac29015cc0679c1eb11bb9de7ca03bc0c0baf84b7c9cbf4e23585d6326b2067544794861abbd9765d8d7733b7d63a704df3b51ac8b624ec8e6677b8c1490ca047ecb545e1b0f15b3176dbfe631b2da03_640.jpg",
     title: "餐酒館",
     value: "餐酒館",
   },
   {
-    img: img80,
+    img: "https://pixabay.com/get/g79beeeb67f8866209b62ac083a462cac584c6d9b61c0b55234c7dbe94b1032a58775228bfe49066cae2622a26ecf96b63d6b44cc10580a060d3fdf21d627050ff3683a272b541267111b29ff4520a036_640.jpg",
     title: "酒吧",
     value: "酒吧",
   },
