@@ -49,7 +49,7 @@ const StoreLoginPage = () => {
 
         setStoreData({
           name: data.restaurants.name || "Test Store",
-          avatar: data.icon.replace(/^"|"$/g, '') || "https://example.com/avatar.png",
+          avatar: data.icon ? data.icon.replace(/^"|"$/g, '') : "https://example.com/avatar.png",
           // address:  "N/A",
           // businessHours: "N/A",
           // phone:  "N/A",
@@ -170,7 +170,7 @@ const StoreLoginPage = () => {
 
       {/* 顯示不同內容區域 */}
       <Box sx={{ mt: 3 }}>
-        {activeTab === "comments" && <StoreComments />}
+        {activeTab === "comments" && (storeData.restaurantID ? (<StoreComments restaurantId={storeData.restaurantID} />) : (<Typography>Loading comments...</Typography>))}
         {activeTab === "reservations" && <StoreReservations />}
         {activeTab === "coupons" && <StoreCoupons />}
         {activeTab === "updateInfo" && <StoreUpdateInfo storeData={storeData} onUpdateStoreData={handleUpdateStoreData} />}

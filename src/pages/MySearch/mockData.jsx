@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export const useRestaurants = () => {
   const [mockRestaurants, setRestaurants] = useState([]);
-  const [loading, setLoading] = useState(true);  // 用來追蹤資料是否正在加載
+  const [loading, setLoading] = useState(true); // 用來追蹤資料是否正在加載
 
   // 抓取資料的函數
   const fetchData = async () => {
@@ -12,16 +12,16 @@ export const useRestaurants = () => {
       const data = await response.json();
       // 設置餐廳資料並設置 loading 為 false
       setRestaurants(data);
-      setLoading(false);  // 資料加載完成
+      setLoading(false); // 資料加載完成
     } catch (error) {
       console.error("Error fetching data:", error);
-      setLoading(false);  // 即使錯誤，將 loading 設置為 false
+      setLoading(false); // 即使錯誤，將 loading 設置為 false
     }
   };
 
   useEffect(() => {
-    fetchData();  // 頁面初次加載時呼叫 fetchData
+    fetchData(); // 頁面初次加載時呼叫 fetchData
   }, []);
 
-  return { mockRestaurants, loading };  // 返回 mockRestaurants 和 loading
+  return { mockRestaurants, loading }; // 返回 mockRestaurants 和 loading
 };
