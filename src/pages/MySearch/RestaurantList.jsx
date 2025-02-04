@@ -21,6 +21,19 @@ const RestaurantList = ({ restaurants }) => {
     setCurrentPage(value);
   };
 
+  // 新增的點擊事件處理函數
+  const handleRestaurantClick = (restaurantId) => {
+    // 當餐廳被點擊時
+    console.log(`餐廳 ID: ${restaurantId} 被點擊了！`);
+    // 這裡可以加入 API 呼叫，將點擊的餐廳ID傳送到後端，增加點擊計數
+    // 比如：
+    // fetch('/api/restaurant/click', {
+    //   method: 'POST',
+    //   body: JSON.stringify({ restaurantId }),
+    //   headers: { 'Content-Type': 'application/json' },
+    // });
+  };
+
   return (
     <div>
       <div style={styles.listContainer}>
@@ -28,6 +41,7 @@ const RestaurantList = ({ restaurants }) => {
           <RestaurantCard
             key={restaurant.restaurantId}
             restaurant={restaurant}
+            onClick={handleRestaurantClick} // 傳遞點擊處理函數
           />
         ))}
       </div>

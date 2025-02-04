@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const RestaurantCard = ({ restaurant }) => {
+const RestaurantCard = ({ restaurant, onClick }) => {
   const [hover, setHover] = useState(false);
+
+  const handleClick = () => {
+    // 觸發點擊事件並傳遞餐廳ID
+    console.log(`餐廳 ${restaurant.name} 被點擊了！`);
+    onClick(restaurant.restaurantId); // 呼叫外部的點擊回調函數
+  };
 
   return (
     <div
@@ -12,6 +18,7 @@ const RestaurantCard = ({ restaurant }) => {
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onClick={handleClick}  // 在此處新增點擊監聽
     >
       <img 
         src={restaurant.image}  
