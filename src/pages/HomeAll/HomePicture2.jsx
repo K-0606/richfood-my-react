@@ -3,6 +3,14 @@ import { useNavigate } from "react-router-dom";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
+import img10 from "./picture/火鍋.jpg";
+import img20 from "./picture/日本料理.jpg";
+import img30 from "./picture/義式料理.jpg";
+import img40 from "./picture/墨西哥料理.jpg";
+import img50 from "./picture/早午餐.jpg";
+import img60 from "./picture/小吃.jpg";
+import img70 from "./picture/餐酒館.jpg";
+import img80 from "./picture/酒吧.jpg";
 
 export default function HomePicture2() {
   const navigate = useNavigate(); // 使用 navigate
@@ -112,42 +120,42 @@ export default function HomePicture2() {
 
 const itemData2 = [
   {
-    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+    img: img10,
     title: "火鍋",
     value: "火鍋",
   },
   {
-    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+    img: img20,
     title: "日式料理",
     value: "日式料理",
   },
   {
-    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+    img: img30,
     title: "義式料理",
     value: "義式料理",
   },
   {
-    img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+    img: img40,
     title: "墨西哥餐",
     value: "墨西哥餐",
   },
   {
-    img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+    img: img50,
     title: "早午餐",
     value: "早午餐",
   },
   {
-    img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
+    img: img60,
     title: "小吃",
     value: "小吃",
   },
   {
-    img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+    img: img70,
     title: "餐酒館",
     value: "餐酒館",
   },
   {
-    img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
+    img: img80,
     title: "酒吧",
     value: "酒吧",
   },

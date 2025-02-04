@@ -3,6 +3,14 @@ import { useNavigate } from "react-router-dom"; // 引入 useNavigate
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
+import img1 from "./picture/台北.jpg";
+import img2 from "./picture/桃園.jpg";
+import img3 from "./picture/苗栗.jpg";
+import img4 from "./picture/台中.jpg";
+import img5 from "./picture/南投.jpg";
+import img6 from "./picture/高雄.jpg";
+import img7 from "./picture/台南.jpg";
+import img8 from "./picture/屏東.jpg";
 
 export default function HomePicture1() {
   const navigate1 = useNavigate(); // 使用 navigate
@@ -106,42 +114,42 @@ export default function HomePicture1() {
 
 const itemData1 = [
   {
-    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+    img: img1,
     title: "台北市",
     value: "台北市",
   },
   {
-    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+    img: img2,
     title: "桃園市",
     value: "桃園",
   },
   {
-    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+    img: img3,
     title: "苗栗",
     value: "苗栗",
   },
   {
-    img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+    img: img4,
     title: "台中",
     value: "台中市",
   },
   {
-    img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+    img: img5,
     title: "南投",
     value: "南投",
   },
   {
-    img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
+    img: img6,
     title: "高雄",
     value: "高雄",
   },
   {
-    img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+    img: img7,
     title: "台南",
     value: "台南",
   },
   {
-    img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
+    img: img8,
     title: "屏東",
     value: "屏東",
   },
