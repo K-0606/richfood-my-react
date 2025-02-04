@@ -103,10 +103,10 @@ const Home = () => {
     }
   }, [activeContent]);
 
-  // 处理更新会员数据
+  // 處理更新會員數據
   const handleUpdateMemberData = (updatedData) => {
     const formData = new FormData();
-    console.log("收到的 updatedData:", updatedData); // 确认头像数据是否存在
+    console.log("收到的 updatedData:", updatedData); // 確認頭像數據是否存在
     formData.append('userId', memberData.id);
     if (updatedData.name) formData.append('name', updatedData.name);
     if (updatedData.phone) formData.append('tel', updatedData.phone);
@@ -125,7 +125,7 @@ const Home = () => {
         alert(response.data.message || '資料更新成功');
         setError(null);
   
-        // 更新用户数据
+        // 更新用戶數據
         setMemberData((prevData) => ({
           ...prevData,
           ...updatedData,
@@ -159,7 +159,7 @@ const Home = () => {
       <Box sx={{ padding: 3 }}>
         <Box display="flex" justifyContent="center" sx={{ marginBottom: 4 }}>
           <Button variant="outlined" onClick={() => setActiveContent('comments')}>
-            我的评论
+            我的評論
           </Button>
           <Button variant="outlined" onClick={() => setActiveContent('collections')}>
             我的珍藏
@@ -168,10 +168,10 @@ const Home = () => {
             我的餐券
           </Button>
           <Button variant="outlined" onClick={() => setActiveContent('reservations')}>
-            我的订位
+            我的訂位
           </Button>
           <Button variant="outlined" onClick={() => setActiveContent('profile')}>
-            会员资料
+            會員資料
           </Button>
         </Box>
 

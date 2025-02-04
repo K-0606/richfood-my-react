@@ -197,7 +197,7 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
         </div>
         <div style={styles.detailItem}>
           <strong>地址: </strong>
-          <span>{restaurant.address}</span>
+          <span>{restaurant.country}{restaurant.district}{restaurant.address}</span>
         </div>
         <div style={styles.detailItem}>
           <strong>營業時間: </strong>

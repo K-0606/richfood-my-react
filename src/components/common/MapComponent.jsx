@@ -37,9 +37,10 @@ function MapComponent({ adressStorePage }) {
   useEffect(() => {
     setAddress(adressStorePage);
   }, [adressStorePage]);
-  //console.log(adressStorePage)
-  // 確保 Google Maps 加載完成後進行操作
+
+  // 顯示地址和處理定位
   useEffect(() => {
+    console.log("Received Address:", address); // 確保傳入的地址正確
     if (googleMapsLoaded && address) {
       const geocoder = new window.google.maps.Geocoder();
 
@@ -48,6 +49,7 @@ function MapComponent({ adressStorePage }) {
         if (status === "OK" && results[0]) {
           const { lat, lng } = results[0].geometry.location;
           setLocation({ lat: lat(), lng: lng() });
+          console.log("Geocoding Result:", { lat: lat(), lng: lng() });
 
           // 嘗試使用 Places API 搜索商業資訊
           const placeId = results[0].place_id;
