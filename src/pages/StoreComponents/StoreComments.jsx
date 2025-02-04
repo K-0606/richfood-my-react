@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Rating, Button, CircularProgress } from '@mui/material';
-import dayjs from 'dayjs';
 
 const StoreComments = ({ restaurantId }) => {
   const [comments, setComments] = useState([]);
@@ -36,6 +35,11 @@ const StoreComments = ({ restaurantId }) => {
     const startIndex = (currentPage - 1) * commentsPerPage;
     return comments.slice(startIndex, startIndex + commentsPerPage);
   };
+  const formatDateTime = (dateTime) => {
+    const [date, time] = dateTime.split("T");
+    return `${date} ${time.slice(0, 8)}`;
+  };
+
 
   return (
     <div>
@@ -62,7 +66,7 @@ const StoreComments = ({ restaurantId }) => {
             }}
           >
             <Typography variant="subtitle2" sx={{ fontWeight: 'bold', color: '#333' }}>
-              {comment.userName}（{dayjs(comment.createdAt).format('YYYY-MM-DD HH:mm')}）
+              {comment.userName}（{formatDateTime(comment.createdAt)}）
             </Typography>
             <Typography variant="body2" sx={{ my: 1, color: '#555' }}>
               {comment.content}
