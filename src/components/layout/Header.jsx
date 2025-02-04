@@ -176,7 +176,10 @@ const Header = () => {
                 <Avatar
                   alt={currentUser?.name || "用户"}
                   src={
+
+
                     user.userType === "member" ? currentUser?.icon : JSON.parse(user.icon)
+
                     // currentUser?.icon || "" // 默认头像路径
                   }
                   sx={{ width: 24, height: 24, mr: 1 }}

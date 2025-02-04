@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { mockRestaurants } from './mockData'; // 模擬的餐廳數據
+import { useRestaurants } from './mockData'; // 模擬的餐廳數據
 import RestaurantList from './RestaurantList';
 import SearchBar from './SearchBar';
 import Header from '../../components/layout/Header';
@@ -14,7 +14,7 @@ const MySearchField = () => {
   const region = searchParams.get('region') || '';
   const type = searchParams.get('type') || '';
   const price = searchParams.get('price') ? searchParams.get('price').split(',') : [];
-  const popular = searchParams.get('popular') === 'true'; // 這裡需要處理為布林值
+  const popular = searchParams.get('popular') === 'true';
 
   const [filters, setFilters] = useState({
     region: region,
@@ -23,13 +23,13 @@ const MySearchField = () => {
     popular: popular,
   });
 
-  // 使用 useEffect 來監聽 filters 改變後再更新 URL
+  
+  
   useEffect(() => {
     const params = new URLSearchParams(filters);
-    navigate(`/search?${params.toString()}`); // 使用 navigate 更新 URL
+    navigate(`/search?${params.toString()}`);
   }, [filters, navigate]);
 
-  // 當 location 改變時，確保 filters 會跟著更新
   useEffect(() => {
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -38,14 +38,12 @@ const MySearchField = () => {
     }));
   }, [region, type]);
 
-  // 更新篩選條件
   const handleSearchChange = (key, value) => {
     setFilters((prevParams) => {
       return { ...prevParams, [key]: value };
     });
   };
 
-  // 檢查餐廳價格是否符合篩選條件
   const isPriceInRange = (price, range) => {
     switch (range) {
       case 'below100':
@@ -64,24 +62,37 @@ const MySearchField = () => {
         return false;
     }
   };
+  const { mockRestaurants, loading } = useRestaurants(); 
+  
+  // 當 mockRestaurants 還沒有資料時，避免進行過濾
+  const filteredRestaurants = loading || !mockRestaurants.length
+    ? [] // 資料還未加載或是無資料，則顯示空列表
+    : mockRestaurants.filter((restaurant) => {
+        const matchesType = filters.type.length > 0
+          ? restaurant.categories.some((cat) => filters.type.includes(cat.name))
+          : true;
+          
+        const matchesRegion = filters.region
+          ? `${restaurant.country}` === filters.region
+          : true;
+        const matchesPrice = filters.price.length
+          ? filters.price.some(range => isPriceInRange(restaurant.average, range))
+          : true;
 
-  // 過濾資料
-  const filteredRestaurants = mockRestaurants.filter((restaurant) => {
-    const matchesType = filters.type.length > 0 ? filters.type.includes(restaurant.type) : true;
-    const matchesRegion = filters.region ? restaurant.region === filters.region : true;
-    const matchesPrice = filters.price.length
-      ? filters.price.some(range => isPriceInRange(restaurant.price, range))
-      : true;
-    const matchesPopular = filters.popular ? restaurant.rating >= 4 : true;
+        const matchesPopular = filters.popular ? restaurant.score >= 4 : true;
 
-    return matchesType && matchesRegion && matchesPrice && matchesPopular;
-  });
-
+        return matchesType && matchesRegion && matchesPrice && matchesPopular;
+    });
+    
   return (
     <div>
       <Header />
       <SearchBar onSearchChange={handleSearchChange} searchParams={filters} />
-      <RestaurantList restaurants={filteredRestaurants} />
+      {loading ? (
+        <div>Loading...</div>  // 如果資料加載中，顯示 Loading
+      ) : (
+        <RestaurantList restaurants={filteredRestaurants} />  // 資料加載完成後顯示餐廳列表
+      )}
       <Footer />
     </div>
   );
