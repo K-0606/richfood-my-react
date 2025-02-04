@@ -29,9 +29,17 @@ export default function BoxSx() {
 
   const settings = {
     infinite: true,
-    speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
+    infinite: true,
+    autoplay: true,
+    speed: 5000,
+    autoplaySpeed: 10,
+    pauseOnHover: true,
+    draggable: true,
+    swipe: true,
+    swipeToSlide: true,
+    easing: "ease-in-out",
     responsive: [
       {
         breakpoint: 1024,
@@ -52,6 +60,7 @@ export default function BoxSx() {
           backgroundColor: "gray",
           justifyContent: "center",
           alignItems: "center",
+          height: "100%",
         }}
       >
         <Slider {...settings}>
@@ -64,15 +73,25 @@ export default function BoxSx() {
                     width: "300px",
                     height: "170px",
                     display: "flex",
-                    gap: 2,
+                    // gap: 2,
                     margin: "0 auto",
+                    borderRadius: "3%",
+                    display: "block",
+                    objectFit: "cover", // 保持比例，裁剪多餘的部分
+                    "&:hover": {
+                      transform: "scale(1.03)", // 當鼠標懸停時，輕微放大
+                      boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)", // 增加陰影效果
+                      cursor: "pointer", // 改變光標形狀，提示用戶可以點擊
+                      borderRadius: "3%",
+                    },
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
                   }}
                 >
                   <CardActionArea>
                     <Box
                       sx={{
                         display: "flex",
-                        flexDirection: "row",
+                        // flexDirection: "row",
                         width: "300px",
                       }}
                     >
@@ -80,11 +99,10 @@ export default function BoxSx() {
                       <CardMedia
                         component="img"
                         sx={{
-                          width: "70px",
-                          height: "70px",
+                          width: "40%",
+                          height: "180px",
                           objectFit: "cover",
                           margin: "0 auto",
-                          borderRadius: "10px",
                         }}
                         image={
                           review.imageUrl
@@ -102,16 +120,24 @@ export default function BoxSx() {
                           paddingLeft: 2,
                         }}
                       >
-                        <Typography gutterBottom variant="h6" component="div">
+                        <Typography
+                          gutterBottom
+                          variant="h6"
+                          component="div"
+                          sx={{ fontSize: "17px" }}
+                        >
                           {review.restaurantName} - {review.rating}⭐
                         </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ color: "text.secondary" }}
+                          sx={{ color: "text.secondary", fontSize: "13px" }}
                         >
                           {review.content}
                         </Typography>
-                        <Typography variant="caption" sx={{ color: "gray" }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "gray", fontSize: "13px" }}
+                        >
                           {new Date(review.createdAt).toLocaleDateString()}{" "}
                           {new Date(review.createdAt).toLocaleTimeString()}
                         </Typography>
