@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import RestaurantCard from "./RestaurantCard";
 import Pagination from "@mui/material/Pagination";
 import Box from "@mui/material/Box";
@@ -21,17 +22,24 @@ const RestaurantList = ({ restaurants }) => {
     setCurrentPage(value);
   };
 
-  // 新增的點擊事件處理函數
-  const handleRestaurantClick = (restaurantId) => {
-    // 當餐廳被點擊時
-    console.log(`餐廳 ID: ${restaurantId} 被點擊了！`);
-    // 這裡可以加入 API 呼叫，將點擊的餐廳ID傳送到後端，增加點擊計數
-    // 比如：
-    // fetch('/api/restaurant/click', {
-    //   method: 'POST',
-    //   body: JSON.stringify({ restaurantId }),
-    //   headers: { 'Content-Type': 'application/json' },
-    // });
+  // 點擊事件處理函數
+  const handleRestaurantClick = async (restaurantId) => {
+    try {
+      const response = await fetch("http://localhost:8080/history/record", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ restaurantId }),
+      });
+      if (!response.ok) {
+        throw new Error("紀錄歷史API失敗");
+      }
+      const data = await response.text();
+      console.log("後端回應：", data);
+    } catch (error) {
+      console.error("呼叫後端 API 發生錯誤：", error);
+    }
   };
 
   return (
@@ -48,9 +56,9 @@ const RestaurantList = ({ restaurants }) => {
       {/* 分頁控制 */}
       <Box sx={styles.pagination}>
         <Pagination
-          count={totalPages} // 顯示總頁數
-          page={currentPage} // 當前頁數
-          onChange={handlePageChange} // 當頁數改變時更新
+          count={totalPages}
+          page={currentPage}
+          onChange={handlePageChange}
           shape="rounded"
           sx={{
             display: "flex",
