@@ -6,7 +6,7 @@ export const useRestaurants = () => {
 
   // 抓取資料的函數
   const fetchData = async () => {
-    const url = "http://localhost:8080/test/test1";  // 請確保這是正確的 API 地址
+    const url = "http://localhost:8080/restaurants/list";  // 請確保這是正確的 API 地址
     try {
       const response = await fetch(url, { method: "GET" });
       const data = await response.json();

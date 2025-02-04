@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useRestaurants } from "../MySearch/mockData"; // 模擬資料
 import RestaurantInfo from "./RestaurantInfo";
 import RestaurantImageCarousel from "./RestaurantImageCarousel";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import FloatingButtons from "../../components/common/FloatingButtons";
-import MyRecommend from "../MyRecommend";
 import MapComponent from "../../components/common/MapComponent";
 import ReviewSection from "../StorePage/ReviewSection";
-import { Height } from "@mui/icons-material";
 
 const RestaurantDetail = () => {
   const { id } = useParams(); // 從URL中獲取餐廳的ID
@@ -37,7 +34,9 @@ const RestaurantDetail = () => {
     fetchRestaurant();
   }, [id]);  // 依賴 id，當 id 變化時重新發送請求
 
-  if (!restaurant) return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!restaurant) return <div>No restaurant data found!</div>;
 
   return (
     <>
@@ -45,14 +44,14 @@ const RestaurantDetail = () => {
       <div className="restaurant-detail-container" style={styles.container}>
         <div className="restaurant-detail-content" style={styles.content}>
           {/* 左半邊輪播圖 */}
-          <RestaurantImageCarousel images={restaurant.images} />
+          <RestaurantImageCarousel images={[restaurant.image]} />
 
           {/* 右半邊餐廳資訊 */}
           <RestaurantInfo restaurant={restaurant} />
         </div>
       </div>
-      <MapComponent />
-      <ReviewSection />
+      <MapComponent longitude={restaurant.longitude} latitude={restaurant.latitude} />
+      <ReviewSection restaurantId={restaurant.restaurantId} />
       <FloatingButtons />
       <Footer />
     </>
