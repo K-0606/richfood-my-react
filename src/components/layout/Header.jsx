@@ -9,11 +9,9 @@ import logo from "../../assets/richfoodCoverV1.png";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, logout } = useUser(); // 从 context 中獲取 user 
+  const { user, logout } = useUser(); // 从 context 中獲取 user
   const [userData, setUserData] = useState(null);
 
-
-  // 跳轉
   const handleLoginRedirect = () => navigate("/login");
   const handleHomeRedirect = () => navigate("/");
   const handleStoreRedirect = () => navigate("/SearchStore");
@@ -32,18 +30,18 @@ const Header = () => {
   // 登出
   const handleLogout = () => {
     setUserData(null);
-    
+
     // 直接執行兩個登出請求
     const memberLogoutEndpoint = "http://localhost:8080/User/logout";
     const storeLogoutEndpoint = "http://localhost:8080/store/storeLogOut";
-  
+
     // 執行會員登出
     fetch(memberLogoutEndpoint, { method: "POST", credentials: "include" })
       .then(() => {
         console.log("會員登出成功");
       })
       .catch((err) => console.error("會員登出失敗", err));
-  
+
     // 執行店家登出
     fetch(storeLogoutEndpoint, { method: "POST", credentials: "include" })
       .then(() => {
@@ -53,24 +51,28 @@ const Header = () => {
       })
       .catch((err) => console.error("店家登出失敗", err));
 
-      logout(); // 清空 user 資料
-      navigate("/"); // 導向首頁
+    logout(); // 清空 user 資料
+    navigate("/"); // 導向首頁
   };
-  
 
   const fetchMemberData = async () => {
     console.log("刷新會員");
     try {
-      const response = await fetch("http://localhost:8080/User/getUserDetails", {
-        credentials: "include",
-      });
+      const response = await fetch(
+        "http://localhost:8080/User/getUserDetails",
+        {
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         const userData = await response.json();
         console.log("重新取得會員資料:", userData);
 
         if (userData.icon) {
-          userData.icon = `http://localhost:8080${userData.icon}?t=${Date.now()}`;
+          userData.icon = `http://localhost:8080${
+            userData.icon
+          }?t=${Date.now()}`;
         }
 
         return userData;
@@ -91,10 +93,21 @@ const Header = () => {
 
       if (response.ok) {
         const userData = await response.json();
+
         console.log("重新取得的店家資料:", userData);
         setUserData(userData);
-        
+
         // return userData;
+        console.log("重新取得的店家资料:", userData);
+
+        // // 拼接完整头像 URL 并避免缓存
+        // if (userData.icon) {
+        //   userData.icon = `http://localhost:8080${
+        //     userData.icon
+        //   }?t=${Date.now()}`;
+        // }
+
+        return userData;
       } else {
         console.error("取得店家資料失敗");
       }
@@ -117,13 +130,20 @@ const Header = () => {
             : null;
           setUserData(userData); // 更新用戶資訊資料
         }
-
-      }else{
-        console.log("不存在")
+      } else {
+        console.log("不存在");
         userData = await fetchStoreData();
       }
 
+      // if (userData) {
+      //   console.log("设置 userData:", userData);
+      //   // 生成头像 URL，避免重复添加时间戳
+      //   userData.iconUrl = userData.icon
+      //     ? `http://localhost:8080${userData.icon}?t=${Date.now()}`
+      //     : null;
 
+      //   setUserData(userData); // 更新用户数据状态
+      // }
     } catch (error) {
       console.error("刷新會員資訊錯誤:", error);
     }
@@ -134,12 +154,8 @@ const Header = () => {
     }
   }, [user]); // 監聽 user 變化
 
-
   // 監聽會員更新事件
   useEffect(() => {
-
-    // fetchUserData();
-
     const handleUpdateHeader = () => {
       console.log("接收到 updateHeader 事件");
       fetchUserData();
@@ -154,7 +170,6 @@ const Header = () => {
 
   //監聽Storeheader更新事件
   useEffect(() => {
-
     // fetchUserData();
 
     const handleUpdateStoreHeader = () => {
@@ -169,9 +184,7 @@ const Header = () => {
     };
   }, []);
 
-
-
-  // 使用 userData 或 user 
+  // 使用 userData 或 user
   const currentUser = userData || user;
 
   return (
@@ -208,11 +221,11 @@ const Header = () => {
                 onClick={handleProfileRedirect}
               >
                 <Avatar
-                  alt={
-                    currentUser?.name || "用户"
-                    }
+                  alt={currentUser?.name || "用户"}
                   src={
-                    user.userType === "member" ? currentUser.icon : JSON.parse(currentUser.icon)
+                    user.userType === "member"
+                      ? currentUser.icon
+                      : JSON.parse(currentUser.icon)
                   }
                   sx={{ width: 24, height: 24, mr: 1 }}
                 />
@@ -228,7 +241,6 @@ const Header = () => {
                 登出
               </Button>
             </div>
-
           ) : (
             <Button variant="contained" onClick={handleLoginRedirect}>
               會員/店家登入
