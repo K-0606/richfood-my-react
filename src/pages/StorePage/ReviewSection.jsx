@@ -3,6 +3,8 @@ import { Box, Card, CardContent, Typography, Rating } from "@mui/material";
 
 function ReviewSection({ restaurantId, refreshTrigger }) {
   const [reviews, setReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!restaurantId) {
@@ -10,9 +12,12 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
       return;
     }
 
-    // 發送 API 請求獲取評論
+    // 重置載入狀態與錯誤
+    setIsLoading(true);
+    setError(null);
+
     console.log("Fetching reviews for restaurantId:", restaurantId);
-    fetch(`http://localhost:8080/Reviews/restaurant/${restaurantId}`)
+    fetch(`http://localhost:8080/Reviews/restaurant/${restaurantId}?t=${Date.now()}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch reviews");
@@ -25,27 +30,70 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
       })
       .catch((error) => {
         console.error("Error fetching reviews:", error);
+        setError(error);
         setReviews([]); // 如果出錯則設置空評論
-      });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      })
+      
   }, [restaurantId, refreshTrigger]);
 
-  // 如果沒有評論則不渲染內容
-  if (!reviews || reviews.length === 0) {
-    return null; // 不渲染任何內容
+  // 1) 載入中狀態
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          marginLeft: "150px",
+          marginTop: "30px",
+        }}
+      >
+        <Typography variant="body1">載入中...</Typography>
+      </Box>
+    );
   }
 
+  // 2) 錯誤狀態
+  if (error) {
+    return (
+      <Box
+        sx={{
+          marginLeft: "150px",
+          marginTop: "30px",
+        }}
+      >
+        <Typography variant="body1" color="error">
+          載入評論失敗：{error.message}
+        </Typography>
+      </Box>
+    );
+  }
+
+  // 3) 尚無評論
+  if (!reviews || reviews.length === 0) {
+    return (
+      <Box
+        sx={{
+          marginLeft: "150px",
+          marginTop: "30px",
+        }}
+      >
+        <Typography variant="body1">尚無評論</Typography>
+      </Box>
+    );
+  }
+
+  // 4) 有評論才渲染
   return (
     <Box
       sx={{
         display: "inline-block",
         width: "30%",
         position: "relative",
-        // top: "-300px",
         marginLeft: "150px",
-        marginTop: "30px", 
-        // backgroundColor: "#f5f5f5",   // 背景顏色
-    borderRadius: "8px",           // 圓角
-    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // 陰影
+        marginTop: "30px",
+        borderRadius: "8px",
+        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
       }}
       className="review-section"
     >
@@ -59,11 +107,7 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
               {review.userName}
             </Typography>
             <Rating value={review.rating} readOnly />
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ marginTop: 1 }}
-            >
+            <Typography variant="body2" color="text.secondary" sx={{ marginTop: 1 }}>
               {review.content}
             </Typography>
           </CardContent>

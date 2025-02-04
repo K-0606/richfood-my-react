@@ -17,7 +17,7 @@ import { ArrowDropDown } from "@mui/icons-material"; // 使用這個圖示作為
 
 import { useParams } from "react-router-dom"; // 引入 useParams
 
-const RestaurantInfo = React.memo(({ restaurant }) => {
+const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
   const { user } = useUser(); // 使用 useUser 來獲取當前的用戶資料
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -101,13 +101,43 @@ const RestaurantInfo = React.memo(({ restaurant }) => {
     setComment(""); // 重設評論
   };
 
-  const handleSubmitReview = () => {
-    // 可在此處發送 API 請求來提交評論
-    console.log("提交的評論:", comment);
-    console.log("提交的評分:", rating);
-    alert("評論已提交！");
-    handleCloseDialog();
-  };
+    // 提交評論
+    const handleSubmitReview = async () => {
+      if (!comment.trim() || rating === 0) {
+        alert("請填寫完整的評論內容和評分！");
+        return;
+      }
+      try {
+        console.log("開始提交評論...");
+  
+        // 發送 POST 請求到後端
+        const response = await fetch(
+          `http://localhost:8080/Reviews/restaurant/${restaurant.restaurantId}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include", // 需要帶上登入資訊
+            body: JSON.stringify({ content: comment, rating }),
+          }
+        );
+  
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(errorMessage);
+        }
+  
+        alert("評論提交成功！");
+        handleCloseDialog(); // 關閉彈窗
+  
+        // 通知父元件刷新評論列表
+        if (onReviewSubmitted) {
+          onReviewSubmitted();
+        }
+      } catch (error) {
+        console.error("提交評論失敗：", error.message);
+        alert("提交評論失敗：" + error.message);
+      }
+    };
 
   const handleFavorite = () => {
     if (user) {
