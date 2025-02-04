@@ -36,6 +36,13 @@ export const UserProvider = ({ children }) => {
     setUser(null);  // 清空 user 狀態
     localStorage.removeItem('user');  // 移除 localStorage 中的 user 資料
   };
+  //更新方法
+  const updateUser = (newUserData) => {
+    setUser(prevUser => ({
+      ...prevUser,
+      ...newUserData, // 更新用戶的部分資料
+    }));
+  };
 
   return (
     <UserContext.Provider value={{ user, login, logout }}>

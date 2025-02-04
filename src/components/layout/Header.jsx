@@ -9,11 +9,11 @@ import logo from "../../assets/richfoodCoverV1.png";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { user, logout } = useUser(); // 从 context 中获取 user 数据
+  const { user, logout } = useUser(); // 从 context 中獲取 user 
   const [userData, setUserData] = useState(null);
 
 
-  // 跳转逻辑
+  // 跳轉
   const handleLoginRedirect = () => navigate("/login");
   const handleHomeRedirect = () => navigate("/");
   const handleStoreRedirect = () => navigate("/SearchStore");
@@ -29,22 +29,37 @@ const Header = () => {
     }
   };
 
-  // 登出逻辑
+  // 登出
   const handleLogout = () => {
-    logout();
-    navigate("/");
-    const endpoint =
-      user?.userType === "member"
-        ? "http://localhost:8080/User/logout"
-        : "http://localhost:8080/store/storeLogOut";
+    setUserData(null);
+    
+    // 直接執行兩個登出請求
+    const memberLogoutEndpoint = "http://localhost:8080/User/logout";
+    const storeLogoutEndpoint = "http://localhost:8080/store/storeLogOut";
+  
+    // 執行會員登出
+    fetch(memberLogoutEndpoint, { method: "POST", credentials: "include" })
+      .then(() => {
+        console.log("會員登出成功");
+      })
+      .catch((err) => console.error("會員登出失敗", err));
+  
+    // 執行店家登出
+    fetch(storeLogoutEndpoint, { method: "POST", credentials: "include" })
+      .then(() => {
+        console.log("店家登出成功");
+        logout(); // 清空 user 資料
+        navigate("/"); // 導向首頁
+      })
+      .catch((err) => console.error("店家登出失敗", err));
 
-    fetch(endpoint, { method: "POST", credentials: "include" })
-      .then(() => console.log("登出成功"))
-      .catch((err) => console.error("登出失败", err));
+      logout(); // 清空 user 資料
+      navigate("/"); // 導向首頁
   };
+  
 
   const fetchMemberData = async () => {
-    console.log("刷新会员数据");
+    console.log("刷新會員");
     try {
       const response = await fetch("http://localhost:8080/User/getUserDetails", {
         credentials: "include",
@@ -52,24 +67,23 @@ const Header = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        console.log("重新取得的会员资料:", userData);
+        console.log("重新取得會員資料:", userData);
 
-        // 拼接完整头像 URL 并避免缓存
         if (userData.icon) {
           userData.icon = `http://localhost:8080${userData.icon}?t=${Date.now()}`;
         }
 
         return userData;
       } else {
-        console.error("获取会员数据失败");
+        console.error("取得會員資料失敗");
       }
     } catch (error) {
-      console.error("获取会员数据出错:", error);
+      console.error("取得會員資料錯誤:", error);
     }
   };
 
   const fetchStoreData = async () => {
-    console.log("刷新店家数据");
+    console.log("刷新店家資料");
     try {
       const response = await fetch("http://localhost:8080/store/selectStore", {
         credentials: "include",
@@ -77,53 +91,54 @@ const Header = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        console.log("重新取得的店家资料:", userData);
-
-        // 拼接完整头像 URL 并避免缓存
-        if (userData.icon) {
-          userData.icon = `http://localhost:8080${userData.icon}?t=${Date.now()}`;
-        }
-
-        return userData;
+        console.log("重新取得的店家資料:", userData);
+        setUserData(userData);
+        
+        // return userData;
       } else {
-        console.error("获取店家数据失败");
+        console.error("取得店家資料失敗");
       }
     } catch (error) {
-      console.error("获取店家数据出错:", error);
+      console.error("取得店家資料錯誤:", error);
     }
   };
 
   const fetchUserData = async () => {
-    console.log("刷新用户数据");
+    console.log("刷新會員資料");
     try {
       let userData;
 
       if (user?.userType === "member") {
         userData = await fetchMemberData();
-      } else if (user?.userType === "store") {
+        if (userData) {
+          console.log("設定 userData:", userData);
+          userData.iconUrl = userData.icon
+            ? `http://localhost:8080${userData.icon}?t=${Date.now()}`
+            : null;
+          setUserData(userData); // 更新用戶資訊資料
+        }
+
+      }else{
+        console.log("不存在")
         userData = await fetchStoreData();
       }
 
-      if (userData) {
-        console.log("设置 userData:", userData);
-        // 生成头像 URL，避免重复添加时间戳
-        userData.iconUrl = userData.icon
-          ? `http://localhost:8080${userData.icon}?t=${Date.now()}`
-          : null;
-  
-        setUserData(userData); // 更新用户数据状态
-      }
+
     } catch (error) {
-      console.error("刷新用户数据出错:", error);
+      console.error("刷新會員資訊錯誤:", error);
     }
   };
+  useEffect(() => {
+    if (user) {
+      fetchUserData();
+    }
+  }, [user]); // 監聽 user 變化
 
 
-
-  // 监听更新事件
+  // 監聽會員更新事件
   useEffect(() => {
 
-    fetchUserData();
+    // fetchUserData();
 
     const handleUpdateHeader = () => {
       console.log("接收到 updateHeader 事件");
@@ -137,7 +152,26 @@ const Header = () => {
     };
   }, []);
 
-  // 使用 userData 或全局 user 数据
+  //監聽Storeheader更新事件
+  useEffect(() => {
+
+    // fetchUserData();
+
+    const handleUpdateStoreHeader = () => {
+      console.log("接收到 updateHeader 事件");
+      fetchUserData();
+    };
+
+    window.addEventListener("updateStoreHeader", handleUpdateStoreHeader);
+
+    return () => {
+      window.removeEventListener("updateStoreHeader", handleUpdateStoreHeader);
+    };
+  }, []);
+
+
+
+  // 使用 userData 或 user 
   const currentUser = userData || user;
 
   return (
@@ -174,13 +208,11 @@ const Header = () => {
                 onClick={handleProfileRedirect}
               >
                 <Avatar
-                  alt={currentUser?.name || "用户"}
+                  alt={
+                    currentUser?.name || "用户"
+                    }
                   src={
-
-
-                    user.userType === "member" ? currentUser?.icon : JSON.parse(user.icon)
-
-                    // currentUser?.icon || "" // 默认头像路径
+                    user.userType === "member" ? currentUser.icon : JSON.parse(currentUser.icon)
                   }
                   sx={{ width: 24, height: 24, mr: 1 }}
                 />

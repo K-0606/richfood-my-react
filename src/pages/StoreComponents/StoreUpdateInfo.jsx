@@ -154,9 +154,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
   
     console.log('發送到後端的資料:', updatedData);
 
-    // 更改資料
     try {
-      const response = await fetch('http://localhost:8080/restaurants/saveResraurantData', {
+      // 更改資料
+      const responseData = await fetch('http://localhost:8080/restaurants/saveResraurantData', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -164,28 +164,18 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
         credentials: 'include', // 確保攜帶 Cookie
         body: JSON.stringify(updatedData),
       });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
+    
+      if (!responseData.ok) {
+        const errorData = await responseData.json();
         throw new Error(errorData.message || '更新失敗');
       }
-  
-      const result = await response.json();
-
-      // 通知 Header 更新
-      const event = new Event("updateHeader");
-      window.dispatchEvent(event);
-
+    
+      const result = await responseData.json();
       console.log('後端回傳的結果:', result);
       alert('店家資訊已成功更新');
-    } catch (error) {
-      console.error('更新失敗:', error.message);
-      alert('更新失敗，請稍後再試');
-    }
-
-    //更改大頭貼
-    try {
-      const response = await fetch(`http://localhost:8080/store/icon/${storeId}`, {
+    
+      // 更改大頭貼
+      const responseAvatar = await fetch(`http://localhost:8080/store/icon/${storeId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -193,32 +183,33 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
         credentials: 'include',
         body: JSON.stringify(avatar),  // 傳送 BASE64 字串
       });
-  
-      if (response.ok) {
-        const data = await response.json();
+    
+      if (responseAvatar.ok) {
+        const data = await responseAvatar.json();
         console.log("更新成功", data);
         alert('頭像更新成功');
-        
-      // 通知 Header 更新
-      const event = new Event("updateHeader");
-      window.dispatchEvent(event);
       } else {
-        const errorData = await response.json();
+        const errorData = await responseAvatar.json();
         throw new Error(errorData.message);
       }
+    
     } catch (error) {
-      console.error("錯誤:", error.message);
-      alert("更新失敗，請稍後再試");
+      console.error('錯誤:', error.message);
+      alert('更新失敗，請稍後再試');
     }
-
-
-
 
     // 更新資料
     onUpdateStoreData(updatedData);
   
     // 提示使用者店家資訊已更新
     alert('店家資訊已更新');
+    //頁面F5
+    window.location.reload();
+
+    // 新增監聽事件
+    const event = new Event('updateStoreHeader');
+    console.log(' updateStoreHeader 事件');
+    window.dispatchEvent(event);
   };
   
 
@@ -304,7 +295,13 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
             value={editStoreData.name}
             name="name"
             onChange={handleChange}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
             sx={{ backgroundColor: 'white' }}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
 
@@ -317,6 +314,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
             value={editStoreData.country}
             name="country"
             onChange={handleChange}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
 
@@ -328,6 +328,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
             value={editStoreData.district}
             name="district"
             onChange={handleChange}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
 
@@ -339,6 +342,9 @@ const StoreUpdateInfo = ({ storeData, onUpdateStoreData }) => {
             value={editStoreData.address}
             name="address"
             onChange={handleChange}
+            InputLabelProps={{
+              shrink: editStoreData.address !=="",
+            }}
           />
         </Grid>
       </Grid>
