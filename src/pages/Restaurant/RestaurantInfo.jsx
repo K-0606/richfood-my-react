@@ -111,6 +111,16 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
     setComment(""); // 重設評論
   };
 
+  const handleModifyReview = () => {
+    setOpenDialog(false);
+    setRating(2); // 重設評分
+    setComment(""); // 重設評論
+  };
+  const handleDeleteReview = () => {
+    setOpenDialog(false);
+    setRating(2); // 重設評分
+    setComment(""); // 重設評論
+  };
   // 提交評論
   const handleSubmitReview = async () => {
     if (!comment.trim() || rating === 0) {
