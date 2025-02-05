@@ -11,10 +11,10 @@ import { CircularProgress, Box } from "@mui/material";
 const libraries = ["places"];
 
 const containerStyle = {
-  width: "45%",
+  width: "150%",
   height: "400px",
-  marginLeft: "150px",
-  marginTop: "-30px",
+  marginLeft: "300px",
+  // marginTop: "-350px",
 };
 
 // 預設地址

@@ -17,7 +17,9 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
     setError(null);
 
     console.log("Fetching reviews for restaurantId:", restaurantId);
-    fetch(`http://localhost:8080/Reviews/restaurant/${restaurantId}?t=${Date.now()}`)
+    fetch(
+      `http://localhost:8080/Reviews/restaurant/${restaurantId}?t=${Date.now()}`
+    )
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch reviews");
@@ -35,8 +37,7 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
       })
       .finally(() => {
         setIsLoading(false);
-      })
-      
+      });
   }, [restaurantId, refreshTrigger]);
 
   // 1) 載入中狀態
@@ -87,13 +88,20 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
   return (
     <Box
       sx={{
-        display: "inline-block",
-        width: "30%",
+        // display: "inline-block",
+        // width: "30%",
         position: "relative",
-        marginLeft: "150px",
+        marginLeft: "50px",
         marginTop: "30px",
         borderRadius: "8px",
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        // boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        width: "100%",
+        height: "auto",
+        justifyContent: "space-between",
+        backgroundColor: "blue",
       }}
       className="review-section"
     >
@@ -101,13 +109,26 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
         最新評論
       </Typography>
       {reviews.map((review) => (
-        <Card key={review.reviewId} sx={{ marginBottom: 2 }}>
+        <Card
+          key={review.reviewId}
+          sx={{
+            marginBottom: 2,
+            marginTop: "50px",
+
+            width: "auto", // 讓卡片自適應寬度
+            backgroundColor: "red",
+          }}
+        >
           <CardContent>
             <Typography variant="h6" color="text.primary">
               {review.userName}
             </Typography>
             <Rating value={review.rating} readOnly />
-            <Typography variant="body2" color="text.secondary" sx={{ marginTop: 1 }}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ marginTop: 1 }}
+            >
               {review.content}
             </Typography>
           </CardContent>
