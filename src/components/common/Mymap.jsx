@@ -1,58 +1,62 @@
-// MapComponent.js
 import React, { useState, useEffect } from "react";
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  InfoWindow,
-} from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import { CircularProgress, Box } from "@mui/material";
 
 // 定義 libraries 來避免重複創建
 const libraries = ["places"];
 
+// 地圖容器樣式
 const containerStyle = {
-  width: "150%",
+  width: "100%", // 確保地圖填滿寬度
   height: "400px",
   marginLeft: "300px",
-  // marginTop: "-350px",
 };
-
-// 預設地址
-const defaultAddress = "408台中市南屯區文心路二段436號";
 
 // 設置紅色標記圖標
 const redMarkerIcon = {
   url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png", // Google 提供的紅色圖標
 };
 
-function MapComponent({ latitude, longitude }) {
+function MyMap({ restaurantName, latitude, longitude, restaurantImage }) {
   const [location, setLocation] = useState(null); // 初始位置設為 null
   const [placeDetails, setPlaceDetails] = useState(null); // 用來儲存商業資訊
   const [showInfoWindow, setShowInfoWindow] = useState(false); // 控制 InfoWindow 顯示
   const [googleMapsLoaded, setGoogleMapsLoaded] = useState(false); // 控制 API 是否加載
   const [loading, setLoading] = useState(true); // 控制地圖是否顯示，加載狀態
 
-  // 顯示地址和處理定位
+  // 取得餐廳的位置信息和商業資訊
   useEffect(() => {
     console.log("Received Latitude and Longitude:", { latitude, longitude });
+
     if (googleMapsLoaded && latitude && longitude) {
       setLocation({ lat: latitude, lng: longitude });
     }
-  }, [googleMapsLoaded, latitude, longitude]); // 當 googleMapsLoaded 或地址變更時觸發
 
-  // 使用 Places API 獲取更多位置資訊
-  const fetchPlaceDetails = (placeId) => {
+    if (googleMapsLoaded && restaurantName) {
+      searchRestaurantByName(restaurantName); // 根據餐廳名稱進行搜尋
+    }
+  }, [googleMapsLoaded, latitude, longitude, restaurantName]);
+
+  // 使用 Places API 根據餐廳名稱搜尋餐廳
+  const searchRestaurantByName = (name) => {
     const service = new window.google.maps.places.PlacesService(
       document.createElement("div")
     );
 
-    service.getDetails({ placeId }, (place, status) => {
+    // 搜索餐廳名稱
+    const request = {
+      query: name,
+      fields: ["name", "geometry", "formatted_address", "place_id", "formatted_phone_number", "website", "photos"],
+    };
+
+    service.textSearch(request, (results, status) => {
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        setPlaceDetails(place); // 更新商業資訊
-        setShowInfoWindow(true); // 自動顯示 InfoWindow
+        const place = results[0]; // 獲取搜尋結果中的第一個商業資訊
+        setPlaceDetails(place);
+        setLocation(place.geometry.location); // 更新地圖位置
+        setShowInfoWindow(true); // 顯示 InfoWindow
       } else {
-        setPlaceDetails(null); // 如果沒有商業信息，清空
+        setPlaceDetails(null); // 如果沒有結果，清空
       }
     });
   };
@@ -123,6 +127,18 @@ function MapComponent({ latitude, longitude }) {
                   >
                     {placeDetails.name}
                   </h4>
+                  {restaurantImage && (
+                    <img
+                      src={restaurantImage}
+                      alt={placeDetails.name}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "8px",
+                        marginBottom: "10px",
+                      }}
+                    />
+                  )}
                   <p>
                     <strong>地址:</strong> {placeDetails.formatted_address}
                   </p>
@@ -155,4 +171,4 @@ function MapComponent({ latitude, longitude }) {
   );
 }
 
-export default MapComponent;
+export default MyMap;
