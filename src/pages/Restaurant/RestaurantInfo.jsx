@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -139,13 +139,67 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
       }
     };
 
-  const handleFavorite = () => {
-    if (user) {
-      setIsFavorited(!isFavorited); // 切換愛心的狀態
-      // 在此處可以加入 API 請求來將餐廳添加/移除到會員的收藏
-      console.log(isFavorited ? "取消收藏" : "收藏餐廳");
-    } else {
+      // **1 頁面載入時，檢查是否已收藏**
+  useEffect(() => {
+    if (!user || !restaurant.restaurantId) return;
+
+    const checkFavoriteStatus = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/favorite/${restaurant.restaurantId}`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("無法獲取收藏狀態");
+        }
+
+        const isFavorite = await response.json(); // API 返回 true / false
+        setIsFavorited(isFavorite);
+      } catch (error) {
+        console.error("獲取收藏狀態失敗：", error);
+      }
+    };
+
+    checkFavoriteStatus();
+  }, [restaurant.restaurantId, user]); // **當 `restaurantId` 或 `user` 改變時重新檢查**
+
+  // **2️ 點擊愛心按鈕**
+  const handleFavorite = async () => {
+    if (!user) {
       alert("請先登入！");
+      return;
+    }
+
+    try {
+      if (isFavorited) {
+        // ⬇ 取消收藏
+        const response = await fetch(`http://localhost:8080/favorite/${restaurant.restaurantId}`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+
+        if (!response.ok) throw new Error("取消收藏失敗");
+
+        setIsFavorited(false);
+        alert("已取消收藏");
+      } else {
+        // ⬆ 加入收藏
+        const response = await fetch(`http://localhost:8080/favorite`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ restaurantId: restaurant.restaurantId }),
+        });
+
+        if (!response.ok) throw new Error("加入收藏失敗");
+
+        setIsFavorited(true);
+        alert("已加入收藏");
+      }
+    } catch (error) {
+      console.error("收藏操作失敗：", error.message);
+      alert("操作失敗：" + error.message);
     }
   };
 
