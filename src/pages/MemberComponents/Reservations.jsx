@@ -36,10 +36,11 @@ const Reservations = () => {
         const formattedData = data.map((item) => ({
           id: item.reservationId,
           restaurant:item.store.restaurants.name,
-          date:item.reservationDate+' '+item.reservationTime,
+          date:item.reservationDate+' '+item.reservationTime+"時段",
           address:item.store.restaurants.country+
                   item.store.restaurants.district+
-                  item.store.restaurants.address
+                  item.store.restaurants.address,
+          numPeople:item.numPeople+"人"
 
         }));
   
@@ -84,9 +85,14 @@ const Reservations = () => {
                 <strong>預定時間：</strong> {reservation.date}
               </Typography>
 
+              {/* 預定時間 */}
+              <Typography variant="body2" color="text.secondary" sx={{ marginBottom: 1 }}>
+              <strong>預約人數：</strong> {reservation.numPeople}
+              </Typography>
+
               {/* 地址 */}
               <Typography variant="body2" color="text.secondary">
-                <strong>地址：</strong> {reservation.address}
+                <strong>餐廳地址：</strong> {reservation.address}
               </Typography>
             </Paper>
           </Grid>
