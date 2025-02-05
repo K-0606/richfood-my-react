@@ -13,7 +13,8 @@ const libraries = ["places"];
 const containerStyle = {
   width: "150%",
   height: "400px",
-  marginLeft: "300px",
+  marginLeft: "400px",
+  transform: "translateX(-300px)",
   // marginTop: "-350px",
 };
 

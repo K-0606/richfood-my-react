@@ -88,20 +88,15 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
   return (
     <Box
       sx={{
-        // display: "inline-block",
-        // width: "30%",
         position: "relative",
-        marginLeft: "50px",
+        marginLeft: "100px",
         marginTop: "30px",
         borderRadius: "8px",
-        // boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
         width: "100%",
         height: "auto",
-        justifyContent: "space-between",
-        backgroundColor: "blue",
       }}
       className="review-section"
     >
@@ -112,11 +107,13 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
         <Card
           key={review.reviewId}
           sx={{
-            marginBottom: 2,
+            marginBottom: 3,
             marginTop: "50px",
-
             width: "auto", // 讓卡片自適應寬度
-            backgroundColor: "red",
+            position: "relative",
+            width: "300px", // 設定固定寬度
+            height: "150px",
+            transform: "translateX(-100px)",
           }}
         >
           <CardContent>

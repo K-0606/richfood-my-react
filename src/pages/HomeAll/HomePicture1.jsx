@@ -47,7 +47,7 @@ export default function HomePicture1() {
           alignItems: "center",
           "@media (min-width: 1200px)": { cols: 4 },
           "@media (max-width: 1200px)": { cols: 3 },
-          "@media (max-width: 768px)": { cols: 1 },
+          "@media (max-width: 768px)": { cols: 2 },
         }}
         cols={3}
         gap={18}
