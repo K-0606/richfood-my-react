@@ -90,11 +90,29 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
       boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // 添加陰影效果
     },
   }));
-  const handleBookRedirect = () => {
+  const handleBookRedirect = async() => {
     // 直接從 URL 中抓取最後的數字部分
     const path = window.location.pathname; // 獲取當前 URL 路徑
     const restaurantId = path.split("/").pop(); // 分割並提取最後一部分
-    navigate("/book", { state: { restaurantId: restaurantId } }); // 傳遞 restaurantId
+
+    //抓取storeId判斷
+    try {
+      const response = await fetch(
+        `http://localhost:8080/restaurants/${restaurantId}`);
+      const data = await response.json();
+      const storeId=data.storeId;
+      
+      if(storeId!=null){
+        navigate("/book", { state: { restaurantId: restaurantId } }); // 傳遞 restaurantId
+      }else{
+        alert("無法預約");
+      }
+    } catch (error) {
+      console.log(error)
+    }
+    
+
+
   };
 
   const handleOpenDialog = () => {
