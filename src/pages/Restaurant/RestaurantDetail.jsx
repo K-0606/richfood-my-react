@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { data, useParams } from "react-router-dom";
 import RestaurantInfo from "./RestaurantInfo";
 import RestaurantImageCarousel from "./RestaurantImageCarousel";
 import Header from "../../components/layout/Header";
@@ -29,7 +29,9 @@ const RestaurantDetail = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log("獲取到的餐廳數據：", data);
+        // console.log("獲取到的餐廳數據：", data);
+
+        const storeId=data.storeId;
 
         // 假資料 - 在此處直接加入 `coupons` 屬性
         const fakeCoupons = [
@@ -38,20 +40,41 @@ const RestaurantDetail = () => {
             image: "https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg",
             name: "套餐A",
             price: 300,
+            storeId:storeId
           },
           {
             id: "2",
             image: "https://www.12hotpot.com.tw/images/demo/deco-menu.png",
             name: "套餐B",
             price: 400,
+            storeId:storeId
           },
           {
             id: "3",
             image: "https://www.sushiexpress.com.tw/images/Product/6458_s.png",
             name: "套餐C",
             price: 500,
+            storeId:storeId
           },
         ];
+          // 再 fetch 餐券資料
+        const couponResponse = await fetch(`http://localhost:8080/coupons/selectCoupon?storeId=${storeId}`);
+        if (!couponResponse.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const couponData = await couponResponse.json();
+        console.log("獲取到的餐券數據：", couponData);
+
+        // 把 API 回來的資料填入 fakeCoupons，但不改變結構
+        fakeCoupons.forEach((fakeCoupon, index) => {
+          if (couponData[index]) {
+            fakeCoupon.id = couponData[index].couponId;
+            // fakeCoupon.image = couponData[index].image;
+            fakeCoupon.name = couponData[index].name;
+            fakeCoupon.price = couponData[index].price;
+        }
+      });
+
 
         // 將假資料合併到後端獲取的餐廳資料中
         data.coupons = fakeCoupons;

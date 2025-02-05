@@ -3,10 +3,13 @@ import { Button, Card, CardContent, Typography, CardMedia } from "@mui/material"
 import { useNavigate } from "react-router-dom";
 
 const CouponCard = ({ coupon, restaurantId }) => {
+console.log("CouponCard 接收到的 coupon:", coupon);
+console.log("CouponCard 接收到的 restaurantId:", restaurantId);
+
   const navigate = useNavigate();
 
   const handlePurchase = () => {
-    navigate(`/paymentPage?restaurantId=${restaurantId}&couponId=${coupon.id}`);
+    navigate(`/paymentPage?storeId=${coupon.storeId}&couponId=${coupon.id}&price=${coupon.price}&name=${coupon.name}`);
   };
 
   return (
