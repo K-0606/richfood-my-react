@@ -68,20 +68,24 @@ const RestaurantDetail = () => {
           if (!couponResponse.ok) {
             throw new Error("Network response was not ok");
           }
+
           const couponData = await couponResponse.json();
           console.log("獲取到的餐券數據：", couponData);
 
-          // 把 API 回來的資料填入 fakeCoupons，但不改變結構
-          fakeCoupons.forEach((fakeCoupon, index) => {
-            if (couponData[index]) {
-              fakeCoupon.id = couponData[index].couponId;
-              // fakeCoupon.image = couponData[index].image;
-              fakeCoupon.name = couponData[index].name;
-              fakeCoupon.price = couponData[index].price;
+          if(couponData.length>0){
+              // 把 API 回來的資料填入 fakeCoupons，但不改變結構
+              fakeCoupons.forEach((fakeCoupon, index) => {
+                if (couponData[index]) {
+                  fakeCoupon.id = couponData[index].couponId;
+                  // fakeCoupon.image = couponData[index].image;
+                    fakeCoupon.name = couponData[index].name;
+                    fakeCoupon.price = couponData[index].price;
+                  }
+                });
+              // 將假資料合併到後端獲取的餐廳資料中
+                data.coupons = fakeCoupons;
           }
-        });
-         // 將假資料合併到後端獲取的餐廳資料中
-          data.coupons = fakeCoupons;
+          
       }
         setRestaurant(data);
       } catch (err) {
