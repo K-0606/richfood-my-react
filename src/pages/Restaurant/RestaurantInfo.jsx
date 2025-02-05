@@ -26,7 +26,8 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
   const [comment, setComment] = useState("");
   const [isFavorited, setIsFavorited] = useState(false); // 控制愛心是否填滿
   const [showAllHours, setShowAllHours] = useState(false); // 控制是否顯示全部營業時間
-
+  const [userReview, setUserReview] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);// 控制是否是編輯模式
   const { restaurantId } = useParams();
 
   // 獲取今天是星期幾
@@ -90,74 +91,196 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
       boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // 添加陰影效果
     },
   }));
-  const handleBookRedirect = () => {
+  const handleBookRedirect = async() => {
     // 直接從 URL 中抓取最後的數字部分
     const path = window.location.pathname; // 獲取當前 URL 路徑
     const restaurantId = path.split("/").pop(); // 分割並提取最後一部分
-    navigate("/book", { state: { restaurantId: restaurantId } }); // 傳遞 restaurantId
-  };
 
-  const handleOpenDialog = () => {
-    if (user) {
-      setOpenDialog(true); // 如果已登入，打開評論彈窗
-    } else {
-      alert("請先登入！");
+    //抓取storeId判斷
+    try {
+      const response = await fetch(
+        `http://localhost:8080/restaurants/${restaurantId}`);
+      const data = await response.json();
+      const storeId=data.storeId;
+      
+      if(storeId!=null){
+        navigate("/book", { state: { restaurantId: restaurantId } }); // 傳遞 restaurantId
+      }else{
+        alert("無法預約");
+      }
+    } catch (error) {
+      console.log(error)
     }
   };
+
+  const handleOpenDialog = (editMode = false) => {
+    if (!user) {
+      alert("請先登入！");
+      return;
+    }
+
+    setOpenDialog(true);
+    setIsEditing(editMode);
+
+    if (editMode) {
+      // 編輯模式 → 帶入舊的評分與評論，若 userReview 不存在就給預設值
+      setRating(userReview ? userReview.rating : 2);
+      setComment(userReview ? userReview.content : "");
+    } else {
+      // 新增模式 → 都給初始值
+      setRating(2);
+      setComment("");
+    }
+  };
+
+
+  useEffect(() => {
+    if (user) {
+      fetch(`http://localhost:8080/Reviews/restaurant/${restaurant.restaurantId}/user/${user.userId}`, {
+        method: "GET",
+        credentials: "include",
+      })
+        .then((res) => {
+          if (res.status === 404) {
+            // 如果後端回傳 404，代表使用者還沒有評論，設置為 null
+            return null;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setUserReview(data); // 若 data 為 null，則 userReview 也會變成 null
+        })
+        .catch((error) => console.error("獲取評論失敗：", error));
+    }
+  }, [restaurant.restaurantId, user, onReviewSubmitted]);
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setRating(2); // 重設評分
     setComment(""); // 重設評論
+    setIsEditing(false);
   };
-
-  const handleModifyReview = () => {
-    setOpenDialog(false);
-    setRating(2); // 重設評分
-    setComment(""); // 重設評論
-  };
-  const handleDeleteReview = () => {
-    setOpenDialog(false);
-    setRating(2); // 重設評分
-    setComment(""); // 重設評論
-  };
-  // 提交評論
+  // 提交新的評論
   const handleSubmitReview = async () => {
     if (!comment.trim() || rating === 0) {
       alert("請填寫完整的評論內容和評分！");
       return;
     }
     try {
-      console.log("開始提交評論...");
-
-      // 發送 POST 請求到後端
       const response = await fetch(
         `http://localhost:8080/Reviews/restaurant/${restaurant.restaurantId}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include", // 需要帶上登入資訊
+          credentials: "include",
           body: JSON.stringify({ content: comment, rating }),
         }
       );
 
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(errorMessage);
-      }
+      if (!response.ok) throw new Error(await response.text());
 
       alert("評論提交成功！");
-      handleCloseDialog(); // 關閉彈窗
 
-      // 通知父元件刷新評論列表
-      if (onReviewSubmitted) {
-        onReviewSubmitted();
-      }
+      // 1️⃣ **等待 1 秒，確保後端數據更新**
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // 2️⃣ **重新從後端獲取評論，確保評論真的存在後才變更按鈕**
+      await fetchUserReview();
+
+      handleCloseDialog(); // **確保 UI 更新後才關閉對話框**
+
+      onReviewSubmitted && onReviewSubmitted(); // **通知父組件**
     } catch (error) {
-      console.error("提交評論失敗：", error.message);
       alert("提交評論失敗：" + error.message);
     }
   };
+
+
+  const fetchUserReview = async () => {
+    if (user) {
+      try {
+        const response = await fetch(`http://localhost:8080/Reviews/restaurant/${restaurant.restaurantId}/user/${user.userId}`, {
+          method: "GET",
+          credentials: "include",
+        });
+
+        if (response.status === 404) {
+          setUserReview(null); // **確保 UI 保持「新增評論」狀態**
+          return;
+        }
+
+        const data = await response.json();
+        if (data && data.content) {
+          setUserReview(data); // **確保 UI 變為「修改評論」**
+        }
+      } catch (error) {
+        console.error("獲取評論失敗：", error);
+      }
+    }
+  };
+
+
+  // **確保 useEffect 會調用 fetchUserReview**
+  useEffect(() => {
+    fetchUserReview();
+  }, [restaurant.restaurantId, user]);
+
+
+  // 修改評論
+  const handleModifyReview = async () => {
+    if (!comment.trim() || rating === 0) {
+      alert("請填寫完整的評論內容和評分！");
+      return;
+    }
+    try {
+      const response = await fetch(
+        `http://localhost:8080/Reviews/restaurant/${restaurant.restaurantId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ content: comment, rating }),
+        }
+      );
+      if (!response.ok) throw new Error(await response.text());
+
+      alert("評論修改成功！");
+
+      await fetchUserReview(); // **確保 UI 更新**
+
+      handleCloseDialog();
+      onReviewSubmitted && onReviewSubmitted();
+    } catch (error) {
+      alert("修改評論失敗：" + error.message);
+    }
+  };
+
+
+  // 刪除評論
+  const handleDeleteReview = async () => {
+    if (!window.confirm("確定要刪除評論嗎？")) return;
+    try {
+      const response = await fetch(
+        `http://localhost:8080/Reviews/restaurant/${restaurant.restaurantId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      if (!response.ok) throw new Error("刪除評論失敗");
+
+      alert("評論已刪除！");
+
+      await fetchUserReview(); // **確保 UI 更新**
+
+      handleCloseDialog();
+      onReviewSubmitted && onReviewSubmitted();
+    } catch (error) {
+      alert("刪除評論失敗：" + error.message);
+    }
+  };
+
+
 
   // **1 頁面載入時，檢查是否已收藏**
   useEffect(() => {
@@ -346,13 +469,18 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
         </div>
         <div>
           <Item1 onClick={handleBookRedirect}>預約</Item1>
-          <Item1 onClick={handleOpenDialog}>評論</Item1>
+          {
+            userReview
+              ? <Item1 onClick={() => handleOpenDialog(true)}>修改評論</Item1>
+              : <Item1 onClick={() => handleOpenDialog(false)}>新增評論</Item1>
+          }
+
         </div>
       </div>
 
       {/* 評論彈窗 */}
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>留下您的評論</DialogTitle>
+        <DialogTitle>{isEditing ? "修改評論" : "新增評論"}</DialogTitle>
         <DialogContent>
           <Rating
             name="rating"
@@ -373,9 +501,16 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog}>取消</Button>
-          <Button onClick={handleModifyReview}>修改</Button>
-          <Button onClick={handleDeleteReview}>刪除</Button>
-          <Button onClick={handleSubmitReview}>提交</Button>
+          {isEditing ? (
+            // **修改模式：顯示「修改」與「刪除」**
+            <>
+              <Button onClick={handleModifyReview} color="primary">修改</Button>
+              <Button onClick={handleDeleteReview} color="error">刪除</Button>
+            </>
+          ) : (
+            // **新增模式：只顯示「提交」**
+            <Button onClick={handleSubmitReview} color="primary">提交</Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>

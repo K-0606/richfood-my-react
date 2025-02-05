@@ -112,7 +112,7 @@ export default function HomePicture2() {
 
 const itemData2 = [
   {
-    img: "https://pixabay.com/get/g2fd1f3fc89d28b5c2a5c44cc0d1fa249f428b45ad8e7ee43a5bec8edb6f8ae73dff90b1f211af101a7d152f14331ae614a7763bbfc6b500feaf0fdafbac161f951ca8e07dcdb3121b3e9e2fcb5219c43_640.jpg",
+    img: "https://images.pexels.com/photos/1618872/pexels-photo-1618872.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     title: "火鍋",
     value: "火鍋",
   },
@@ -127,7 +127,7 @@ const itemData2 = [
     value: "義式料理",
   },
   {
-    img: "https://pixabay.com/get/g755ced894fa2149af35f46a69bf6ec599e4aa9fe5c37da68dd4f313a737be968956d26cbe0c967dd13a039903c7a4d810df47c78eeee0947f3dba63fe2e27115317df8428a0cdb1ee5302a784f920706_640.jpg",
+    img: "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     title: "墨西哥餐",
     value: "墨西哥餐",
   },
@@ -137,7 +137,7 @@ const itemData2 = [
     value: "早午餐",
   },
   {
-    img: "https://pixabay.com/get/ge50450fa0019f2b1e95356d4396a6a6f12f97e32aec01bc05382d19e1453bd2b5e029c23a5b81e2f5515a04750076630ee80f74cafa1f292ad3ef22cc1e6d8099411bfe5a31a815e75bc1b02f77ff867_640.jpg",
+    img: "https://lh3.googleusercontent.com/qTQStAUeou4MY7ylidcsXIf59WN6zW33qZhp0sGSHEP4rJVdeKmNJmwmCMBYTGRtvwTjtSjgg2q4CdUwJrB0_uqUhBzhpQo=s200",
     title: "小吃",
     value: "小吃",
   },

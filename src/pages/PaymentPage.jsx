@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Grid, Box, Typography, Divider, IconButton, TextField } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
+import { useSearchParams } from 'react-router-dom';
 
-const menuItems = [
-  { id: 1, name: 'AAAA', price: 300, imageUrl: 'https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg' },
+const defaultMenuItems = [
+  { id: 1, name: 'AAAA', price: 100, imageUrl: 'https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg' },
   //{ id: 2, name: 'BBBBBBB', price: 450, imageUrl: 'https://www.12hotpot.com.tw/images/demo/deco-menu.png' },
   // { id: 3, name: 'CCCCCCC', price: 500, imageUrl: 'https://www.sushiexpress.com.tw/images/Product/6458_s.png' },
   // { id: 4, name: 'DDDDD', price: 350, imageUrl: 'https://shoplineimg.com/5fbb6edf9e6af50038441874/611e183cc25280003ec74bea/800x.jpg?' },
@@ -14,6 +15,16 @@ function PaymentPage() {
   const [selectedItems, setSelectedItems] = useState({});
   const [totalAmount, setTotalAmount] = useState(0);
 
+  const [searchParams] = useSearchParams();
+  const storeId = searchParams.get('storeId');
+  const couponId = searchParams.get('couponId');
+  const price = searchParams.get('price');
+  const name = searchParams.get('name');
+  
+  const menuItems = couponId && name ? [
+    { id: parseInt(couponId), name, price: parseInt(price), imageUrl: 'https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg' },
+  ] : defaultMenuItems;
+
   // 處理增加數量
   const handleIncrement = (itemId, price) => {
     setSelectedItems(prevState => {
@@ -21,11 +32,11 @@ function PaymentPage() {
       if (newState[itemId]) {
         if (newState[itemId] < 99) {
           newState[itemId] += 1;
-          setTotalAmount(totalAmount + price);
+          setTotalAmount(prevTotal => prevTotal + price);
         }
       } else {
         newState[itemId] = 1;
-        setTotalAmount(totalAmount + price);
+        setTotalAmount(prevTotal => prevTotal + price);
       }
       return newState;
     });
@@ -37,11 +48,10 @@ function PaymentPage() {
       const newState = { ...prevState };
       if (newState[itemId] > 1) {
         newState[itemId] -= 1;
-        setTotalAmount(totalAmount - price);
+        setTotalAmount(prevTotal => prevTotal - price);
       } else if (newState[itemId] === 1) {
-        // 當數量為 1 時，移除該餐點並減去金額
         const newAmount = totalAmount - price;
-        const { [itemId]: _, ...rest } = newState; // 移除該項目
+        const { [itemId]: _, ...rest } = newState; 
         setTotalAmount(newAmount);
         return rest;
       }
@@ -49,11 +59,38 @@ function PaymentPage() {
     });
   };
 
+  // 處理付款
+  const handlePayment = async () => {  
+    const totalQuantity = Object.values(selectedItems).reduce((sum, quantity) => sum + quantity, 0);
+    try {
+      const orderItems = {
+        storeId: storeId,
+        couponId: couponId,
+        price: price,
+        quantity: totalQuantity 
+      };
+
+      console.log(orderItems);
+      const response = await fetch("http://localhost:8080/couponsOrder/addCouponsOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(orderItems),
+      });
+      const redirectUrl = await response.text(); // 取得後端回傳的 URL（純文字）
+      window.location.href = redirectUrl; // 跳轉到該 URL
+    } catch (error) {
+      console.error("發生錯誤:", error);
+      alert("請求失敗，請稍後再試");
+    }
+  };
+
   return (
     <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
       <Typography variant="h4" gutterBottom align="center">餐券購買</Typography>
 
-      {/* 顯示餐點選擇清單 */}
       <Grid container spacing={2}>
         {menuItems.map((item) => (
           <Grid item xs={12} key={item.id} container spacing={2} alignItems="center">
@@ -61,53 +98,40 @@ function PaymentPage() {
               display: 'flex',
               alignItems: 'center',
               padding: '8px',
-              border: selectedItems[item.id] > 0 ? '2px solid #4caf50' : '1px solid #ccc', // 選中時邊框變綠色
-              backgroundColor: selectedItems[item.id] > 0 ? '#e8f5e9' : 'transparent', // 選中時背景顏色變淡綠
+              border: selectedItems[item.id] > 0 ? '2px solid #4caf50' : '1px solid #ccc',
+              backgroundColor: selectedItems[item.id] > 0 ? '#e8f5e9' : 'transparent',
               borderRadius: '4px',
-              transition: 'all 0.3s ease', // 加入過渡效果
+              transition: 'all 0.3s ease',
               cursor: 'pointer',
               '&:hover': {
-                backgroundColor: selectedItems[item.id] > 0 ? '#d0f0c0' : '#f1f1f1', // Hover時變顏色
+                backgroundColor: selectedItems[item.id] > 0 ? '#d0f0c0' : '#f1f1f1',
               }
             }}>
-              {/* 餐點圖片 */}
               <img 
                 src={item.imageUrl} 
                 alt={item.name} 
                 style={{
-                  width: 'auto',  // 自動寬度
-                  height: 50, // 高度設定固定
-                  maxWidth: 50, // 最大寬度為 50
-                  objectFit: 'contain', // 保持原始比例
-                  marginRight: 16, // 讓圖片與文字之間有點間距
+                  width: 'auto',
+                  height: 50,
+                  maxWidth: 50,
+                  objectFit: 'contain',
+                  marginRight: 16,
                 }} 
               />
-              
-              {/* 餐點名稱 */}
               <Typography variant="body1" sx={{ flexGrow: 1, marginLeft: 2 }}>
                 {item.name} - {item.price}元
               </Typography>
-
-              {/* 增減數量的按鈕 */}
               <Box display="flex" alignItems="center">
-                <IconButton
-                  onClick={() => handleDecrement(item.id, item.price)}
-                  disabled={selectedItems[item.id] <= 0}
-                >
+                <IconButton onClick={() => handleDecrement(item.id, item.price)} disabled={selectedItems[item.id] <= 0}>
                   <Remove />
                 </IconButton>
                 <TextField
                   value={selectedItems[item.id] || 0}
                   size="small"
-                  InputProps={{
-                    readOnly: true,
-                  }}
+                  InputProps={{ readOnly: true }}
                   sx={{ width: 40, textAlign: 'center' }}
                 />
-                <IconButton
-                  onClick={() => handleIncrement(item.id, item.price)}
-                  disabled={selectedItems[item.id] >= 99}
-                >
+                <IconButton onClick={() => handleIncrement(item.id, item.price)} disabled={selectedItems[item.id] >= 99}>
                   <Add />
                 </IconButton>
               </Box>
@@ -117,24 +141,9 @@ function PaymentPage() {
       </Grid>
 
       <Divider sx={{ margin: '20px 0' }} />
-
-      {/* 顯示總金額 */}
-      <Typography variant="h6" align="center">
-        總金額: {totalAmount} 元
-      </Typography>
-
-      {/* 前往付款按鈕 */}
+      <Typography variant="h6" align="center">總金額: {totalAmount} 元</Typography>
       <Box sx={{ mt: 3 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          disabled={totalAmount === 0} // 如果沒有選擇任何餐點，禁用付款按鈕
-          onClick={() => {
-            // 假設跳轉到付款頁面，這邊你可以替換為實際的付款頁面連結
-            window.location.href = '/linepay'; // 這只是示範，實際後端會處理付款邏輯
-          }}
-        >
+        <Button variant="contained" color="primary" fullWidth disabled={totalAmount === 0} onClick={handlePayment}>
           前往付款
         </Button>
       </Box>
