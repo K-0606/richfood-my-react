@@ -11,17 +11,17 @@ import CouponCard from "./CouponCard";
 import MyMap from "../../components/common/MyMap";
 
 const RestaurantDetail = () => {
-  const { id } = useParams(); // 从 URL 中获取餐厅ID
+  const { id } = useParams(); //  URL 中餐廳ID
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 用于触发 ReviewSection 再次抓取评论的 state
+  // 觸發 ReviewSection 再次抓取評論的 state
   const [refreshTrigger, setRefreshTrigger] = useState(false);
 
-  const [coupons, setCoupons] = useState([]); // 新增一个 state 来存储 coupons
+  const [coupons, setCoupons] = useState([]); // 新增儲存 coupons
 
-  // 用来触发 MyMap 重新渲染的 state
+  //  MyMap 重新渲染的 state
   const [mapReloadTrigger, setMapReloadTrigger] = useState(false);
 
   useEffect(() => {
@@ -33,39 +33,11 @@ const RestaurantDetail = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        // console.log("獲取到的餐廳數據：", data);
-
-        const storeId = data.storeId;
-        // console.log(  "我要的!!!"+id);
-        console.log("我要的!!!" + storeId);
-        console.log("取得的 storeId:", storeId, "| 類型:", typeof storeId);
-
-        // 假数据 - 在此处直接加入 `coupons` 属性
-        const fakeCoupons = [
-          {
-            id: "1",
-            image:
-              "https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg",
-            name: "套餐A",
-            price: 10000,
-            storeId: storeId,
-          },
-          // ,
-          // {
-          //   id: "2",
-          //   image: "https://www.12hotpot.com.tw/images/demo/deco-menu.png",
-          //   name: "套餐B",
-          //   price: 400,
-          // },
-          // {
-          //   id: "3",
-          //   image: "https://www.sushiexpress.com.tw/images/Product/6458_s.png",
-          //   name: "套餐C",
-          //   price: 500,
-          // },
-        ];
-
-        // 再 fetch 餐券資料
+  
+        const storeId = data.storeId; // storeId 可能是 null
+        let couponData = [];
+  
+        // 只有在 storeId 存在的情況下才抓取餐券資料
         if (storeId != null) {
           const couponResponse = await fetch(
             `http://localhost:8080/coupons/selectCoupon?storeId=${storeId}`
@@ -73,38 +45,32 @@ const RestaurantDetail = () => {
           if (!couponResponse.ok) {
             throw new Error("Network response was not ok");
           }
-
-          const couponData = await couponResponse.json();
+  
+          couponData = await couponResponse.json();
           console.log("獲取到的餐券數據：", couponData);
-
-          if (couponData.length > 0) {
-            // 把 API 回來的資料填入 fakeCoupons，但不改變結構
-            fakeCoupons.forEach((fakeCoupon, index) => {
-              if (couponData[index]) {
-                fakeCoupon.id = couponData[index].couponId;
-                // fakeCoupon.image = couponData[index].image;
-                fakeCoupon.name = couponData[index].name;
-                fakeCoupon.price = couponData[index].price;
-              }
-            });
-            // 將假資料合併到後端獲取的餐廳資料中
-            data.coupons = fakeCoupons;
-          }
+  
+          couponData = (couponData || []).map((coupon) => ({
+            id: coupon.couponId,
+            image: coupon.couponpic || "https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg",
+            name: coupon.name,
+            price: coupon.price,
+            storeId: storeId,
+          }));
+          setCoupons(couponData);
+          data.coupons = couponData;  // 設定餐廳的餐券
         }
-        // 将假数据合并到后端获取的餐厅数据中
-        data.coupons = fakeCoupons;
-
-        setRestaurant(data);
+  
+        setRestaurant(data);  // 設定餐廳資料
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchRestaurant();
   }, [id]);
-
+  
   // 让子组件调用的 callback：一旦评论提交成功，就翻转 refreshTrigger
   const handleReviewSubmitted = () => {
     setRefreshTrigger((prev) => !prev);
