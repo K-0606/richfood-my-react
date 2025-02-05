@@ -126,12 +126,12 @@ const itemData1 = [
     value: "台中市",
   },
   {
-    img: "https://pixabay.com/get/g0f248314c7ba4c66420996a852cfc4e516cd4657d5e52ae6ccf3169fde4f7d2030237d5e313670e1d003552b99d762fa01ebcba0526e9e05ca3eff87b8d8ec852487f7fccc1d3a7fa47f629db4a043b3_640.jpg",
+    img: "https://images.pexels.com/photos/6865354/pexels-photo-6865354.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     title: "南投",
     value: "南投",
   },
   {
-    img: "https://pixabay.com/get/g2852f31332cb146c4d93a66f5942792ae8941a94d16812deae7d1d835c84013c382bc0fb0b3dcd8fd83c16105a2fbebf2f4076b46bd9eddbf6fc517fff4aaff50246fc9b0f511721bc10885968a6dbbb_640.jpg",
+    img: "https://images.pexels.com/photos/19998095/pexels-photo-19998095.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     title: "高雄",
     value: "高雄",
   },
