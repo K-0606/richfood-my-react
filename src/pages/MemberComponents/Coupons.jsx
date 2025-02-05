@@ -16,7 +16,6 @@ const Coupons = () => {
   const [countdown, setCountdown] = useState(null); // 控制倒數計時
   const [isConfirmed, setIsConfirmed] = useState(false); // 用來判斷是否已經確認使用餐券
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false); // 用來控制是否顯示確認提示框
-
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
@@ -79,7 +78,7 @@ const Coupons = () => {
     startCountdown(); // 開始倒數計時
 
     try {
-      const url ='http://localhost:8080/couponsOrder/usedCoupon?orderId=15'
+      const url =`http://localhost:8080/couponsOrder/usedCoupon?orderId=${selectedCoupon.id}`
       const response = await fetch(url);
       const data = await response.json();
       console.log(data)

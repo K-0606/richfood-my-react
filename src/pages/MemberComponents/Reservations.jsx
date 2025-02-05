@@ -1,6 +1,6 @@
 // src/components/Reservations.jsx
 import React, { useState, useEffect }  from "react";
-import { Box, Typography, Grid, Paper } from "@mui/material";
+import { Box, Typography, Grid, Paper,Button} from "@mui/material";
 import { Link } from "react-router-dom"; // 引入 Link 用來導向餐廳頁面
 
 const Reservations = () => {
@@ -62,17 +62,29 @@ const Reservations = () => {
       </Typography>
       
       {/* 使用 Grid 排版每條預定訊息 */}
+      {reservations.length === 0 ? (
+      <Box sx={{ textAlign: 'center', marginTop: 4 }}>
+        <Typography variant="h5" color="textSecondary">
+          現在沒有訂位，來去逛逛
+        </Typography>
+        <Button variant="contained" color="primary" href="/" sx={{ marginTop: 2 }}>
+          回首頁
+        </Button>
+      </Box>
+    ) : (
       <Grid container spacing={2}>
         {reservations.map((reservation) => (
           <Grid item xs={12} key={reservation.id}>
-            <Paper sx={{
-              padding: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start', // 訊息靠左顯示
-              boxShadow: 2,
-              borderRadius: 2
-            }}>
+            <Paper
+              sx={{
+                padding: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                boxShadow: 2,
+                borderRadius: 2,
+              }}
+            >
               {/* 餐廳名稱，使用 Link 進行路由跳轉 */}
               <Link to={`/store/${reservation.id}`} style={{ textDecoration: 'none' }}>
                 <Typography variant="h6" color="primary" sx={{ marginBottom: 1 }}>
@@ -85,9 +97,9 @@ const Reservations = () => {
                 <strong>預定時間：</strong> {reservation.date}
               </Typography>
 
-              {/* 預定時間 */}
+              {/* 預約人數 */}
               <Typography variant="body2" color="text.secondary" sx={{ marginBottom: 1 }}>
-              <strong>預約人數：</strong> {reservation.numPeople}
+                <strong>預約人數：</strong> {reservation.numPeople}
               </Typography>
 
               {/* 地址 */}
@@ -98,6 +110,7 @@ const Reservations = () => {
           </Grid>
         ))}
       </Grid>
+    )}
     </Box>
   );
 };
