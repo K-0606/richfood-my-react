@@ -13,9 +13,7 @@ const MySearchField = () => {
   const searchParams = new URLSearchParams(location.search);
   const region = searchParams.get("region") || "";
   const type = searchParams.get("type") || "";
-  const price = searchParams.get("price")
-    ? searchParams.get("price").split(",")
-    : [];
+  const price = searchParams.get("price") ? searchParams.get("price").split(",") : [];
   const popular = searchParams.get("popular") === "true";
 
   const [filters, setFilters] = useState({
@@ -62,6 +60,16 @@ const MySearchField = () => {
         return false;
     }
   };
+
+  // 模糊查詢函數
+  const fuzzyMatch = (target, query) => {
+    if (!query) return true;
+    const normalizedTarget = target.replace(/[台臺]/g, "台").toLowerCase(); // 處理台、臺的模糊匹配
+    const normalizedQuery = query.replace(/[台臺]/g, "台").toLowerCase(); // 查詢的關鍵字處理
+    const regex = new RegExp(normalizedQuery, "i"); // 不區分大小寫進行匹配
+    return regex.test(normalizedTarget);
+  };
+
   const { mockRestaurants, loading } = useRestaurants();
 
   // 當 mockRestaurants 還沒有資料時，避免進行過濾
@@ -71,19 +79,16 @@ const MySearchField = () => {
       : mockRestaurants.filter((restaurant) => {
           const matchesType =
             filters.type.length > 0
-              ? restaurant.categories.some((cat) =>
-                  filters.type.includes(cat.name)
-                )
+              ? restaurant.categories.some((cat) => filters.type.includes(cat.name))
               : true;
 
-          const matchesRegion = filters.region
-            ? `${restaurant.country}` === filters.region
-            : true;
-          const matchesPrice = filters.price.length
-            ? filters.price.some((range) =>
-                isPriceInRange(restaurant.average, range)
-              )
-            : true;
+          const matchesRegion =
+            filters.region ? fuzzyMatch(restaurant.country, filters.region) : true;
+
+          const matchesPrice =
+            filters.price.length
+              ? filters.price.some((range) => isPriceInRange(restaurant.average, range))
+              : true;
 
           const matchesPopular = filters.popular ? restaurant.score >= 4 : true;
 
