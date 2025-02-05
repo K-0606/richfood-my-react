@@ -5,49 +5,50 @@ import { Box, Typography, Button, Grid, Card, CardContent } from '@mui/material'
 const Coupons = () => {
   const [selectedCoupon, setSelectedCoupon] = useState(null); // 儲存選中的餐券
   const [coupons, setCoupons] = useState([
-    { id: 1, name: '餐券A', restaurant: '餐廳A', couponCode: 'A12345', used: false, quantity: 5 },
-    { id: 2, name: '餐券B', restaurant: '餐廳B', couponCode: 'B12345', used: false, quantity: 3 },
-    { id: 3, name: '餐券C', restaurant: '餐廳C', couponCode: 'C12345', used: false, quantity: 0 }, // 沒有剩餘
-    { id: 4, name: '餐券D', restaurant: '餐廳D', couponCode: 'D12345', used: false, quantity: 2 },
-    { id: 5, name: '餐券E', restaurant: '餐廳E', couponCode: 'E12345', used: false, quantity: 1 },
+    // { id: 1, name: '餐券A', restaurant: '餐廳A', couponCode: 'A12345', used: false, quantity: 5 },
+    // { id: 2, name: '餐券B', restaurant: '餐廳B', couponCode: 'B12345', used: false, quantity: 3 },
+    // { id: 3, name: '餐券C', restaurant: '餐廳C', couponCode: 'C12345', used: false, quantity: 0 }, // 沒有剩餘
+    // { id: 4, name: '餐券D', restaurant: '餐廳D', couponCode: 'D12345', used: false, quantity: 2 },
+    // { id: 5, name: '餐券E', restaurant: '餐廳E', couponCode: 'E12345', used: false, quantity: 1 },
+  
   ]);
   const [showQRCode, setShowQRCode] = useState(false); // 控制 QR code 顯示與否
   const [countdown, setCountdown] = useState(null); // 控制倒數計時
   const [isConfirmed, setIsConfirmed] = useState(false); // 用來判斷是否已經確認使用餐券
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false); // 用來控制是否顯示確認提示框
 
-  // useEffect(() => {
-  //   const fetchCoupons = async () => {
-  //     try {
-  //       const url ='http://localhost:8080/couponsOrder/selectAllCouponsOrder'
-  //       const response = await fetch(url, {
-  //         method: 'GET',
-  //         credentials: 'include',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //       });
-  //       const data = await response.json();
-  //       const formattedData = data.map((item) => ({
-  //         id:item.orderId, 
-  //         name:`${item.coupons.name}\n${item.coupons.description}`, 
-  //         restaurant:item.store.restaurants.name, 
-  //         couponCode:`http://localhost:8080/couponsOrder/usedCoupon?orderId=${item.orderId}`, 
-  //         used: item.status,
-  //         quantity: item.quantity, // 假設這裡有數量資訊
-  //       }));
-  //       setCoupons(formattedData);
-  //     } catch (error) {
-  //       console.error('Error fetching reservations:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const url ='http://localhost:8080/couponsOrder/selectCouponsOrder'
+        const response = await fetch(url, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        const formattedData = data.map((item) => ({
+          id:item.orderId, 
+          name:`${item.coupons.name}`, 
+          restaurant:item.store.restaurants.name, 
+          couponCode:`http://localhost:8080/couponsOrder/usedCoupon?orderId=${item.orderId}`, 
+          used: item.status,
+          quantity: item.quantity, // 假設這裡有數量資訊
+        }));
+        setCoupons(formattedData);
+      } catch (error) {
+        console.error('Error fetching:', error);
+      }
+    };
 
-  //   fetchCoupons();
-  // }, []);
+    fetchCoupons();
+  }, []);
 
   // 處理選擇餐券
   const handleSelectCoupon = (coupon) => {
-    if (!coupon.used && coupon.quantity > 0) {
+    if (coupon.used && coupon.quantity > 0) {
       setSelectedCoupon(coupon); // 顯示選中的餐券詳細資訊
       setShowConfirmationDialog(true); // 顯示確認提示框
       setShowQRCode(false); // 不顯示 QR code，直到用戶確認
@@ -71,11 +72,21 @@ const Coupons = () => {
   };
 
   // 確認使用餐券
-  const handleConfirmUse = () => {
+  const handleConfirmUse = async() => {
     setIsConfirmed(true);
     setShowConfirmationDialog(false); // 隱藏確認提示框
     setShowQRCode(true); // 顯示 QR code
     startCountdown(); // 開始倒數計時
+
+    try {
+      const url ='http://localhost:8080/couponsOrder/usedCoupon?orderId=15'
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log(data)
+    } catch (error) {
+      console.error('Error fetching:', error);
+    }
+
   };
 
   // 取消使用餐券
@@ -137,7 +148,7 @@ const Coupons = () => {
                     剩餘數量：{coupon.quantity}
                   </Typography>
                   {/* 如果餐券未使用且剩餘數量大於 0，可以點擊查看詳情 */}
-                  {!coupon.used && coupon.quantity > 0 ? (
+                  {coupon.used && coupon.quantity > 0 ? (
                     <Button
                       variant="contained"
                       color="primary"

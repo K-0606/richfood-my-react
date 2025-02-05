@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   IconButton,
-  Button,
   Typography,
   Card,
   CardContent,
@@ -10,10 +9,12 @@ import {
 } from "@mui/material";
 import { ArrowUpward, Close } from "@mui/icons-material";
 import MyRecommend from "../../pages/MyRecommend"; // 引入你的 MyRecommend 組件
+import { useNavigate } from "react-router-dom"; // 引入 useNavigate
 
 const FloatingButtons = () => {
   const [showRecommendation, setShowRecommendation] = useState(false); // 控制推薦顯示
   const [recommendedRestaurant, setRecommendedRestaurant] = useState(null); // 推薦的餐廳資料
+  const navigate = useNavigate(); // 初始化 useNavigate
 
   // 回到最上方的功能
   const handleBackToTop = () => {
@@ -31,6 +32,27 @@ const FloatingButtons = () => {
     setRecommendedRestaurant(null); // 确保没有推荐餐厅
     setShowRecommendation(false); // 确保按鈕顯示
   }, []);
+
+  // 在這裡調試推薦餐廳的資料
+  useEffect(() => {
+    if (recommendedRestaurant) {
+      console.log("Recommended Restaurant Data: ", recommendedRestaurant);
+    }
+  }, [recommendedRestaurant]);
+
+  // 點擊餐廳名稱跳轉到餐廳詳細頁
+  const handleNavigateToRestaurant = () => {
+    if (
+      recommendedRestaurant &&
+      recommendedRestaurant[0] &&
+      recommendedRestaurant[0].restaurantId
+    ) {
+      navigate(`/restaurant/${recommendedRestaurant[0].restaurantId}`); // 根據餐廳 id 導航
+    } else {
+      console.warn("Restaurant ID is not available or invalid");
+      console.log("Recommended Restaurant Data: ", recommendedRestaurant);
+    }
+  };
 
   return (
     <Box sx={{ position: "fixed", left: 20, bottom: 20, zIndex: 999 }}>
@@ -58,13 +80,11 @@ const FloatingButtons = () => {
             right: 0,
             margin: "auto",
             width: "350px", // 增加卡片的寬度
-            //   maxWidth: '100%',  // 保證寬度不會超過螢幕大小
             borderRadius: 2, // 加上圓角
             boxShadow: 3, // 增加陰影效果
           }}
         >
           {/* 圖片部分 */}
-
           <CardMedia
             component="img"
             image={recommendedRestaurant[0].image}
@@ -79,6 +99,7 @@ const FloatingButtons = () => {
           />
 
           <CardContent sx={{ padding: "16px" }}>
+            {/* 點擊餐廳名稱以導向餐廳頁面 */}
             <Typography
               variant="h6"
               sx={{
@@ -86,7 +107,12 @@ const FloatingButtons = () => {
                 textOverflow: "ellipsis",
                 overflow: "hidden",
                 whiteSpace: "nowrap",
+                cursor: "pointer", // 改變游標為指針，顯示可點擊
+                "&:hover": {
+                  textDecoration: "underline", // 鼠標懸停時添加下劃線
+                },
               }}
+              onClick={handleNavigateToRestaurant} // 點擊餐廳名稱時觸發導航
             >
               {recommendedRestaurant[0].name}
             </Typography>
@@ -94,6 +120,7 @@ const FloatingButtons = () => {
               {recommendedRestaurant[0].address}
             </Typography>
           </CardContent>
+          
           {/* 關閉按鈕 */}
           <IconButton
             onClick={handleCloseCard}

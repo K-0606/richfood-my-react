@@ -16,6 +16,7 @@ import { useUser } from "../../context/UserContext"; // 引入 useUser hook 來�
 import { ArrowDropDown } from "@mui/icons-material"; // 使用這個圖示作為顯示全部營業時間的按鈕
 
 import { useParams } from "react-router-dom"; // 引入 useParams
+import { fontGrid } from "@mui/material/styles/cssUtils";
 
 const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
   const { user } = useUser(); // 使用 useUser 來獲取當前的用戶資料
@@ -30,7 +31,15 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
   const { restaurantId } = useParams();
 
   // 獲取今天是星期幾
-  const daysOfWeek = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+  const daysOfWeek = [
+    "星期日",
+    "星期一",
+    "星期二",
+    "星期三",
+    "星期四",
+    "星期五",
+    "星期六",
+  ];
   const today = new Date();
   const currentDay = daysOfWeek[today.getDay()];
 
@@ -61,7 +70,9 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
     }, {});
   };
 
-  const formattedBusinessHours = mergeTimes(formatBusinessHours(restaurant.businessHours));
+  const formattedBusinessHours = mergeTimes(
+    formatBusinessHours(restaurant.businessHours)
+  );
   const todayFormattedHours = mergeTimes(formatBusinessHours(todayHours));
 
   const Item1 = styled(Paper)(({ theme }) => ({
@@ -80,12 +91,26 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
       boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // 添加陰影效果
     },
   }));
-  const handleBookRedirect = () => {
-
+  const handleBookRedirect = async() => {
     // 直接從 URL 中抓取最後的數字部分
-    const path = window.location.pathname;  // 獲取當前 URL 路徑
-    const restaurantId = path.split("/").pop();  // 分割並提取最後一部分
-    navigate("/book", { state: { restaurantId: restaurantId } }); // 傳遞 restaurantId
+    const path = window.location.pathname; // 獲取當前 URL 路徑
+    const restaurantId = path.split("/").pop(); // 分割並提取最後一部分
+
+    //抓取storeId判斷
+    try {
+      const response = await fetch(
+        `http://localhost:8080/restaurants/${restaurantId}`);
+      const data = await response.json();
+      const storeId=data.storeId;
+      
+      if(storeId!=null){
+        navigate("/book", { state: { restaurantId: restaurantId } }); // 傳遞 restaurantId
+      }else{
+        alert("無法預約");
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handleOpenDialog = (editMode = false) => {
@@ -263,10 +288,13 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
 
     const checkFavoriteStatus = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/favorite/${restaurant.restaurantId}`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `http://localhost:8080/favorite/${restaurant.restaurantId}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) {
           throw new Error("無法獲取收藏狀態");
@@ -292,10 +320,13 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
     try {
       if (isFavorited) {
         // ⬇ 取消收藏
-        const response = await fetch(`http://localhost:8080/favorite/${restaurant.restaurantId}`, {
-          method: "DELETE",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `http://localhost:8080/favorite/${restaurant.restaurantId}`,
+          {
+            method: "DELETE",
+            credentials: "include",
+          }
+        );
 
         if (!response.ok) throw new Error("取消收藏失敗");
 
@@ -369,7 +400,11 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
         </div>
         <div style={styles.detailItem}>
           <strong>地址: </strong>
-          <span>{restaurant.country}{restaurant.district}{restaurant.address}</span>
+          <span>
+            {restaurant.country}
+            {restaurant.district}
+            {restaurant.address}
+          </span>
         </div>
         <div style={styles.detailItem}>
           <strong>營業時間: </strong>
@@ -378,21 +413,24 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
             {showAllHours ? (
               // 顯示全部營業時間頁面
               <div style={styles.allHoursContainer}>
-                {Object.entries(formattedBusinessHours).map(([day, times], index) => (
-                  <div key={index} style={styles.dayBlock}>
-                    <strong>{day}:</strong>
-                    {times.map((time, timeIndex) => (
-                      <span key={timeIndex}>
-                        {timeIndex > 0 ? "，" : " "}{time}
-                      </span>
-                    ))}
-                  </div>
-                ))}
+                {Object.entries(formattedBusinessHours).map(
+                  ([day, times], index) => (
+                    <div key={index} style={styles.dayBlock}>
+                      <strong>{day}:</strong>
+                      {times.map((time, timeIndex) => (
+                        <span key={timeIndex}>
+                          {timeIndex > 0 ? "，" : " "}
+                          {time}
+                        </span>
+                      ))}
+                    </div>
+                  )
+                )}
                 <Button
                   variant="contained"
                   color="secondary"
                   onClick={() => setShowAllHours(false)}
-                  sx={{ marginTop: 2 }}
+                  sx={{ marginTop: 2, backgroundColor: "gray" }}
                 >
                   關閉
                 </Button>
@@ -404,7 +442,8 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
                   <span>{day} </span>
                   {times.map((time, timeIndex) => (
                     <span key={timeIndex}>
-                      {timeIndex > 0 ? "，" : " "}{time}
+                      {timeIndex > 0 ? "，" : " "}
+                      {time}
                     </span>
                   ))}
                   {times.length > 1 && (
@@ -485,7 +524,8 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "50%",
-    height: "90%",
+    height: "auto", // 根據內容的高度自動調整
+    minHeight: "200px", // 設置一個最小高度
     padding: "20px",
     borderRadius: "10px",
     backgroundColor: "#f8f8f8",
@@ -514,6 +554,7 @@ const styles = {
     padding: "10px",
     backgroundColor: "#f1f1f1",
     borderRadius: "8px",
+    fontSize: "13px",
   },
   dayBlock: {
     marginBottom: "8px",

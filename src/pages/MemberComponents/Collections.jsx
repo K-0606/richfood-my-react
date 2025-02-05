@@ -31,7 +31,7 @@ const Collections = ({ collections }) => {
                 />
                 <CardContent>
                   {/* 餐廳名稱，點擊後跳轉 */}
-                  <Link to={`/store/${item.restaurantId}`} style={{ textDecoration: 'none' }}>
+                  <Link to={`/restaurant/${item.restaurantId}`} style={{ textDecoration: 'none' }}>
                     <Typography variant="h6" gutterBottom>
                       {item.name}
                     </Typography>
