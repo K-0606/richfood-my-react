@@ -31,17 +31,32 @@ const RestaurantDetail = () => {
         const data = await response.json();
         const storeId = data.storeId;
 
-        // 嘗試獲取餐券資料
-        const couponResponse = await fetch(`http://localhost:8080/coupons/selectCoupon?storeId=${storeId}`);
-        if (!couponResponse.ok) {
-          // 如果 coupon API 有錯誤，則跳過
-          setCoupons([]); // 設置空的 coupons
-        } else {
-          const couponData = await couponResponse.json();
-          setCoupons(couponData); // 正確的話就設置 coupons
-        }
+        // 假資料 - 在此處直接加入 `coupons` 屬性
+        const fakeCoupons = [
+          {
+            id: "1",
+            image:
+              "https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg",
+            name: "套餐A",
+            price: 300,
+          },
+          {
+            id: "2",
+            image: "https://www.12hotpot.com.tw/images/demo/deco-menu.png",
+            name: "套餐B",
+            price: 400,
+          },
+          {
+            id: "3",
+            image: "https://www.sushiexpress.com.tw/images/Product/6458_s.png",
+            name: "套餐C",
+            price: 500,
+          },
+        ];
 
-        // 將餐廳資料設置進 state
+        // 將假資料合併到後端獲取的餐廳資料中
+        data.coupons = fakeCoupons;
+
         setRestaurant(data);
       } catch (err) {
         setError(err.message);
@@ -78,16 +93,24 @@ const RestaurantDetail = () => {
         </div>
       </div>
 
-      {/* 餐券展示區域 - 只有在有 coupon 資料時才顯示 */}
-      {coupons.length > 0 && (
+      {/* 餐券展示區域 - 已經不需要另外的樣式，因為 CouponCard 已經處理了 */}
+      <div style={styles.mapcomponent}>
+        <MapComponent
+          longitude={restaurant.longitude}
+          latitude={restaurant.latitude}
+        />
         <div style={styles.couponSection}>
-          {coupons.map((coupon) => (
-            <CouponCard key={coupon.couponId} coupon={coupon} restaurantId={restaurant.id} />
-          ))}
+          {restaurant.coupons &&
+            restaurant.coupons.map((coupon) => (
+              <CouponCard
+                key={coupon.id}
+                coupon={coupon}
+                restaurantId={restaurant.id}
+              />
+            ))}
         </div>
-      )}
+      </div>
 
-      <MapComponent longitude={restaurant.longitude} latitude={restaurant.latitude} />
       {/* 評論列表 */}
       <ReviewSection
         restaurantId={restaurant.restaurantId}
@@ -110,6 +133,18 @@ const styles = {
     display: "flex",
     width: "80%",
     gap: "20px",
+  },
+  mapcomponent: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    width: "100%",
+    height: "auto",
+    justifyContent: "space-between", // 可以調整對齊方式
+    alignItems: "flex-start",
+    backgroundColor: "gray",
+    flex: "1 1 200px",
+    minWidth: "200px",
   },
   couponSection: {
     display: "flex",
