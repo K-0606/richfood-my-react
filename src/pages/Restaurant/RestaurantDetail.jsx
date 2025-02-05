@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { data, useParams } from "react-router-dom";
 import RestaurantInfo from "./RestaurantInfo";
 import RestaurantImageCarousel from "./RestaurantImageCarousel";
 import Header from "../../components/layout/Header";
@@ -9,16 +9,17 @@ import MapComponent from "../../components/common/MapComponent";
 import ReviewSection from "../StorePage/ReviewSection";
 import CouponCard from "./CouponCard";
 
+
 const RestaurantDetail = () => {
+
   const { id } = useParams(); // 從 URL 中獲取餐廳ID
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   // 用於觸發 ReviewSection 再次抓取評論的 state
   const [refreshTrigger, setRefreshTrigger] = useState(false);
-
-  const [coupons, setCoupons] = useState([]); // 新增一個 state 來儲存 coupons
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -29,34 +30,59 @@ const RestaurantDetail = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        const storeId = data.storeId;
+        // console.log("獲取到的餐廳數據：", data);
+
+        const storeId=data.storeId;
+        // console.log(  "我要的!!!"+id);
+        console.log(  "我要的!!!"+storeId);
+        console.log("取得的 storeId:", storeId, "| 類型:", typeof storeId);
+
 
         // 假資料 - 在此處直接加入 `coupons` 屬性
         const fakeCoupons = [
           {
             id: "1",
-            image:
-              "https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg",
+            image: "https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg",
             name: "套餐A",
-            price: 300,
-          },
-          {
-            id: "2",
-            image: "https://www.12hotpot.com.tw/images/demo/deco-menu.png",
-            name: "套餐B",
-            price: 400,
-          },
-          {
-            id: "3",
-            image: "https://www.sushiexpress.com.tw/images/Product/6458_s.png",
-            name: "套餐C",
-            price: 500,
-          },
+            price: 10000,
+            storeId:storeId
+          }
+          // ,
+          // {
+          //   id: "2",
+          //   image: "https://www.12hotpot.com.tw/images/demo/deco-menu.png",
+          //   name: "套餐B",
+          //   price: 400,
+          // },
+          // {
+          //   id: "3",
+          //   image: "https://www.sushiexpress.com.tw/images/Product/6458_s.png",
+          //   name: "套餐C",
+          //   price: 500,
+          // },
         ];
 
-        // 將假資料合併到後端獲取的餐廳資料中
-        data.coupons = fakeCoupons;
+      // 再 fetch 餐券資料
+      if(storeId != null){
+          const couponResponse = await fetch(`http://localhost:8080/coupons/selectCoupon?storeId=${storeId}`);
+          if (!couponResponse.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const couponData = await couponResponse.json();
+          console.log("獲取到的餐券數據：", couponData);
 
+          // 把 API 回來的資料填入 fakeCoupons，但不改變結構
+          fakeCoupons.forEach((fakeCoupon, index) => {
+            if (couponData[index]) {
+              fakeCoupon.id = couponData[index].couponId;
+              // fakeCoupon.image = couponData[index].image;
+              fakeCoupon.name = couponData[index].name;
+              fakeCoupon.price = couponData[index].price;
+          }
+        });
+         // 將假資料合併到後端獲取的餐廳資料中
+          data.coupons = fakeCoupons;
+      }
         setRestaurant(data);
       } catch (err) {
         setError(err.message);
@@ -94,23 +120,13 @@ const RestaurantDetail = () => {
       </div>
 
       {/* 餐券展示區域 - 已經不需要另外的樣式，因為 CouponCard 已經處理了 */}
-      <div style={styles.mapcomponent}>
-        <MapComponent
-          longitude={restaurant.longitude}
-          latitude={restaurant.latitude}
-        />
-        <div style={styles.couponSection}>
-          {restaurant.coupons &&
-            restaurant.coupons.map((coupon) => (
-              <CouponCard
-                key={coupon.id}
-                coupon={coupon}
-                restaurantId={restaurant.id}
-              />
-            ))}
-        </div>
+      <div style={styles.couponSection}>
+        {restaurant.coupons && restaurant.coupons.map((coupon) => (
+          <CouponCard key={coupon.id} coupon={coupon} restaurantId={restaurant.id} />
+        ))}
       </div>
 
+      <MapComponent longitude={restaurant.longitude} latitude={restaurant.latitude} />
       {/* 評論列表 */}
       <ReviewSection
         restaurantId={restaurant.restaurantId}
@@ -133,18 +149,6 @@ const styles = {
     display: "flex",
     width: "80%",
     gap: "20px",
-  },
-  mapcomponent: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    width: "100%",
-    height: "auto",
-    justifyContent: "space-between", // 可以調整對齊方式
-    alignItems: "flex-start",
-    backgroundColor: "gray",
-    flex: "1 1 200px",
-    minWidth: "200px",
   },
   couponSection: {
     display: "flex",
