@@ -6,6 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import { useUser } from "../../context/UserContext"; // 引入 useUser
 import "./Header.css";
 import logo from "../../assets/richfoodCoverV1.png";
+import LanguageSwitch from "../common/LanguageSwitch";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -246,6 +247,7 @@ const Header = () => {
               會員/店家登入
             </Button>
           )}
+          <LanguageSwitch />
         </Stack>
       </div>
     </div>
