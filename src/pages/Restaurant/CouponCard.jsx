@@ -1,15 +1,23 @@
 import React from "react";
-import { Button, Card, CardContent, Typography, CardMedia } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  CardMedia,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const CouponCard = ({ coupon, restaurantId }) => {
-console.log("CouponCard 接收到的 coupon:", coupon);
-console.log("CouponCard 接收到的 restaurantId:", restaurantId);
+  console.log("CouponCard 接收到的 coupon:", coupon);
+  console.log("CouponCard 接收到的 restaurantId:", restaurantId);
 
   const navigate = useNavigate();
 
   const handlePurchase = () => {
-    navigate(`/paymentPage?storeId=${coupon.storeId}&couponId=${coupon.id}&price=${coupon.price}&name=${coupon.name}`);
+    navigate(
+      `/paymentPage?storeId=${coupon.storeId}&couponId=${coupon.id}&price=${coupon.price}&name=${coupon.name}`
+    );
   };
 
   return (
@@ -27,7 +35,11 @@ console.log("CouponCard 接收到的 restaurantId:", restaurantId);
           <Typography variant="body2" color="text.secondary">
             ${coupon.price}
           </Typography>
-          <Button variant="contained" onClick={handlePurchase} sx={styles.button}>
+          <Button
+            variant="contained"
+            onClick={handlePurchase}
+            sx={styles.button}
+          >
             購買
           </Button>
         </div>
@@ -43,6 +55,7 @@ const styles = {
     display: "inline-block", // 改為 inline-block，讓餐券水平排列
     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
     borderRadius: "8px",
+    transform: "translateX(200px)",
     transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
     "&:hover": {
       transform: "scale(1.05)", // 鼠標懸停時放大效果

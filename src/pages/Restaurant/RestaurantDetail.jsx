@@ -33,10 +33,10 @@ const RestaurantDetail = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-  
+
         const storeId = data.storeId; // storeId 可能是 null
         let couponData = [];
-  
+
         // 只有在 storeId 存在的情況下才抓取餐券資料
         if (storeId != null) {
           const couponResponse = await fetch(
@@ -45,32 +45,34 @@ const RestaurantDetail = () => {
           if (!couponResponse.ok) {
             throw new Error("Network response was not ok");
           }
-  
+
           couponData = await couponResponse.json();
           console.log("獲取到的餐券數據：", couponData);
-  
+
           couponData = (couponData || []).map((coupon) => ({
             id: coupon.couponId,
-            image: coupon.couponpic || "https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg",
+            image:
+              coupon.couponpic ||
+              "https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg",
             name: coupon.name,
             price: coupon.price,
             storeId: storeId,
           }));
           setCoupons(couponData);
-          data.coupons = couponData;  // 設定餐廳的餐券
+          data.coupons = couponData; // 設定餐廳的餐券
         }
-  
-        setRestaurant(data);  // 設定餐廳資料
+
+        setRestaurant(data); // 設定餐廳資料
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchRestaurant();
   }, [id]);
-  
+
   // 让子组件调用的 callback：一旦评论提交成功，就翻转 refreshTrigger
   const handleReviewSubmitted = () => {
     setRefreshTrigger((prev) => !prev);
@@ -80,10 +82,10 @@ const RestaurantDetail = () => {
   useEffect(() => {
     if (restaurant) {
       setTimeout(() => {
-        setMapReloadTrigger((prev) => !prev);  // 翻转 mapReloadTrigger
-      }, 500);  // 延迟 0.5 秒后更新 MyMap
+        setMapReloadTrigger((prev) => !prev); // 翻转 mapReloadTrigger
+      }, 500); // 延迟 0.5 秒后更新 MyMap
     }
-  }, [restaurant]);  // 只在 restaurant 加载完成后执行
+  }, [restaurant]); // 只在 restaurant 加载完成后执行
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -104,10 +106,10 @@ const RestaurantDetail = () => {
           />
         </div>
       </div>
-
       {/* MyMap 组件，使用 mapReloadTrigger 来强制重新渲染 */}
       <MyMap
-        key={mapReloadTrigger}  
+        style={styles.mymap}
+        key={mapReloadTrigger}
         restaurantName={restaurant.name} // 传递餐厅名称
         latitude={restaurant.latitude}
         longitude={restaurant.longitude}
@@ -115,11 +117,12 @@ const RestaurantDetail = () => {
       />
 
       {/* 餐券展示区域 */}
-      <div style={styles.mapcomponent}>
+      <div>
         {/* <MapComponent
           latitude={restaurant.latitude} // 传递 latitude
           longitude={restaurant.longitude} // 传递 longitude
         /> */}
+
         <div style={styles.couponSection}>
           {restaurant.coupons &&
             restaurant.coupons.map((coupon) => (
@@ -155,26 +158,26 @@ const styles = {
     width: "80%",
     gap: "20px",
   },
-  mapcomponent: {
+  mymap: {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
     width: "100%",
     height: "auto",
-    justifyContent: "space-between", // 可以调整对齐方式
-    alignItems: "flex-start",
+    // justifyContent: "space-between", // 可以调整对齐方式
+    // alignItems: "flex-start",
     backgroundColor: "gray",
-    flex: "1 1 200px",
+    // flex: "1 1 200px",
     minWidth: "200px",
   },
   couponSection: {
     display: "flex",
     flexDirection: "column", // 改为垂直排列
     alignItems: "flex-end", // 居中显示
-    marginTop: "20px",
-    marginRight: "150px",
+    // marginTop: "20px",
+    // marginRight: "150px",
     padding: "0 10px", // 一些内边距以免餐券过于拥挤
-    transform: "translateX(800px)",
+    // transform: "translateX(800px)",
   },
 };
 

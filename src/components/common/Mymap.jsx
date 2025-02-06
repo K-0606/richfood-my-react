@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 import { CircularProgress, Box } from "@mui/material";
 
 // 定義 libraries 來避免重複創建
@@ -7,9 +12,9 @@ const libraries = ["places"];
 
 // 地圖容器樣式
 const containerStyle = {
-  width: "100%", // 確保地圖填滿寬度
+  width: "50%", // 確保地圖填滿寬度
   height: "400px",
-  marginLeft: "300px",
+  // marginLeft: "300px",
 };
 
 // 設置紅色標記圖標
@@ -46,7 +51,15 @@ function MyMap({ restaurantName, latitude, longitude, restaurantImage }) {
     // 搜索餐廳名稱
     const request = {
       query: name,
-      fields: ["name", "geometry", "formatted_address", "place_id", "formatted_phone_number", "website", "photos"],
+      fields: [
+        "name",
+        "geometry",
+        "formatted_address",
+        "place_id",
+        "formatted_phone_number",
+        "website",
+        "photos",
+      ],
     };
 
     service.textSearch(request, (results, status) => {
