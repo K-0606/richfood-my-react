@@ -5,7 +5,7 @@ import Pagination from "@mui/material/Pagination";
 import Box from "@mui/material/Box";
 
 const RestaurantList = ({ restaurants }) => {
-  const itemsPerPage = 3;
+  const itemsPerPage = 10;
   const totalItems = restaurants.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const [currentPage, setCurrentPage] = useState(1);

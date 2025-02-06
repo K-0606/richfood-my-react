@@ -52,34 +52,3 @@
   margin-left: auto;
 }
 
-/*Header.Button */
-.btn {
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 4px;
-  transition: background-color 0.3s, transform 0.2s ease-in-out; 
-  white-space: nowrap;
-}
-.btn:hover {
-  background-color: #c6c6c6b6;
-  transform: scale(1.1); /* 鼠標懸停時稍微放大按鈕 */
-}
-
-.member {
-  background-color: #000000  !important; 
-  color: white !important;  
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color 0.3s, transform 0.2s ease-in-out; 
-}
-
-.member:hover {
-  background-color: #151515b6  !important;
-  transform: scale(1.1) !important;
-}

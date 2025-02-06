@@ -106,23 +106,17 @@ const RestaurantDetail = () => {
           />
         </div>
       </div>
-      {/* MyMap 组件，使用 mapReloadTrigger 来强制重新渲染 */}
-      <MyMap
-        style={styles.mymap}
-        key={mapReloadTrigger}
-        restaurantName={restaurant.name} // 传递餐厅名称
-        latitude={restaurant.latitude}
-        longitude={restaurant.longitude}
-        restaurantImage={restaurant.image} // 传递餐厅图片
-      />
+      <div style={styles.mymap}>
+        {/* MyMap 组件，使用 mapReloadTrigger 来强制重新渲染 */}
+        <MyMap
+          key={mapReloadTrigger}
+          restaurantName={restaurant.name} // 传递餐厅名称
+          latitude={restaurant.latitude}
+          longitude={restaurant.longitude}
+          restaurantImage={restaurant.image} // 传递餐厅图片
+        />
 
-      {/* 餐券展示区域 */}
-      <div>
-        {/* <MapComponent
-          latitude={restaurant.latitude} // 传递 latitude
-          longitude={restaurant.longitude} // 传递 longitude
-        /> */}
-
+        {/* 餐券展示区域 */}
         <div style={styles.couponSection}>
           {restaurant.coupons &&
             restaurant.coupons.map((coupon) => (
@@ -134,7 +128,6 @@ const RestaurantDetail = () => {
             ))}
         </div>
       </div>
-
       {/* 评论列表 */}
       <ReviewSection
         restaurantId={restaurant.restaurantId}
@@ -159,25 +152,16 @@ const styles = {
     gap: "20px",
   },
   mymap: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    width: "100%",
-    height: "auto",
-    // justifyContent: "space-between", // 可以调整对齐方式
-    // alignItems: "flex-start",
-    backgroundColor: "gray",
-    // flex: "1 1 200px",
-    minWidth: "200px",
+    width: "100%", // 确保 MyMap 组件填满父容器的宽度
+    height: "auto", // 根据需要调整高度
+    marginBottom: "20px", // 给 MyMap 和餐券之间留出一些间距
   },
   couponSection: {
     display: "flex",
     flexDirection: "column", // 改为垂直排列
     alignItems: "flex-end", // 居中显示
-    // marginTop: "20px",
-    // marginRight: "150px",
+    marginRight: "100px",
     padding: "0 10px", // 一些内边距以免餐券过于拥挤
-    // transform: "translateX(800px)",
   },
 };
 

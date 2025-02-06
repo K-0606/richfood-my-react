@@ -204,16 +204,28 @@ const Header = () => {
 
       <div className="right-container">
         <Stack spacing={2} direction="row">
-          <Button variant="text" onClick={handleStoreRedirect}>
+          <Button
+            variant="text"
+            onClick={handleStoreRedirect}
+            style={styles.btn}
+          >
             所有餐廳
           </Button>
-          <Button variant="text" onClick={handlePopularRedirect}>
+          <Button
+            variant="text"
+            onClick={handlePopularRedirect}
+            style={styles.btn}
+          >
             熱門餐廳
           </Button>
-          <Button variant="text" onClick={handlePopularRedirect}>
+          <Button
+            variant="text"
+            onClick={handlePopularRedirect}
+            style={styles.btn}
+          >
             關於我
           </Button>
-
+          <LanguageSwitch />
           {currentUser ? (
             <div className="profile-container">
               <Button
@@ -243,15 +255,52 @@ const Header = () => {
               </Button>
             </div>
           ) : (
-            <Button variant="contained" onClick={handleLoginRedirect}>
+            <Button
+              variant="contained"
+              onClick={handleLoginRedirect}
+              sx={{
+                backgroundColor: "#000000", // 按钮保持黑色背景
+                color: "white", // 文字颜色为白色
+                "&:hover": {
+                  backgroundColor: "#151515b6", // Hover 时的背景色
+                },
+                "&:focus": {
+                  outline: "none", // 去除聚焦边框
+                  backgroundColor: "#000000", // 保持黑色背景
+                },
+                "&:active": {
+                  backgroundColor: "#000000", // 防止按下时背景变蓝
+                  transform: "scale(1)", // 按下时不变形
+                },
+              }}
+            >
               會員/店家登入
             </Button>
           )}
-          <LanguageSwitch />
         </Stack>
       </div>
     </div>
   );
+};
+
+const styles = {
+  btn: {
+    backgroundColor: "white", // Hover 时的背景色
+    color: "black", // 文字颜色为黑色
+    "&:hover": {
+      outline: "none", // 去除聚焦边框
+      backgroundColor: "gray", // Hover 时的背景色
+    },
+    "&:focus": {
+      outline: "none", // 去除聚焦边框
+      backgroundColor: "#000000", // 保持黑色背景
+    },
+    "&:active": {
+      outline: "none", // 去除聚焦边框
+      backgroundColor: "#c6c6c6b6", // 按下时的背景色
+      transform: "scale(1)", // 按下时不变形
+    },
+  },
 };
 
 export default Header;

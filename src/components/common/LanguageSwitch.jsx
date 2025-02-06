@@ -1,67 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Box from "@mui/material/Box"; // 修正 Box 的導入
 
 const LanguageSwitch = () => {
-  const [language, setLanguage] = useState('zh');
+  const [language, setLanguage] = useState("zh");
 
-  const toggleLanguage = (lang) => {
-    setLanguage(lang);
+  const toggleLanguage = (event) => {
+    setLanguage(event.target.value); // 根據選擇的值來更新語言
   };
 
   // 定義樣式
   const styles = {
     switchContainer: {
-      fontSize: '16px',
-      userSelect: 'none',
+      fontSize: "14px",
+      userSelect: "none",
     },
     span: {
-      margin: '0 10px',
-      transition: 'font-weight 0.3s, color 0.3s',
-      cursor: 'pointer', // 預設指針為可點擊
+      margin: "0 10px",
+      transition: "font-weight 0.3s, color 0.3s",
+      cursor: "pointer", // 預設指針為可點擊
     },
     active: {
-      fontWeight: 'bolder',  // 更強調粗體效果
-      color: '#333',
+      fontWeight: "bolder", // 更強調粗體效果
+      color: "#333",
     },
     hover: {
-      color: '#007bff',
+      color: "#007bff",
     },
     nonHover: {
-      color: 'inherit',  // 當前選擇語言，禁用 hover 顏色
+      color: "inherit", // 當前選擇語言，禁用 hover 顏色
     },
     disabled: {
-      cursor: 'default', // 禁用當前語言的 pointer
-      color: 'black',     // 顯示較淡顏色，表示禁用狀態
-    }
+      cursor: "default", // 禁用當前語言的 pointer
+      color: "black", // 顯示較淡顏色，表示禁用狀態
+    },
   };
 
   return (
-    <div style={styles.switchContainer}>
-      <span
-        style={{
-          ...styles.span,
-          ...(language === 'zh' ? styles.active : {}),
-          ...(language === 'zh' ? styles.disabled : {}), // 禁用當前選擇語言
-        }}
-        onClick={language !== 'zh' ? () => toggleLanguage('zh') : undefined} // 只有非當前語言才可以點擊
-        onMouseEnter={(e) => language !== 'zh' && (e.target.style.color = '#007bff')}
-        onMouseLeave={(e) => language !== 'zh' && (e.target.style.color = '')}
-      >
-        繁體中文
-      </span>
-      |
-      <span
-        style={{
-          ...styles.span,
-          ...(language === 'en' ? styles.active : {}),
-          ...(language === 'en' ? styles.disabled : {}), // 禁用當前選擇語言
-        }}
-        onClick={language !== 'en' ? () => toggleLanguage('en') : undefined} // 只有非當前語言才可以點擊
-        onMouseEnter={(e) => language !== 'en' && (e.target.style.color = '#007bff')}
-        onMouseLeave={(e) => language !== 'en' && (e.target.style.color = '')}
-      >
-        English
-      </span>
-    </div>
+    <Box sx={{ minWidth: 120 }}>
+      <div style={styles.switchContainer}>
+        <FormControl sx={{ m: 1, minWidth: 50 }} size="small">
+          <InputLabel id="language-select-label">語言</InputLabel>
+          <Select
+            labelId="language-select-label"
+            id="language-select"
+            value={language} // 綁定選中的語言
+            label="Language"
+            onChange={toggleLanguage} // 直接使用 onChange 來處理語言切換
+          >
+            <MenuItem
+              value="zh"
+              disabled={language === "zh"} // 當前選語言禁用
+              style={{
+                ...styles.span,
+                ...(language === "zh" ? styles.active : {}),
+              }}
+            >
+              繁體中文
+            </MenuItem>
+            <MenuItem
+              value="en"
+              disabled={language === "en"} // 當前選語言禁用
+              style={{
+                ...styles.span,
+                ...(language === "en" ? styles.active : {}),
+              }}
+            >
+              English
+            </MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+    </Box>
   );
 };
 

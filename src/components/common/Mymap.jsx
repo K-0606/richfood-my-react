@@ -12,9 +12,10 @@ const libraries = ["places"];
 
 // 地圖容器樣式
 const containerStyle = {
-  width: "50%", // 確保地圖填滿寬度
+  width: "40%", // 確保地圖填滿寬度
   height: "400px",
-  // marginLeft: "300px",
+  marginLeft: "180px",
+  marginTop: "50px",
 };
 
 // 設置紅色標記圖標

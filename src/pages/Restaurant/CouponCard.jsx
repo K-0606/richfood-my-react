@@ -7,6 +7,7 @@ import {
   CardMedia,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Padding } from "@mui/icons-material";
 
 const CouponCard = ({ coupon, restaurantId }) => {
   console.log("CouponCard 接收到的 coupon:", coupon);
@@ -31,8 +32,8 @@ const CouponCard = ({ coupon, restaurantId }) => {
           sx={styles.image}
         />
         <div style={styles.textContainer}>
-          <Typography variant="h6">{coupon.name}</Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="h7">{coupon.name}</Typography>
+          <Typography variant="body3" color="text.secondary">
             ${coupon.price}
           </Typography>
           <Button
@@ -50,17 +51,21 @@ const CouponCard = ({ coupon, restaurantId }) => {
 
 const styles = {
   card: {
-    width: "300px", // 每個餐券卡片寬度
+    width: "350px",
+    // marginLeft: "180px",
+    // marginTop: "50px",
+    marginRight: "-300px",
     margin: "10px",
     display: "inline-block", // 改為 inline-block，讓餐券水平排列
     boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
     borderRadius: "8px",
-    transform: "translateX(200px)",
-    transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
-    "&:hover": {
-      transform: "scale(1.05)", // 鼠標懸停時放大效果
-      boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.2)",
-    },
+    marginTop: "-400px",
+    // transition: "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
+
+    // "&:hover": {
+    //   transform: "scale(1.05)", // 鼠標懸停時放大效果
+    //   boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.2)",
+    // },
   },
   cardContent: {
     display: "flex",
@@ -77,12 +82,15 @@ const styles = {
     flexDirection: "flex", // 文字部分上下排列
     justifyContent: "space-between", // 在垂直方向上有間距
     height: "100%", // 讓文字和按鈕占滿剩餘空間
+    marginTop: "10px",
   },
   button: {
-    marginTop: "10px", // 按鈕和價格之間的間距
-    backgroundColor: "#00796b", // 按鈕顏色
+    marginTop: "-10px", // 按鈕和價格之間的間距
+    height: "15vh",
+    marginLeft: "10px",
+    backgroundColor: "#000000", // 按鈕顏色
     "&:hover": {
-      backgroundColor: "#004d40",
+      backgroundColor: "#151515b6",
     },
   },
 };

@@ -97,6 +97,7 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
         flexWrap: "wrap",
         width: "100%",
         height: "auto",
+        gap: 2,
       }}
       className="review-section"
     >
