@@ -143,15 +143,15 @@ const StoreReservations = () => {
       <Card sx={{ maxWidth: 800, margin: '0 auto', mt: 4, boxShadow: 3, borderRadius: 2 }}>
         <CardContent>
           <Tabs value={tabValue} onChange={handleTabChange} centered>
-            <Tab label="過去訂單" sx={{ fontSize: '16px' }} />
-            <Tab label="未來訂單" sx={{ fontSize: '16px' }} />
+            <Tab label="所有訂位" sx={{ fontSize: '16px' }} />
+            <Tab label="未來訂位" sx={{ fontSize: '16px' }} />
           </Tabs>
 
           {/* 顯示過去訂單 */}
           {tabValue === 0 && (
             <div>
               <Typography variant="h6" sx={{ mt: 2, fontWeight: 'bold', color: '#1976d2' }}>
-                過去訂單
+                所有訂位
               </Typography>
               {getReservationsForPage().map((reservation, index) => (
                 <Card
@@ -191,7 +191,7 @@ const StoreReservations = () => {
           {tabValue === 1 && (
             <div>
               <Typography variant="h6" sx={{ mt: 2, fontWeight: 'bold', color: '#1976d2' }}>
-                未來訂單
+                未來訂位
               </Typography>
               {getReservationsForPage().map((reservation, index) => (
                 <Card

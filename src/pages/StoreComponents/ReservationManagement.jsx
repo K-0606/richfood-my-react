@@ -19,6 +19,34 @@ const ReservationManagement = () => {
     return days;
   };
 
+  // 抓取 storeId
+  useEffect(() => {
+    const fetchStoreId = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/store/selectStore', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setStoreId(data.storeId);
+      } catch (error) {
+        console.error('抓取錯誤:', error);
+      }
+    };
+
+    fetchStoreId();
+  }, []);
+
+
+
    // 使用 fetch 讀取餐廳的容量列表
    useEffect(() => {
     const fetchReservations = async () => {
@@ -33,7 +61,7 @@ const ReservationManagement = () => {
           }
         );
         const data = await response.json();
-        setStoreId(data[0].storeId);
+        // setStoreId(data[0].storeId);
         
         // 將 API 返回的資料轉換為日期 -> 時段 -> 容量 的格式
         const transformedData = data.reduce((acc, item) => {
