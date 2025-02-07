@@ -6,10 +6,11 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 import routes from './routes';
 import ErrorPage from './pages/ErrorPage';
+import Home from './pages/Home';
 
 function App() {
   const router = createBrowserRouter([
-    ...routes,
+    { path: "/", element: <Home/ > },
     { path: "*", element: <ErrorPage /> }, // 用來處理未知路由的錯誤頁面
   ]);
 
