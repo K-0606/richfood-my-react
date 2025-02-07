@@ -10,6 +10,7 @@ import ErrorPage from './pages/ErrorPage';
 function App() {
   const router = createBrowserRouter([
     ...routes,
+    { path: '/', element: <Home /> },
     { path: "*", element: <ErrorPage /> }, // 用來處理未知路由的錯誤頁面
   ]);
 
