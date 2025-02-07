@@ -18,7 +18,7 @@ function App() {
   <UserProvider>{/* 使用 UserProvider 包裹整個應用 */}
     <ThemeProvider theme={theme}>
         <AvatarProvider>
-          <RouterProvider router={router} basename="/richfood-my-react" />
+          <RouterProvider router={router}  />
         </AvatarProvider>
       </ThemeProvider>
     </UserProvider>
