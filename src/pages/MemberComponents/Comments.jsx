@@ -48,7 +48,7 @@ const Comments = () => {
           {/* 餐廳名稱，點擊後跳轉到餐廳詳細頁面 */}
           <Link
             component={RouterLink}
-            to={`/StorePage/${review.restaurantId}`} // 跳轉的餐廳 ID
+            to={`/restaurant/${review.restaurantId}`} // 跳轉的餐廳 ID
             underline="hover"
           >
             <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
