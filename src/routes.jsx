@@ -47,7 +47,6 @@ import MySearchField from './pages/MySearch/MySearchField';
 // 定義路由配置
 const routes = [
   { path: '/', element: <Home /> },
-  { path: '/richfood-my-react/', element: <Home /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/memberLogin', element: <MemberLoginPage /> },
   { path: '/memberRegister', element: <MemberRegister /> },
