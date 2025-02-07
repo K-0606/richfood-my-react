@@ -46,22 +46,22 @@ import MySearchField from './pages/MySearch/MySearchField';
 
 // 定義路由配置
 const routes = [
-  { path: '/richfood-my-react/', element: <Home /> },
-  { path: '/richfood-my-react/login', element: <LoginPage /> },
-  { path: '/richfood-my-react/memberLogin', element: <MemberLoginPage /> },
-  { path: '/richfood-my-react/memberRegister', element: <MemberRegister /> },
-  { path: '/richfood-my-react/myRecommend', element: <MyRecommend /> },
-  { path: '/richfood-my-react/paymentPage', element: <PaymentPage /> },
-  { path: '/richfood-my-react/storeLogin', element: <StoreLoginPage /> },
-  { path: '/richfood-my-react/systemManage', element: <SystemManage /> },
-  { path: '/richfood-my-react/PopularPage', element: <PopularPage /> },
-  { path: '/richfood-my-react/StoreQRCodeScanner', element: <StoreQRCodeScanner /> },
-  { path: '/richfood-my-react/contactUs', element: <ContactUsPage /> },
-  { path: '/richfood-my-react/StorePage/book', element: <BookPage /> },
-  { path: '/richfood-my-react/book', element: <BookPage /> },
-  { path: '/richfood-my-react/forgot-password', element: <ForgotPasswordPage /> },
-  { path: '/richfood-my-react/reset-password', element: <ResetPasswordPage /> },
-  { path: '/richfood-my-react/restaurant/:id', element: <RestaurantDetail /> },
+  { path: '/', element: <Home /> },
+  { path: '/login', element: <LoginPage /> },
+  { path: '/memberLogin', element: <MemberLoginPage /> },
+  { path: '/memberRegister', element: <MemberRegister /> },
+  { path: '/myRecommend', element: <MyRecommend /> },
+  { path: '/paymentPage', element: <PaymentPage /> },
+  { path: '/storeLogin', element: <StoreLoginPage /> },
+  { path: '/systemManage', element: <SystemManage /> },
+  { path: '/PopularPage', element: <PopularPage /> },
+  { path: '/StoreQRCodeScanner', element: <StoreQRCodeScanner /> },
+  { path: '/contactUs', element: <ContactUsPage /> },
+  { path: '/StorePage/book', element: <BookPage /> },
+  { path: '/book', element: <BookPage /> },
+  { path: '/forgot-password', element: <ForgotPasswordPage /> },
+  { path: '/reset-password', element: <ResetPasswordPage /> },
+  { path: '/restaurant/:id', element: <RestaurantDetail /> },
   
 
   //餐廳搜尋 routes
