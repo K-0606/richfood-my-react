@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://K-0606.github.io/richfood-my-react",
+  "homepage": "https://k-0606.github.io/richfood-my-react",
 
   "scripts": {
     "dev": "vite",
