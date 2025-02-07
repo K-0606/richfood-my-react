@@ -9,6 +9,8 @@ import MapComponent from "../../components/common/MapComponent";
 import ReviewSection from "../StorePage/ReviewSection";
 import CouponCard from "./CouponCard";
 import MyMap from "../../components/common/MyMap";
+import StoreNamePicture from "../StorePage/StoreNamePicture"
+
 
 const RestaurantDetail = () => {
   const { id } = useParams(); //  URL 中餐廳ID
@@ -23,6 +25,24 @@ const RestaurantDetail = () => {
 
   //  MyMap 重新渲染的 state
   const [mapReloadTrigger, setMapReloadTrigger] = useState(false);
+
+  const recordBrowsingHistory = async (restaurantId) => {
+    try {
+      await fetch("http://localhost:8080/History/record", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        credentials: "include",
+        body: new URLSearchParams({ restaurantId }),
+      });
+      console.log("瀏覽紀錄已上傳成功");
+    } catch (err) {
+      console.error("上傳瀏覽紀錄失敗:", err);
+    }
+  };
+  
+
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -39,9 +59,7 @@ const RestaurantDetail = () => {
 
         // 只有在 storeId 存在的情況下才抓取餐券資料
         if (storeId != null) {
-          const couponResponse = await fetch(
-            `http://localhost:8080/coupons/selectCoupon?storeId=${storeId}`
-          );
+          const couponResponse = await fetch(`http://localhost:8080/coupons/selectCoupon?storeId=${storeId}`);
           if (!couponResponse.ok) {
             throw new Error("Network response was not ok");
           }
@@ -63,6 +81,9 @@ const RestaurantDetail = () => {
         }
 
         setRestaurant(data); // 設定餐廳資料
+        if (data.restaurantId) {
+          recordBrowsingHistory(data.restaurantId);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -133,7 +154,7 @@ const RestaurantDetail = () => {
         restaurantId={restaurant.restaurantId}
         refreshTrigger={refreshTrigger}
       />
-
+      <StoreNamePicture />
       <FloatingButtons />
       <Footer />
     </>
