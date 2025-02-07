@@ -9,6 +9,8 @@ import MapComponent from "../../components/common/MapComponent";
 import ReviewSection from "../StorePage/ReviewSection";
 import CouponCard from "./CouponCard";
 import MyMap from "../../components/common/MyMap";
+import StoreNamePicture from "../StorePage/StoreNamePicture"
+
 
 const RestaurantDetail = () => {
   const { id } = useParams(); //  URL 中餐廳ID
@@ -133,7 +135,7 @@ const RestaurantDetail = () => {
         restaurantId={restaurant.restaurantId}
         refreshTrigger={refreshTrigger}
       />
-
+      <StoreNamePicture />
       <FloatingButtons />
       <Footer />
     </>
