@@ -64,11 +64,6 @@ const routes = [
   { path: '/reset-password', element: <ResetPasswordPage /> },
   { path: '/restaurant/:id', element: <RestaurantDetail /> },
   
-
-  //餐廳搜尋 routes
-  // { path: "/search/:region?/:type?", element: <MySearchField /> },
-  // { path: "/search/:type", element: <MySearchField /> },
-  // { path: "/search/:region", element: <MySearchField /> },
   
   { path: "/search", element: <MySearchField /> },
 

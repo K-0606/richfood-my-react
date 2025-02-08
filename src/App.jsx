@@ -18,7 +18,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <AvatarProvider>
           {/* 這裡只使用 RouterProvider 並設置 basename */}
-          <RouterProvider router={router}  />
+          <RouterProvider router={router} />
         </AvatarProvider>
       </ThemeProvider>
     </UserProvider>
