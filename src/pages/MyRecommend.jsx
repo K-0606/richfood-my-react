@@ -127,7 +127,7 @@ const recommendRestaurant = async (userLocation) => {
   try {
     const response = await fetch(url, { method: "GET" });
     const data = await response.json();
-    setRecommendedRestaurant(data.content);  // 更新餐廳列表
+    setRecommendedRestaurant(data);  // 更新餐廳列表
     setShowRecommendation(true);
   } catch (error) {
     console.error("Error fetching data:", error);

@@ -44,10 +44,9 @@ const FloatingButtons = () => {
   const handleNavigateToRestaurant = () => {
     if (
       recommendedRestaurant &&
-      recommendedRestaurant[0] &&
-      recommendedRestaurant[0].restaurantId
+      recommendedRestaurant.restaurantId
     ) {
-      navigate(`/restaurant/${recommendedRestaurant[0].restaurantId}`); // 根據餐廳 id 導航
+      navigate(`/restaurant/${recommendedRestaurant.restaurantId}`); // 根據餐廳 id 導航
     } else {
       console.warn("Restaurant ID is not available or invalid");
       console.log("Recommended Restaurant Data: ", recommendedRestaurant);
@@ -87,8 +86,8 @@ const FloatingButtons = () => {
           {/* 圖片部分 */}
           <CardMedia
             component="img"
-            image={recommendedRestaurant[0].image}
-            alt={recommendedRestaurant[0].name}
+            image={recommendedRestaurant.image}
+            alt={recommendedRestaurant.name}
             sx={{
               height: "250px", // 增加圖片的高度
               width: "100%", // 讓圖片填滿寬度
@@ -114,10 +113,10 @@ const FloatingButtons = () => {
               }}
               onClick={handleNavigateToRestaurant} // 點擊餐廳名稱時觸發導航
             >
-              {recommendedRestaurant[0].name}
+              {recommendedRestaurant.name}
             </Typography>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {recommendedRestaurant[0].address}
+              {recommendedRestaurant.address}
             </Typography>
           </CardContent>
           
