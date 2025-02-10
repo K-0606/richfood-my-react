@@ -37,6 +37,7 @@
 .logoImg {
   width: 200px;
   order: -1;  /* 強制圖片在最左邊 */
+  margin-left: 20px;
   transition: transform 0.3s ease, filter 0.3s ease; /* 平滑過渡縮放和濾鏡效果 */
 }
 

@@ -42,10 +42,7 @@ const FloatingButtons = () => {
 
   // 點擊餐廳名稱跳轉到餐廳詳細頁
   const handleNavigateToRestaurant = () => {
-    if (
-      recommendedRestaurant &&
-      recommendedRestaurant.restaurantId
-    ) {
+    if (recommendedRestaurant && recommendedRestaurant.restaurantId) {
       navigate(`/restaurant/${recommendedRestaurant.restaurantId}`); // 根據餐廳 id 導航
     } else {
       console.warn("Restaurant ID is not available or invalid");
@@ -54,29 +51,24 @@ const FloatingButtons = () => {
   };
 
   return (
-    <Box sx={{ position: "fixed", left: 20, bottom: 20, zIndex: 999 }}>
-      {/* 回到最上方的按鈕 */}
-      <IconButton
-        onClick={handleBackToTop}
-        sx={{
-          backgroundColor: "primary.main",
-          color: "white",
-          borderRadius: "50%",
-          marginBottom: 2,
-          boxShadow: 3,
-        }}
-      >
-        <ArrowUpward />
-      </IconButton>
-
+    <Box
+      sx={{
+        position: "fixed",
+        right: 20,
+        bottom: 50,
+        zIndex: 999,
+        display: "flex",
+        flexDirection: "column", // 垂直排列
+        gap: "10px", // 設置物件之間的間隔為 10px
+      }}
+    >
       {/* 顯示推薦餐廳的卡片 */}
       {showRecommendation && recommendedRestaurant && (
         <Card
           sx={{
             position: "absolute",
+            left: -235,
             bottom: "110px",
-            left: 0,
-            right: 0,
             margin: "auto",
             width: "350px", // 增加卡片的寬度
             borderRadius: 2, // 加上圓角
@@ -97,7 +89,7 @@ const FloatingButtons = () => {
             }}
           />
 
-          <CardContent sx={{ padding: "16px" }}>
+          <CardContent sx={{ padding: "15px" }}>
             {/* 點擊餐廳名稱以導向餐廳頁面 */}
             <Typography
               variant="h6"
@@ -119,7 +111,7 @@ const FloatingButtons = () => {
               {recommendedRestaurant.address}
             </Typography>
           </CardContent>
-          
+
           {/* 關閉按鈕 */}
           <IconButton
             onClick={handleCloseCard}
@@ -146,6 +138,22 @@ const FloatingButtons = () => {
         setRecommendedRestaurant={setRecommendedRestaurant}
         setShowRecommendation={setShowRecommendation}
       />
+
+      {/* 回到最上方的按鈕 */}
+      <IconButton
+        onClick={handleBackToTop}
+        sx={{
+          backgroundColor: "primary.main",
+          color: "white",
+          marginBottom: "5px",
+          boxShadow: 3,
+          right: -70,
+          width: "35%",
+          height: "50%",
+        }}
+      >
+        <ArrowUpward />
+      </IconButton>
     </Box>
   );
 };

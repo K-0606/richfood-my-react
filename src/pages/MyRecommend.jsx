@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Typography, Snackbar } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import { Button, Typography, Snackbar } from "@mui/material";
 
 // 模擬餐廳資料（假設來自於後端）
 // const mockRestaurants = [
@@ -54,8 +54,6 @@ import { Button, Typography, Snackbar } from '@mui/material';
 //     coordinates: { lat: 24.1740, lng: 120.6670 },
 //   },
 // ]
-  
-
 
 // // 計算兩個經緯度之間的距離（Haversine公式）
 // const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -74,7 +72,7 @@ import { Button, Typography, Snackbar } from '@mui/material';
 // 隨機推薦餐廳
 // const recommendRestaurant = (setRecommendedRestaurant, userLocation) => {
 
-  //   const nearbyRestaurants = mockRestaurants.filter((restaurant) => {
+//   const nearbyRestaurants = mockRestaurants.filter((restaurant) => {
 //     const distance = calculateDistance(userLocation.lat, userLocation.lng, restaurant.coordinates.lat, restaurant.coordinates.lng);
 //     return distance <= 3; // 設定範圍，這裡是3公里內
 //   });
@@ -82,7 +80,7 @@ import { Button, Typography, Snackbar } from '@mui/material';
 //   if (nearbyRestaurants.length > 0) {
 //     // 隨機選擇一間在範圍內的餐廳
 //     const randomRestaurant = nearbyRestaurants[Math.floor(Math.random() * nearbyRestaurants.length)];
-    // setRecommendedRestaurant(randomRestaurant);
+// setRecommendedRestaurant(randomRestaurant);
 
 //     // 顯示餐廳資訊及距離
 //     const distance = calculateDistance(userLocation.lat, userLocation.lng, randomRestaurant.coordinates.lat, randomRestaurant.coordinates.lng);
@@ -93,8 +91,6 @@ import { Button, Typography, Snackbar } from '@mui/material';
 //     setRecommendedRestaurant(null); // 如果沒有找到符合範圍的餐廳，清空推薦
 //   }
 // };
-
-
 
 const MyRecommend = ({ setRecommendedRestaurant, setShowRecommendation }) => {
   const [userLocation, setUserLocation] = useState(null); // 使用者位置
@@ -112,7 +108,11 @@ const MyRecommend = ({ setRecommendedRestaurant, setShowRecommendation }) => {
           lng: position.coords.longitude,
         });
         // 顯示使用者的位置
-        console.log("使用者位置: ", position.coords.latitude, position.coords.longitude);
+        console.log(
+          "使用者位置: ",
+          position.coords.latitude,
+          position.coords.longitude
+        );
         setLoading(false); // 完成獲取位置，關閉加載狀態
         setSnackOpen(false); // 隱藏訊息
       });
@@ -120,20 +120,19 @@ const MyRecommend = ({ setRecommendedRestaurant, setShowRecommendation }) => {
       alert("無法獲取位置");
     }
   };
-// 從後端獲取推薦餐廳
-const recommendRestaurant = async (userLocation) => {
-  const { lat, lng } = userLocation; // 解構 userLocation 以獲得 lat 和 lng
-  const url = `http://localhost:8080/restaurants?lat=${lat}&long=${lng}`;
-  try {
-    const response = await fetch(url, { method: "GET" });
-    const data = await response.json();
-    setRecommendedRestaurant(data);  // 更新餐廳列表
-    setShowRecommendation(true);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
+  // 從後端獲取推薦餐廳
+  const recommendRestaurant = async (userLocation) => {
+    const { lat, lng } = userLocation; // 解構 userLocation 以獲得 lat 和 lng
+    const url = `http://localhost:8080/restaurants?lat=${lat}&long=${lng}`;
+    try {
+      const response = await fetch(url, { method: "GET" });
+      const data = await response.json();
+      setRecommendedRestaurant(data.content); // 更新餐廳列表
+      setShowRecommendation(true);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   return (
     <div>
@@ -150,29 +149,30 @@ const recommendRestaurant = async (userLocation) => {
             getUserLocation(); // 按下按鈕後搜尋位置
           } else {
             recommendRestaurant(userLocation);
-          
-          // setShowRecommendation(true); // 顯示推薦卡片
+
+            // setShowRecommendation(true); // 顯示推薦卡片
           }
         }}
         sx={{
-          backgroundColor: 'rgba(243, 178, 104, 0.78)', // 透明度 50%
-          color: 'white',
+          backgroundColor: "rgba(243, 178, 104, 0.78)", // 透明度 50%
+          color: "white",
           borderRadius: 3,
           boxShadow: 3,
-          padding: '10px 20px',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          textTransform: 'none',
-          transition: 'all 0.3s ease',
-          '&:hover': {
-            backgroundColor: '#FF8000',
-            transform: 'scale(1.1)',
+          padding: "10px 20px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          textTransform: "none",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            backgroundColor: "#FF8000",
+            transform: "scale(1.1)",
           },
-          display: 'flex',
-          alignItems: 'center',
+          display: "flex",
+          alignItems: "center",
         }}
       >
-        <Typography sx={{ marginRight: 1 }}>推薦餐廳</Typography> {/* 按鈕文字 */}
+        <Typography sx={{ marginRight: 1 }}>推薦餐廳</Typography>{" "}
+        {/* 按鈕文字 */}
       </Button>
     </div>
   );

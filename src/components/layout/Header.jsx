@@ -197,9 +197,9 @@ const Header = () => {
           alt="logo"
           onClick={handleHomeRedirect}
         />
-        <h1 className="logo" onClick={handleHomeRedirect}>
+        {/* <h1 className="logo" onClick={handleHomeRedirect}>
           腹餓帶
-        </h1>
+        </h1> */}
       </div>
 
       <div className="right-container">
