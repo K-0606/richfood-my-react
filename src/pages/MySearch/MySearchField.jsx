@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRestaurants } from "./mockData"; // 模擬的餐廳數據
 import RestaurantList from "./RestaurantList";
 import SearchBar from "./SearchBar";
+// import HomeHeroImage from "../../HomeAll/HomeHeroImage.jsx";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 
@@ -13,7 +14,9 @@ const MySearchField = () => {
   const searchParams = new URLSearchParams(location.search);
   const region = searchParams.get("region") || "";
   const type = searchParams.get("type") || "";
-  const price = searchParams.get("price") ? searchParams.get("price").split(",") : [];
+  const price = searchParams.get("price")
+    ? searchParams.get("price").split(",")
+    : [];
   const popular = searchParams.get("popular") === "true";
 
   const [filters, setFilters] = useState({
@@ -79,16 +82,20 @@ const MySearchField = () => {
       : mockRestaurants.filter((restaurant) => {
           const matchesType =
             filters.type.length > 0
-              ? restaurant.categories.some((cat) => filters.type.includes(cat.name))
+              ? restaurant.categories.some((cat) =>
+                  filters.type.includes(cat.name)
+                )
               : true;
 
-          const matchesRegion =
-            filters.region ? fuzzyMatch(restaurant.country, filters.region) : true;
+          const matchesRegion = filters.region
+            ? fuzzyMatch(restaurant.country, filters.region)
+            : true;
 
-          const matchesPrice =
-            filters.price.length
-              ? filters.price.some((range) => isPriceInRange(restaurant.average, range))
-              : true;
+          const matchesPrice = filters.price.length
+            ? filters.price.some((range) =>
+                isPriceInRange(restaurant.average, range)
+              )
+            : true;
 
           const matchesPopular = filters.popular ? restaurant.score >= 4 : true;
 
@@ -98,6 +105,7 @@ const MySearchField = () => {
   return (
     <div>
       <Header />
+      {/* <HomeHeroImage /> */}
       <SearchBar onSearchChange={handleSearchChange} searchParams={filters} />
       {loading ? (
         <div>Loading...</div> // 如果資料加載中，顯示 Loading
