@@ -145,16 +145,16 @@ const itemData1 = [
     title: "屏東",
     value: "屏東",
   },
-  {
-    img: "https://images.pexels.com/photos/10473820/pexels-photo-10473820.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    title: "嘉義",
-    value: "嘉義",
-  },
-  {
-    img: "https://images.pexels.com/photos/15810479/pexels-photo-15810479.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    title: "新竹",
-    value: "新竹",
-  },
+  // {
+  //   img: "https://images.pexels.com/photos/10473820/pexels-photo-10473820.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  //   title: "嘉義",
+  //   value: "嘉義",
+  // },
+  // {
+  //   img: "https://images.pexels.com/photos/15810479/pexels-photo-15810479.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  //   title: "新竹",
+  //   value: "新竹",
+  // },
   // {
   //   img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
   //   title: "雲林",

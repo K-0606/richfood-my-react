@@ -151,16 +151,16 @@ const itemData2 = [
     title: "酒吧",
     value: "酒吧",
   },
-  {
-    img: "https://images.pexels.com/photos/1375902/pexels-photo-1375902.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    title: "燒肉",
-    value: "燒肉",
-  },
-  {
-    img: "https://images.pexels.com/photos/30522860/pexels-photo-30522860.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    title: "甜點",
-    value: "甜點",
-  },
+  // {
+  //   img: "https://images.pexels.com/photos/1375902/pexels-photo-1375902.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  //   title: "燒肉",
+  //   value: "燒肉",
+  // },
+  // {
+  //   img: "https://images.pexels.com/photos/30522860/pexels-photo-30522860.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+  //   title: "甜點",
+  //   value: "甜點",
+  // },
   // {
   //   img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
   //   title: "約會餐廳",
