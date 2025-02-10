@@ -1,9 +1,23 @@
-import * as React from "react";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 import ImageListItemBar from "@mui/material/ImageListItemBar";
+import React, { useState, useEffect } from "react";
 
 export default function Home() {
+const [itemData, setRecommendedRestaurant] = useState([]);
+useEffect(() => {
+  const HotRestaurant = async () => {
+    const url = `http://localhost:8080/restaurants/list`;
+    try {
+      const response = await fetch(url, { method: "GET" });
+      const data = await response.json();
+      setRecommendedRestaurant(data.slice(0, 8));  // 更新餐廳列表
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  HotRestaurant();
+}, []);  // 空依賴陣列表示只會在組件掛載時執行一次
   return (
     <>
       <div
@@ -54,7 +68,7 @@ export default function Home() {
       >
         {itemData.map((item) => (
           <ImageListItem
-            key={item.img}
+            key={item.image}
             sx={{
               border: "none",
               maxWidth: "248px",
@@ -71,9 +85,9 @@ export default function Home() {
             onClick={() => handleCardClick(item.value)}
           >
             <img
-              srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-              src={`${item.img}?w=248&fit=crop&auto=format`}
-              alt={item.title}
+              srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+              src={`${item.image}?w=248&fit=crop&auto=format`}
+              alt={item.name}
               loading="lazy"
               style={{
                 display: "block",
@@ -84,7 +98,7 @@ export default function Home() {
               }}
             />
             <ImageListItemBar
-              title={item.title}
+              title={item.name}
               position="below"
               sx={{
                 display: "flex",
@@ -104,47 +118,47 @@ export default function Home() {
   );
 }
 
-const itemData = [
-  {
-    img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-    title: "金鼎大飯店",
-    author: "傳承經典的台灣傳統美味。",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-    title: "鼎泰豐",
-    author: "精緻小籠包，口感鮮美，外脆內嫩。",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-    title: "小南國",
-    author: "地道江南風味，經典本土佳餚。",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-    title: "老林牛肉麵",
-    author: "鮮嫩牛肉，濃郁湯頭，暖心滋味。",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-    title: "望海樓",
-    author: "風景優美，海鮮新鮮，餐點精緻。",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
-    title: "老虎塭",
-    author: "創意料理，挑戰你的味蕾極限。",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
-    title: "壽司禪",
-    author: "精緻日式料理，食材新鮮直送。",
-  },
-  {
-    img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
-    title: "越南料理",
-    author: "高端奢華，細膩的法式料理體驗。",
-  },
+// const itemData = [
+//   {
+//     img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+//     title: "金鼎大飯店",
+//     author: "傳承經典的台灣傳統美味。",
+//   },
+//   {
+//     img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+//     title: "鼎泰豐",
+//     author: "精緻小籠包，口感鮮美，外脆內嫩。",
+//   },
+//   {
+//     img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+//     title: "小南國",
+//     author: "地道江南風味，經典本土佳餚。",
+//   },
+//   {
+//     img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+//     title: "老林牛肉麵",
+//     author: "鮮嫩牛肉，濃郁湯頭，暖心滋味。",
+//   },
+//   {
+//     img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+//     title: "望海樓",
+//     author: "風景優美，海鮮新鮮，餐點精緻。",
+//   },
+//   {
+//     img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
+//     title: "老虎塭",
+//     author: "創意料理，挑戰你的味蕾極限。",
+//   },
+//   {
+//     img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+//     title: "壽司禪",
+//     author: "精緻日式料理，食材新鮮直送。",
+//   },
+//   {
+//     img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
+//     title: "越南料理",
+//     author: "高端奢華，細膩的法式料理體驗。",
+//   },
   // {
   //   img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
   //   title: "泰式料理",
@@ -165,4 +179,4 @@ const itemData = [
   //   title: "飲料",
   //   author: "",
   // },
-];
+// ];
