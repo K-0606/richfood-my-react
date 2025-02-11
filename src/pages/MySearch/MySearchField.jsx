@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useRestaurants } from "./mockData"; // 模擬的餐廳數據
 import RestaurantList from "./RestaurantList";
 import SearchBar from "./SearchBar";
-import HomeImage from "../MySearch/HomeImage";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 
@@ -105,7 +104,6 @@ const MySearchField = () => {
   return (
     <div>
       <Header />
-      <HomeImage />
       <SearchBar onSearchChange={handleSearchChange} searchParams={filters} />
       {loading ? (
         <div>Loading...</div> // 如果資料加載中，顯示 Loading
