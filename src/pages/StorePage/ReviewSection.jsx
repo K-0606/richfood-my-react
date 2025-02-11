@@ -129,6 +129,19 @@ function ReviewSection({ restaurantId, refreshTrigger }) {
             >
               {review.content}
             </Typography>
+            <button
+            style={{
+              position: "absolute", // 使按鈕固定在卡片內部
+              bottom: "10px", // 靠下
+              right: "10px", // 靠右
+              backgroundColor: "#f0f0f0", // 淺色背景
+              border: "none", // 去除邊框
+              padding: "5px 10px", // 添加內邊距
+              borderRadius: "4px", // 圓角
+              cursor: "pointer", // 鼠標為指標
+              fontSize: "14px", // 字體大小
+              boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // 輕微陰影
+            }}>檢舉</button>
           </CardContent>
         </Card>
       ))}

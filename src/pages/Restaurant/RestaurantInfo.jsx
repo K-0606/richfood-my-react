@@ -30,7 +30,6 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
   const [isEditing, setIsEditing] = useState(false);// 控制是否是編輯模式
   const { restaurantId } = useParams();
 
-  // 獲取今天是星期幾
   const daysOfWeek = [
     "星期日",
     "星期一",
@@ -41,7 +40,7 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
     "星期六",
   ];
   const today = new Date();
-  const currentDay = daysOfWeek[today.getDay()];
+  const currentDay = daysOfWeek[today.getDay()]; // 獲取今天是星期幾
 
   // 篩選今天的營業時間
   const todayHours = restaurant.businessHours.filter(
@@ -70,11 +69,18 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
     }, {});
   };
 
+  // 格式化並合併營業時間
   const formattedBusinessHours = mergeTimes(
     formatBusinessHours(restaurant.businessHours)
   );
-  const todayFormattedHours = mergeTimes(formatBusinessHours(todayHours));
 
+  // 註意：讓todayHours變成正確的格式
+  const todayFormattedHours = mergeTimes(
+    formatBusinessHours(todayHours)
+  );
+
+  // 顯示今天的營業時間
+  const todayDisplayHours = todayFormattedHours[currentDay];
   const Item1 = styled(Paper)(({ theme }) => ({
     backgroundColor: "#fff",
     ...theme.typography.body2,
@@ -354,118 +360,121 @@ const RestaurantInfo = React.memo(({ restaurant, onReviewSubmitted }) => {
 
   return (
     <div style={styles.infoContainer}>
-      <h1 style={styles.restaurantName}>
-        {restaurant.name}
-        <button
-          onClick={handleFavorite}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            marginLeft: "10px",
-            fontSize: "1.5rem",
-            color: isFavorited ? "red" : "#ccc",
-            transition: "color 0.3s ease",
-          }}
-        >
-          {isFavorited ? "❤️" : "🤍"} {/* 愛心按鈕 */}
-        </button>
-      </h1>
-      <div style={styles.detailsContainer}>
-        <div style={styles.detailItem}>
-          <strong>類型: </strong>
-          <span>
-            {restaurant.categories.map((category, index) => (
-              <React.Fragment key={index}>
-                {category.name}
-                {index < restaurant.categories.length - 1 && ", "}
-              </React.Fragment>
-            ))}
-          </span>
-        </div>
-        <div style={styles.detailItem}>
-          <strong>地區: </strong>
-          <span>{restaurant.country}</span>
-        </div>
-        <div style={styles.detailItem}>
-          <strong>評分: </strong>
-          <span>
-            {"⭐".repeat(restaurant.score)}
-            {"☆".repeat(6 - restaurant.score)}
-          </span>
-        </div>
-        <div style={styles.detailItem}>
-          <strong>平均消費: </strong>
-          <span>${restaurant.average}</span>
-        </div>
-        <div style={styles.detailItem}>
-          <strong>地址: </strong>
-          <span>
-            {restaurant.country}
-            {restaurant.district}
-            {restaurant.address}
-          </span>
-        </div>
-        <div style={styles.detailItem}>
-          <strong>營業時間: </strong>
-          <span>
-            {/* 如果 showAllHours 為 true，顯示全部營業時間 */}
-            {showAllHours ? (
-              // 顯示全部營業時間頁面
-              <div style={styles.allHoursContainer}>
-                {Object.entries(formattedBusinessHours).map(
-                  ([day, times], index) => (
-                    <div key={index} style={styles.dayBlock}>
-                      <strong>{day}:</strong>
-                      {times.map((time, timeIndex) => (
-                        <span key={timeIndex}>
-                          {timeIndex > 0 ? "，" : " "}
-                          {time}
-                        </span>
-                      ))}
-                    </div>
-                  )
+    <h1 style={styles.restaurantName}>
+      {restaurant.name}
+      <button
+        onClick={handleFavorite}
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          marginLeft: "10px",
+          fontSize: "1.5rem",
+          color: isFavorited ? "red" : "#ccc",
+          transition: "color 0.3s ease",
+        }}
+      >
+        {isFavorited ? "❤️" : "🤍"} {/* 愛心按鈕 */}
+      </button>
+    </h1>
+    <div style={styles.detailsContainer}>
+      <div style={styles.detailItem}>
+        <strong>類型: </strong>
+        <span>
+          {restaurant.categories.map((category, index) => (
+            <React.Fragment key={index}>
+              {category.name}
+              {index < restaurant.categories.length - 1 && ", "}
+            </React.Fragment>
+          ))}
+        </span>
+      </div>
+      <div style={styles.detailItem}>
+        <strong>地區: </strong>
+        <span>{restaurant.country}</span>
+      </div>
+      <div style={styles.detailItem}>
+        <strong>評分: </strong>
+        <span>
+          {"⭐".repeat(restaurant.score)}
+          {"☆".repeat(6 - restaurant.score)}
+        </span>
+      </div>
+      <div style={styles.detailItem}>
+        <strong>平均消費: </strong>
+        <span>${restaurant.average}</span>
+      </div>
+      <div style={styles.detailItem}>
+        <strong>地址: </strong>
+        <span>
+          {restaurant.country}
+          {restaurant.district}
+          {restaurant.address}
+        </span>
+      </div>
+      <div style={styles.detailItem}>
+        <strong>營業時間: </strong>
+        <span>
+          {/* 如果 showAllHours 為 true，顯示全部營業時間 */}
+          {showAllHours ? (
+            // 顯示全部營業時間頁面
+            <div style={styles.allHoursContainer}>
+              {Object.entries(formattedBusinessHours).map(
+                ([day, times], index) => (
+                  <div key={index} style={styles.dayBlock}>
+                    <strong>{day}:</strong>
+                    {times.map((time, timeIndex) => (
+                      <span key={timeIndex}>
+                        {timeIndex > 0 ? "，" : " "}
+                        {time}
+                      </span>
+                    ))}
+                  </div>
+                )
+              )}
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setShowAllHours(false)}
+                sx={{ marginTop: 2, backgroundColor: "gray" }}
+              >
+                關閉
+              </Button>
+            </div>
+          ) : (
+            // 顯示今天的營業時間
+            
+            todayDisplayHours ? (
+              <div>
+                <strong>{currentDay}  </strong>
+                {todayDisplayHours.map((time, timeIndex) => (
+                  <span key={timeIndex}>
+                    {timeIndex > 0 ? "，" : " "}
+                    {time}
+                  </span>
+                ))}
+                {todayDisplayHours.length > 1 && (
+                  <IconButton
+                    onClick={() => setShowAllHours(true)}
+                    size="small"
+                    sx={{
+                      marginLeft: 1,
+                      padding: 0,
+                      fontSize: "1rem",
+                      color: "#007BFF",
+                      transition: "color 0.3s ease",
+                      "&:hover": { color: "#0056b3" },
+                    }}
+                  >
+                    <ArrowDropDown />
+                  </IconButton>
                 )}
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => setShowAllHours(false)}
-                  sx={{ marginTop: 2, backgroundColor: "gray" }}
-                >
-                  關閉
-                </Button>
               </div>
             ) : (
-              // 顯示今天的營業時間
-              Object.entries(todayFormattedHours).map(([day, times], index) => (
-                <div key={index}>
-                  <span>{day} </span>
-                  {times.map((time, timeIndex) => (
-                    <span key={timeIndex}>
-                      {timeIndex > 0 ? "，" : " "}
-                      {time}
-                    </span>
-                  ))}
-                  {times.length > 1 && (
-                    <IconButton
-                      onClick={() => setShowAllHours(true)}
-                      size="small"
-                      sx={{
-                        marginLeft: 1,
-                        padding: 0,
-                        fontSize: "1rem",
-                        color: "#007BFF",
-                        transition: "color 0.3s ease",
-                        "&:hover": { color: "#0056b3" },
-                      }}
-                    >
-                      <ArrowDropDown />
-                    </IconButton>
-                  )}
-                </div>
-              ))
-            )}
-          </span>
+              <span>今天沒有營業時間資料</span>
+            )
+          )}
+        </span>
         </div>
         <div>
           <Item1 onClick={handleBookRedirect}>預約</Item1>
@@ -523,7 +532,7 @@ const styles = {
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    width: "50%",
+    width: "55%",
     height: "auto", // 根據內容的高度自動調整
     minHeight: "200px", // 設置一個最小高度
     padding: "20px",

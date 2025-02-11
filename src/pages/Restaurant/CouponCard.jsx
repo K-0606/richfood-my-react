@@ -28,7 +28,7 @@ const CouponCard = ({ coupon, restaurantId }) => {
           component="img"
           alt={coupon.name}
           height="140"
-          image={coupon.image}
+          image="https://shinysusu.com/wp-content/uploads/2024/12/20241216-%E9%87%87%E6%9C%88%E9%8D%8B%E5%93%81Cai-Yue-Hot-Pot-28.jpg"
           sx={styles.image}
         />
         <div style={styles.textContainer}>

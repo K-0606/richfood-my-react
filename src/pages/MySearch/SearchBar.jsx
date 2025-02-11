@@ -144,7 +144,7 @@ const SearchBar = ({ onSearchChange, searchParams }) => {
       </div>
 
       {/* 最受歡迎餐廳選擇 */}
-      <div style={styles.filterGroup}>
+      {/* <div style={styles.filterGroup}>
         <label style={styles.optionLabel}>
           <input
             type="checkbox"
@@ -154,7 +154,7 @@ const SearchBar = ({ onSearchChange, searchParams }) => {
           />
           顯示最受歡迎餐廳（4顆星以上）
         </label>
-      </div>
+      </div> */}
     </div>
   );
 };

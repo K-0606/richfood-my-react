@@ -112,13 +112,18 @@ const RestaurantDetail = () => {
   if (error) return <div>Error: {error}</div>;
   if (!restaurant) return <div>No restaurant data found!</div>;
 
+  const urlTest = "https://www.limedia.tw/wp-content/uploads/2025/01/202501087.jpg"
+   const urlTest2 = "https://lh3.googleusercontent.com/2BjbmLAueE-V6wbnQBgqlS663dY7Oi5okzmwKhdSBZueI-Xa1n4Sj_X27L2baEmWi3f4oFGuJPTjStbMMqd-_BoEoVxL9hMcmW4ZG6dSj5W34w=s600"
+   const urlTest3 = "https://hips.hearstapps.com/hmg-prod/images/intercontinental-taichung-8802625658-4x3-66336d104c5d7.jpeg?crop=1xw:1xh;center,top&resize=980:*"
+
   return (
     <>
       <Header />
       <div className="restaurant-detail-container" style={styles.container}>
         <div className="restaurant-detail-content" style={styles.content}>
           {/* 左边轮播图 */}
-          <RestaurantImageCarousel images={[restaurant.image]} />
+          
+          <RestaurantImageCarousel images={[restaurant.image, urlTest, urlTest2, urlTest3]} />
 
           {/* 右边餐厅信息：把 onReviewSubmitted 传给子组件 */}
           <RestaurantInfo

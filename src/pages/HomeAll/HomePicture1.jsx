@@ -107,12 +107,12 @@ export default function HomePicture1() {
 const itemData1 = [
   {
     img: "https://images.pexels.com/photos/1717859/pexels-photo-1717859.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    title: "台北市",
+    title: "台北",
     value: "台北市",
   },
   {
     img: "https://images.pexels.com/photos/21832653/pexels-photo-21832653.jpeg",
-    title: "桃園市",
+    title: "桃園",
     value: "桃園",
   },
   {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Grid, Box, Typography, Divider, IconButton, TextField } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 import { useSearchParams } from 'react-router-dom';
+import Header from '../components/layout/Header';
 
 const defaultMenuItems = [
   { id: 1, name: 'AAAA', price: 100, imageUrl: 'https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg' },
@@ -22,7 +23,7 @@ function PaymentPage() {
   const name = searchParams.get('name');
   
   const menuItems = couponId && name ? [
-    { id: parseInt(couponId), name, price: parseInt(price), imageUrl: 'https://fruitlovelife.com/wp-content/uploads/2024/09/IMG_5817.jpg' },
+    { id: parseInt(couponId), name, price: parseInt(price), imageUrl: 'https://shinysusu.com/wp-content/uploads/2024/12/20241216-%E9%87%87%E6%9C%88%E9%8D%8B%E5%93%81Cai-Yue-Hot-Pot-28.jpg' },
   ] : defaultMenuItems;
 
   // 處理增加數量
@@ -89,6 +90,7 @@ function PaymentPage() {
 
   return (
     <Box sx={{ maxWidth: 600, margin: '0 auto', padding: 2 }}>
+      
       <Typography variant="h4" gutterBottom align="center">餐券購買</Typography>
 
       <Grid container spacing={2}>

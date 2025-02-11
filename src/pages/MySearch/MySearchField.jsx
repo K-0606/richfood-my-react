@@ -5,6 +5,7 @@ import RestaurantList from "./RestaurantList";
 import SearchBar from "./SearchBar";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
+import FloatingButtons from "../../components/common/FloatingButtons";
 
 const MySearchField = () => {
   const location = useLocation();
@@ -104,6 +105,7 @@ const MySearchField = () => {
       ) : (
         <RestaurantList restaurants={filteredRestaurants} /> // 資料加載完成後顯示餐廳列表
       )}
+      <FloatingButtons />
       <Footer />
     </div>
   );
