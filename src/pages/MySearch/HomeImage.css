@@ -1,0 +1,66 @@
+.hero-container {
+    position: relative;
+    /* text-align: center; */
+    height: 100px;
+  }
+  
+  .hero-image {
+    width: 100%;
+    height: 100%; /* 設定圖片高度為容器的 100% */
+    object-fit: contain; /* 確保圖片在容器內保持完整比例縮放 */
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    height: 100px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    color: white;
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .select-container {
+    width: 80%;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .cta-button {
+    background-color: white;
+    /* color: black; */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: '100px';
+    /* transition: background-color 0.3s ease, color 0.3s ease; */
+  }
+
+  .cta-button-container {
+    display: flex;
+    justify-content: center;  /* 水平居中 */
+    align-items: center;      /* 垂直居中 */
+    margin-top: 20px;         /* 按鈕與其他元素的間距 */
+  }
+  
+  .cta-button:hover {
+    background-color: #545454;
+    color: white;
+  }
+  
+  .slick-slide {
+    display: none;
+  }
+  .slick-center {
+    display: block;  /* 显示当前中心位置的卡片 */
+  }
+  
+  
